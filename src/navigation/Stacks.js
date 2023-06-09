@@ -149,6 +149,8 @@ export const ExploreStack = () => {
 import TopicsScreen from './../screens/Topics/TopicsScreen';
 import TabNavigator from './Tab';
 import {HomeDrawerNavigator} from './Drawer';
+import ProfileSettings from '../screens/ProfileSettings';
+import SettingsScreen from '../screens/SettingsScreen';
 // import Category from './../screens/Category';
 
 export const TopicsStack = () => {
@@ -161,6 +163,18 @@ export const TopicsStack = () => {
         <Stack.Screen name="EditTopicsScreen" component={EditTopicsScreen} />
         <Stack.Screen name="HomeScreen" component={HomeDrawerNavigator} />
         <Stack.Screen name="ExploreScreen" component={HomeDrawerNavigator} />
+      </Stack.Navigator>
+    </>
+  );
+};
+export const SettingStack = () => {
+  return (
+    <>
+      <Stack.Navigator
+        initialRouteName="SettingsScreen"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+        <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
       </Stack.Navigator>
     </>
   );

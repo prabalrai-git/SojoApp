@@ -7,7 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Text} from 'react-native';
 
 import SettingsScreen from './../screens/SettingsScreen';
-import {TopicsStack} from './Stacks';
+import {SettingStack, TopicsStack} from './Stacks';
 import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
 import {useNavigation} from '@react-navigation/native';
 const Tab = createMaterialTopTabNavigator();
@@ -110,13 +110,16 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        // component={SettingsScreen}
         options={{headerShown: false, tabBarLabel: 'Profile'}}
         // listeners={{
         //   tabPress: () => {
         //     navigation.replace('Settings');
         //   },
         // }}
+        children={() => {
+          return <SettingStack />;
+        }}
       />
     </Tab.Navigator>
   );

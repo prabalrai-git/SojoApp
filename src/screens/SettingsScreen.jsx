@@ -97,7 +97,9 @@ const SettingsScreen = () => {
       <View style={styles.topBar}>
         <Text style={styles.topBarText}>My Profile</Text>
 
-        <TouchableOpacity style={styles.iconContainer}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => navigation.navigate('ProfileSettings')}>
           <Image
             source={require('../assets/settings.png')}
             style={{
@@ -157,13 +159,6 @@ const SettingsScreen = () => {
           }}
         />
       </ScrollView>
-      <Button
-        title="Logout"
-        onPress={() => {
-          logoutUser();
-          navigation.reset({index: 0, routes: [{name: 'Auth'}]});
-        }}
-      />
     </View>
   );
 };
