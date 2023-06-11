@@ -7,12 +7,15 @@ import {
   ScrollView,
   useWindowDimensions,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
 import Card from '../components/Card';
 import FastImage from 'react-native-fast-image';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 
 const BlogScreen = ({route, navigation}) => {
   const scrollRef = useRef(null);
@@ -53,59 +56,167 @@ const BlogScreen = ({route, navigation}) => {
   }
 
   return data ? (
-    <ScrollView
-      ref={scrollRef}
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}>
-      <View style={styles.blog}>
-        <Text style={styles.title}>{data.title}</Text>
-        <View style={styles.categories}>
-          <Text style={styles.topic}>{data.topics[0].name}</Text>
-          <Text style={styles.date}>
-            Posted on {moment(data.createdAt).format('DD MMM YYYY')}
-          </Text>
+    <>
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={{
+            alignSelf: 'center',
+            paddingHorizontal: 15,
+            padding: 6,
+          }}
+          onPress={() => navigation.pop()}>
+          <Image
+            source={require('../assets/arrow-left.png')}
+            style={{tintColor: 'white', width: 20, height: 20}}
+          />
+        </TouchableOpacity>
+
+        <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#52c080',
+              padding: 6,
+              borderRadius: 5,
+              paddingHorizontal: 10,
+              flexDirection: 'row',
+            }}>
+            <Image
+              source={require('../assets/saved.png')}
+              style={{
+                tintColor: 'white',
+                resizeMode: 'contain',
+                width: 20,
+                height: 20,
+                marginRight: 5,
+              }}
+            />
+            <Text style={{color: 'white'}}>Bookmark</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginLeft: 10,
+              backgroundColor: '#52c080',
+              padding: 6,
+              borderRadius: 5,
+              paddingHorizontal: 10,
+              flexDirection: 'row',
+            }}>
+            <Image
+              source={require('../assets/share.png')}
+              style={{
+                tintColor: 'white',
+                resizeMode: 'contain',
+                width: 23,
+                height: 23,
+              }}
+            />
+          </TouchableOpacity>
         </View>
-        {/* <Image source={{uri: data.image}} style={styles.image} /> */}
-        <FastImage
-          source={{uri: data.image}}
-          style={styles.image}
-          resizeMode={FastImage.resizeMode.cover}
-        />
-        <Text style={styles.previewText}>{data.previewText}</Text>
 
-        <HTML
-          source={{html: data.news}}
-          contentWidth={width}
-          tagsStyles={markdownStyles}
-        />
+        {/* 
+        <TouchableOpacity style={styles.saveBtn}>
+          <View>
+            <Image
+              source={require('../assets/floppy-disk.png')}
+              style={{
+                tintColor: '#27B161',
+                width: 17,
+                height: 17,
+                resizeMode: 'contain',
+                marginRight: 5,
+              }}
+            />
+          </View>
+          <View style={{alignSelf: 'center'}}>
+            <Text style={styles.topBarText}>Save Changes</Text>
+          </View>
+        </TouchableOpacity> */}
+      </View>
+      <ScrollView
+        ref={scrollRef}
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.blog}>
+          <Text style={styles.title}>{data.title}</Text>
+          <View style={styles.categories}>
+            <Text style={styles.topic}>{data.topics[0].name}</Text>
+            <Text style={styles.date}>
+              Posted on {moment(data.createdAt).format('DD MMM YYYY')}
+            </Text>
+          </View>
+          {/* <Image source={{uri: data.image}} style={styles.image} /> */}
+          <FastImage
+            source={{uri: data.image}}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.cover}
+          />
+          <Text style={styles.previewText}>{data.previewText}</Text>
 
-        {/* <View style={styles.shareWrapper}>
+          <HTML
+            source={{html: data.news}}
+            contentWidth={width}
+            tagsStyles={markdownStyles}
+          />
+
+          {/* <View style={styles.shareWrapper}>
           <Text style={styles.shareTitle}>Share this story</Text>
         </View> */}
 
-        <Text
-          style={{
-            fontSize: 25,
-            fontWeight: 'bold',
-            marginTop: 15,
-            marginBottom: 30,
-            color: '#2B2D34',
-          }}>
-          Similar News
-        </Text>
-      </View>
-      <View style={{flex: 1}}>
-        {similarBlogs.map(item => {
-          return <Card key={item.id} item={item} navigation={navigation} />;
-        })}
-      </View>
-    </ScrollView>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: 'bold',
+              marginTop: 15,
+              marginBottom: 30,
+              color: '#2B2D34',
+            }}>
+            Similar News
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          {similarBlogs.map(item => {
+            return <Card key={item.id} item={item} navigation={navigation} />;
+          })}
+        </View>
+      </ScrollView>
+    </>
   ) : (
     <ActivityIndicator />
   );
 };
 
 const styles = StyleSheet.create({
+  // container: {
+  //   paddingVertical: 6,
+  //   // paddingRight: 7,
+  //   paddingLeft: 13,
+  //   backgroundColor: '#FEFEFF',
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'space-between',
+  //   borderRadius: 8,
+  //   flex: 1,
+  // },
+  // titleWrapper: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   flex: 1,
+  // },
+  // titleS: {
+  //   fontSize: 13,
+  //   color: '#26B160',
+  //   fontWeight: 'bold',
+  //   flex: 3,
+  //   marginLeft: 10,
+  // },
+  topBar: {
+    backgroundColor: PRIMARY_COLOR,
+    padding: 15,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: windowWidth,
+  },
   container: {
     flexGrow: 1,
     backgroundColor: '#fff',

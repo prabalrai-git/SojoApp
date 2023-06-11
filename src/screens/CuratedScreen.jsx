@@ -121,7 +121,7 @@ const HomeScreen = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.topBar}>
-        <Text style={styles.title}>Your Feed</Text>
+        <Text style={styles.title}>My Feed</Text>
         <HomeHeader />
       </View>
       <SearchBar />

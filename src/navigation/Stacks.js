@@ -97,7 +97,11 @@ export const HomeStack = () => {
           }}
         />
 
-        <Stack.Screen name="Blog" component={BlogScreen} />
+        <Stack.Screen
+          name="Blog"
+          component={BlogScreen}
+          options={{headerShown: false}}
+        />
 
         <Stack.Screen
           name="SearchScreen"
@@ -131,7 +135,11 @@ export const ExploreStack = () => {
           }}
         />
 
-        <Stack.Screen name="Blog" component={BlogScreen} />
+        <Stack.Screen
+          name="Blog"
+          component={BlogScreen}
+          options={{headerShown: false}}
+        />
 
         <Stack.Screen
           name="SearchScreen"

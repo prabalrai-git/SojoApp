@@ -117,10 +117,35 @@ const Category = () => {
     profile && (
       <View style={{flex: 1, backgroundColor: '#F3F4F7'}}>
         <View style={styles.topBar}>
-          <Text style={styles.title}>Topics</Text>
+          <Text style={styles.title}>My Topics</Text>
           <TopicsHeader />
         </View>
-        <View style={{backgroundColor: '#E6E6E8'}}>
+        {/* <View style={{backgroundColor: '#E6E6E8'}}>
+          <View style={styles.container}>
+            <TextInput
+              style={styles.input}
+              placeholder="Search for a topic..."
+              placeholderTextColor="#A9A9A9"
+              value={term}
+              onChangeText={setTerm}
+              onSubmitEditing={searchTopic}
+            />
+            <Icon
+              name="search"
+              size={20}
+              color="#000"
+              onPress={() => {
+                Keyboard.dismiss();
+                if (term.trim().length > 0) {
+                  searchTopic();
+                } else {
+                  setFilteredTopics(data);
+                }
+              }}
+            />
+          </View>
+        </View> */}
+        <View style={{backgroundColor: '#F3F4F7'}}>
           <View style={styles.container}>
             <TextInput
               style={styles.input}
@@ -145,7 +170,6 @@ const Category = () => {
             />
           </View>
         </View>
-
         <FlatList
           data={filteredTopics}
           renderItem={({item}) => {
@@ -218,7 +242,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
   },
-  linkIcon: {},
+  linkIcon: {
+    backgroundColor: '#F3F4F7',
+  },
   topBar: {
     backgroundColor: '#27B161',
     padding: 20,
@@ -238,7 +264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFF',
-    borderRadius: 12,
+    borderRadius: 5,
     marginHorizontal: 15,
     marginVertical: 10,
     paddingHorizontal: 15,
@@ -249,5 +275,6 @@ const styles = StyleSheet.create({
     color: '#919298',
     paddingLeft: 0,
     paddingVertical: 8,
+    // backgroundColor: '#E6E6E8',
   },
 });

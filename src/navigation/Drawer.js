@@ -398,14 +398,14 @@ const styles = StyleSheet.create({
     color: '#41424B',
   },
   drawerItemIcon: {
-    borderLeftWidth: 2,
+    borderLeftWidth: 1,
     padding: 18,
     // paddingVertical: 15,
     borderLeftColor: '#DEE0E4',
   },
 
   header: {
-    backgroundColor: '#E6E6E8',
+    backgroundColor: '#F3F4F7',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -420,11 +420,12 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#E6E6E8',
     borderRadius: 5,
     flexDirection: 'row', // align items in row
     alignItems: 'center', // align items vertically
-    marginHorizontal: 10,
+    marginLeft: 10,
+
     height: 43,
     paddingHorizontal: 10,
     color: '#A8ACB3',

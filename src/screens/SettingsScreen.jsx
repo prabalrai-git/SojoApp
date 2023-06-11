@@ -46,7 +46,7 @@ const SettingsScreen = () => {
 
   useEffect(() => {
     fetchNews();
-  }, []);
+  }, [config]);
 
   const fetchNews = async () => {
     try {
@@ -55,7 +55,6 @@ const SettingsScreen = () => {
       news.length > 0
         ? setNews(prevData => [...prevData, ...res.data.data])
         : setNews(res.data.data);
-      console.log(res.data.data, 'hey ohhh');
       setLoading(false);
       setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
@@ -143,7 +142,11 @@ const SettingsScreen = () => {
             Saved stories
           </Text>
         </View>
-        <FlatList
+
+        {news.map(item => {
+          return <BlogItem item={item} navigation={navigation} />;
+        })}
+        {/* <FlatList
           data={news}
           renderItem={renderItem}
           keyExtractor={item => item.id}
@@ -157,7 +160,7 @@ const SettingsScreen = () => {
             setNews([]);
             navigation.replace('Curated');
           }}
-        />
+        /> */}
       </ScrollView>
     </View>
   );
@@ -190,8 +193,9 @@ const styles = StyleSheet.create({
   },
   topBarText: {
     color: 'white',
-    fontWeight: '500',
-    fontSize: 22,
+    fontWeight: 'bold',
+    fontSize: 20,
+    alignSelf: 'center',
   },
   topBar: {
     backgroundColor: PRIMARY_COLOR,

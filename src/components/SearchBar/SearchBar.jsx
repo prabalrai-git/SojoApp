@@ -8,7 +8,7 @@ const SearchBar = () => {
   const [term, setTerm] = useState('');
 
   return (
-    <View style={{backgroundColor: '#E6E6E8'}}>
+    <View style={{backgroundColor: '#F3F4F7'}}>
       <View style={styles.container}>
         <TextInput
           style={styles.input}
@@ -50,10 +50,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 12,
+    backgroundColor: 'white',
+    borderRadius: 6,
     marginHorizontal: 15,
-    marginVertical: 10,
+    marginVertical: 15,
+    padding: 2,
     paddingHorizontal: 15,
   },
   input: {
@@ -62,5 +63,6 @@ const styles = StyleSheet.create({
     color: '#919298',
     paddingLeft: 0,
     paddingVertical: 8,
+    backgroundColor: 'white',
   },
 });

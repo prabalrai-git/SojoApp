@@ -115,7 +115,7 @@ const LoginScreen = ({navigation}) => {
           <TouchableOpacity onPress={toggleShowPassword}>
             <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={20} />
           </TouchableOpacity> */}
-          <View style={styles.checkboxContainer}>
+          {/* <View style={styles.checkboxContainer}>
             <MaterialIcons
               name={rememberMe ? 'check-box' : 'check-box-outline-blank'}
               size={20}
@@ -123,7 +123,7 @@ const LoginScreen = ({navigation}) => {
               onPress={() => setRememberMe(!rememberMe)}
             />
             <Text style={styles.checkboxLabel}>Remember me</Text>
-          </View>
+          </View> */}
           <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
             <Text style={styles.loginText}>Sign in</Text>
             <MaterialIcons

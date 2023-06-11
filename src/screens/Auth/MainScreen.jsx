@@ -80,6 +80,7 @@ const MainScreen = ({navigation}) => {
             },
           ]}
           onPress={() => {
+            return console.log('clicked');
             navigation.push('WelcomeSignup');
           }}>
           {/* <MaterialIcons name="email" size={24} color="#545760" /> */}

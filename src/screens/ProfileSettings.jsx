@@ -5,25 +5,43 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import {logoutUser} from '../helper/auth';
 import {Switch} from 'react-native-switch';
 import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 const ProfileSettings = ({navigation}) => {
   const [checked, setChecked] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [notiForValue, setNotiForValue] = useState(null);
+  const [notiFreqValue, setNotiFreqValue] = useState(null);
 
   const notificationFor = [
     {id: 1, title: 'New stories on topic I follow'},
     {id: 2, title: 'Featured stories on topics I follow'},
     {id: 3, title: 'Top stories aggregated by Sojo news'},
   ];
+
+  const notificationFrequency = [
+    {id: 1, title: 'Every morning at 8AM'},
+    {id: 2, title: 'Every evening at 6PM'},
+    {id: 3, title: 'Every two days'},
+    {id: 4, title: 'Once a week'},
+  ];
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.topBar}>
         <TouchableOpacity
-          style={{alignSelf: 'center'}}
+          style={{
+            alignSelf: 'center',
+            paddingHorizontal: 15,
+            padding: 6,
+          }}
           onPress={() => navigation.pop()}>
           <Image
             source={require('../assets/arrow-left.png')}
@@ -31,6 +49,22 @@ const ProfileSettings = ({navigation}) => {
           />
         </TouchableOpacity>
 
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.titleWrapper}
+            onPress={() => {
+              console.log('hello world');
+            }}>
+            <Icon
+              name="save"
+              size={18}
+              color="#26B160"
+              style={{marginTop: 2}}
+            />
+            <Text style={styles.title}>Save Changes</Text>
+          </TouchableOpacity>
+        </View>
+        {/* 
         <TouchableOpacity style={styles.saveBtn}>
           <View>
             <Image
@@ -47,7 +81,7 @@ const ProfileSettings = ({navigation}) => {
           <View style={{alignSelf: 'center'}}>
             <Text style={styles.topBarText}>Save Changes</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {/* Start of body/ content */}
       <View style={{paddingHorizontal: 15}}>
@@ -119,14 +153,66 @@ const ProfileSettings = ({navigation}) => {
           />
         </View>
         <View>
-          <Text style={{color: 'black', fontWeight: '500', fontSize: 14}}>
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: '500',
+              fontSize: 12,
+              marginTop: 10,
+            }}>
             SEND ME NOTIFICATION FOR...
           </Text>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              editable={false}
+              value={notiForValue}></TextInput>
+
+            <TouchableOpacity
+              onPress={() => setModalVisible(prev => !prev)}
+              style={{position: 'absolute', right: 5, top: '25%', padding: 5}}>
+              <Image
+                source={require('../assets/down.png')}
+                style={{
+                  width: 18,
+                  height: 18,
+                  resizeMode: 'contain',
+                  tintColor: 'black',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View>
-          <Text style={{color: 'black', fontWeight: '500', fontSize: 14}}>
+          <Text style={{color: 'black', fontWeight: '500', fontSize: 12}}>
             NOTIFICATION FREQUENCY
           </Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              editable={false}
+              value={notiFreqValue}></TextInput>
+
+            <TouchableOpacity
+              onPress={() => setModalVisible(prev => !prev)}
+              style={{
+                position: 'absolute',
+                right: 5,
+                top: '25%',
+                padding: 5,
+              }}>
+              <Image
+                source={require('../assets/down.png')}
+                style={{
+                  width: 18,
+                  height: 18,
+                  resizeMode: 'contain',
+                  tintColor: 'black',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View
@@ -178,7 +264,7 @@ const ProfileSettings = ({navigation}) => {
           <Text
             style={{
               color: 'white',
-              fontWeight: 'bold',
+              fontWeight: '500',
               fontSize: 16,
               textAlign: 'center',
             }}>
@@ -188,7 +274,7 @@ const ProfileSettings = ({navigation}) => {
       </View>
       {/* modal */}
       <Modal
-        isVisible={true}
+        isVisible={modalVisible}
         style={{
           position: 'relative',
           margin: 0,
@@ -201,21 +287,30 @@ const ProfileSettings = ({navigation}) => {
             // height: 200,
             width: '100%',
             borderTopRightRadius: 20,
-            paddingVertical: 30,
+            paddingTop: 25,
             borderTopLeftRadius: 20,
           }}>
-          {notificationFor.map(item => {
+          {notificationFrequency.map(item => {
             return (
-              <View key={item.id} style={{width: windowWidth}}>
-                <Text style={{color: 'black'}}>{item.title}</Text>
+              <TouchableOpacity
+                key={item.id}
+                style={{width: windowWidth}}
+                onPress={() => {
+                  setModalVisible(prev => !prev);
+                  setNotiFreqValue(item.title);
+                }}>
+                <Text style={{color: 'black', marginHorizontal: 20}}>
+                  {item.title}
+                </Text>
                 <View
                   style={{
                     height: 1,
                     backgroundColor: 'lightgrey',
                     marginVertical: 18,
+
                     width: windowWidth,
                   }}></View>
-              </View>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -227,6 +322,43 @@ const ProfileSettings = ({navigation}) => {
 export default ProfileSettings;
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    flexDirection: 'row',
+    position: 'relative',
+  },
+  container: {
+    paddingVertical: 6,
+    width: '36%',
+    // paddingRight: 7,
+    paddingLeft: 13,
+    backgroundColor: '#FEFEFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 8,
+    // flex: 1,
+  },
+  titleWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  title: {
+    fontSize: 13,
+    color: '#26B160',
+    fontWeight: 'bold',
+    flex: 3,
+    marginLeft: 10,
+  },
+
+  input: {
+    width: '100%',
+    backgroundColor: 'lightgrey',
+    padding: 5,
+    marginVertical: 5,
+    borderRadius: 5,
+    color: 'black',
+  },
   btnTxt: {
     textAlign: 'center',
     color: 'white',
