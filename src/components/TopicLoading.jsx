@@ -17,7 +17,7 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
   return (
     <TouchableOpacity style={styles.link}>
       <Text style={styles.linkTitle}>{item.name}</Text>
-      {selectedTopics.includes(item.id) ? (
+      {selectedTopics?.includes(item.id) ? (
         <Icon
           name={loading ? 'loader' : 'check'}
           size={26}

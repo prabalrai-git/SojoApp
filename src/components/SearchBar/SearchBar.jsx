@@ -8,7 +8,7 @@ const SearchBar = () => {
   const [term, setTerm] = useState('');
 
   return (
-    <View style={{backgroundColor: '#F3F4F7'}}>
+    <View style={{backgroundColor: '#f3f4f7'}}>
       <View style={styles.container}>
         <TextInput
           style={styles.input}

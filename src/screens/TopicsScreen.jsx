@@ -4,14 +4,22 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
 import Axios from './../api/server';
 import Icon from 'react-native-vector-icons/Feather';
+import TopicLoading from '../components/TopicLoading';
+import CreateProfileHeader from '../components/CreateProfileHeader';
+import {windowWidth} from '../helper/usefulConstants';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const TopicsScreen = ({navigation}) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,37 +34,176 @@ const TopicsScreen = ({navigation}) => {
   }, [navigation]);
 
   return (
-    <ScrollView style={{flex: 1}}>
-      <SearchBar />
-      <View style={{padding: 20}}>
-        <Text style={{fontSize: 24, fontWeight: 'bold', color: '#6B6F76'}}>
+    <>
+      <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+        <CreateProfileHeader />
+        <ScrollView StickyHeaderComponent={[]}>
+          <Text
+            style={{
+              color: 'black',
+              paddingHorizontal: 20,
+              // paddingLeft: 39,
+              fontSize: 18,
+              textAlign: 'left',
+              marginTop: 10,
+              fontWeight: '500',
+            }}>
+            Choose your topics.
+          </Text>
+          <Text
+            style={{
+              color: 'black',
+              paddingHorizontal: 20,
+              // paddingLeft: 39,
+              fontSize: 16,
+              textAlign: 'left',
+              marginTop: 10,
+              fontWeight: '500',
+              marginBottom: 15,
+            }}>
+            Have your news be filtered out for by choosing the topics that you
+            want to follow.
+          </Text>
+          <SearchBar />
+          <View style={{paddingHorizontal: 20}}>
+            {/* <Text style={{fontSize: 24, fontWeight: 'bold', color: '#6B6F76'}}>
           Explore Topics
-        </Text>
-        <View style={{marginTop: 20}}>
-          {data?.map(item => {
+        </Text> */}
+            <View style={{marginTop: 20}}>
+              {data?.map(item => {
+                return (
+                  <TouchableOpacity style={styles.link}>
+                    <Text style={styles.linkTitle}>{item.name}</Text>
+
+                    <Icon
+                      name={loading ? 'check' : 'plus'}
+                      size={26}
+                      color="#6B6F76"
+                      style={styles.linkIcon}
+                      onPress={async () => {
+                        setLoading(!loading);
+                        // // await Axios.patch(
+                        // //   `/users/profile/topic/${item.id}`,
+                        // //   {},
+                        // //   config,
+                        // // );
+                        // fetchProfile();
+                        // setLoading(false);
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            {/* <FlatList
+          data={data}
+          renderItem={({item}) => {
             return (
-              <TouchableOpacity
-                style={styles.item}
-                key={item.id}
-                onPress={() => {
-                  navigation.push('Category', {
-                    id: item.id,
-                  });
-                }}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <Icon name="arrow-right" size={22} color="#3E424B" />
-              </TouchableOpacity>
+              <TopicLoading
+                item={item}
+                // selectedTopics={selectedTopics}
+                // config={config}
+                // fetchProfile={fetchProfile}
+              />
             );
-          })}
-        </View>
+          }}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        /> */}
+          </View>
+        </ScrollView>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('MainScreen');
+            // if (!loading) {
+            //   handleFormSubmit();
+            // }
+          }}
+          style={[styles.loginButton, {marginBottom: 5}]}>
+          {loading1 ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <>
+              <Text style={styles.loginText}>Start Browsing</Text>
+              <MaterialIcons
+                name="arrow-forward"
+                size={20}
+                color="#FFFFFF"
+                style={styles.loginButtonIcon}
+              />
+            </>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            if (!loading1) {
+              handleFormSubmit();
+            }
+          }}
+          style={[styles.loginButton, {backgroundColor: 'white'}]}>
+          {loading1 ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <>
+              <Text style={[styles.loginText, {color: '#5fbc7d'}]}>
+                Skip for now
+              </Text>
+              <MaterialIcons
+                name="block-flipped"
+                size={20}
+                color="#5fbc7d"
+                style={styles.loginButtonIcon}
+              />
+            </>
+          )}
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </>
   );
 };
 
 export default TopicsScreen;
 
 const styles = StyleSheet.create({
+  loginButton: {
+    borderRadius: 5,
+    marginTop: 20,
+    marginBottom: 35,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    width: windowWidth * 0.9,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#26B160',
+  },
+  loginText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  link: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 5,
+    backgroundColor: '#f3f4f7',
+  },
+  linkTitle: {
+    color: '#4B4D54',
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingLeft: 15,
+    flex: 1,
+  },
+  linkIcon: {
+    borderLeftWidth: 1,
+    borderLeftColor: '#DEE1E5',
+    padding: 17,
+    paddingLeft: 20,
+  },
   item: {
     flex: 1,
     borderWidth: 1,

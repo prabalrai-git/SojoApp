@@ -10,6 +10,7 @@ import SettingsScreen from './../screens/SettingsScreen';
 import {SettingStack, TopicsStack} from './Stacks';
 import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
 import {useNavigation} from '@react-navigation/native';
+import {windowWidth} from '../helper/usefulConstants';
 const Tab = createMaterialTopTabNavigator();
 
 function CustomTabBarLabel({label, focused}) {
@@ -18,7 +19,7 @@ function CustomTabBarLabel({label, focused}) {
       style={{
         fontSize: 22,
         fontWeight: focused ? 'bold' : 'normal',
-        display: 'none',
+        display: 'block',
       }}>
       {label}
     </Text>
@@ -32,13 +33,24 @@ const TabNavigator = () => {
       keyboardHidesTabBar={true}
       tabBarPosition="bottom"
       screenOptions={({route}) => ({
-        tabBarLabel: ({label, size, focused}) => (
-          <CustomTabBarLabel label={label} focused={focused} />
-        ),
-        tabBarIndicatorStyle: {backgroundColor: 'transparent'},
+        tabBarLabel: ({label, size, focused}) => {
+          return <CustomTabBarLabel label={label} focused={focused} />;
+        },
+        tabBarStyle: {height: 70},
+        tabBarIndicatorStyle: {
+          backgroundColor: '#ECF9EF',
+          height: '85%',
+          marginBottom: 6,
+          width: windowWidth * 0.2,
+          marginLeft: 10,
+          borderRadius: 16,
+        },
         tabBarActiveTintColor: '#006203',
+        tabBarShowLabel: true,
+
         tabBarLabelStyle: {
           fontSize: 12,
+          fontWeight: '500',
           textTransform: 'none',
         },
         tabBarAndroidRipple: {
@@ -53,12 +65,16 @@ const TabNavigator = () => {
           if (route.name === 'HomeTab') {
             // iconName = 'home';
             return (
-              <Ionicons
-                name={focused ? 'md-newspaper' : 'md-newspaper-outline'}
-                size={23}
-                color={color}
-                onPress={() => {
-                  console.log('thichyo rey thichyo');
+              <Image
+                source={
+                  focused
+                    ? require('../assets/feed_fill.png')
+                    : require('../assets/feed.png')
+                }
+                style={{
+                  width: 26,
+                  height: 26,
+                  resizeMode: 'contain',
                 }}
               />
             );
@@ -76,9 +92,9 @@ const TabNavigator = () => {
                     : require('../assets/user.png')
                 }
                 style={{
-                  tintColor: focused ? '#006203' : 'grey',
-                  width: 23,
-                  height: 23,
+                  // tintColor: focused ? '#006203' : 'grey',
+                  width: 26,
+                  height: 26,
                   resizeMode: 'contain',
                 }}
               />
@@ -86,67 +102,115 @@ const TabNavigator = () => {
             iconName = 'profile';
           } else if (route.name === 'Topics') {
             return (
-              <AndDesign
-                name={focused ? 'appstore1' : 'appstore-o'}
-                size={23}
-                color={color}
+              <Image
+                source={
+                  focused
+                    ? require('../assets/topics_fill.png')
+                    : require('../assets/topics.png')
+                }
+                style={{
+                  width: 26,
+                  height: 26,
+                  resizeMode: 'contain',
+                }}
               />
             );
           } else if (route.name === 'Explore') {
             return (
-              <Ionicons
-                name={focused ? 'compass' : 'compass-outline'}
-                size={25}
-                color={color}
-                onPress={() => {
-                  console.log('thichyo rey thichyo');
+              <Image
+                source={
+                  focused
+                    ? require('../assets/compass_fill.png')
+                    : require('../assets/compass.png')
+                }
+                style={{
+                  width: 26,
+                  height: 26,
+                  resizeMode: 'contain',
                 }}
               />
+              // <Ionicons
+              //   name={focused ? 'compass' : 'compass-outline'}
+              //   size={25}
+              //   color={color}
+              //   onPress={() => {
+              //     console.log('thichyo rey thichyo');
+              //   }}
+              // />
             );
           }
 
-          return <Icon name={iconName} size={23} color={color} />;
+          return <Icon name={iconName} size={26} color={color} />;
         },
       })}>
       <Tab.Screen
         name="HomeTab"
         children={() => <HomeDrawerNavigator />}
         options={{
-          tabBarLabel: 'Feed',
+          headerShown: false,
+
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                color: focused ? '#171717' : 'grey',
+                fontSize: 12,
+                fontWeight: '500',
+              }}>
+              Feed
+            </Text>
+          ),
           tabBarInactiveTintColor: 'grey',
         }}
-        listeners={{
-          tabPress: () => {
-            navigation.replace('Curated');
-          },
-        }}
+        // listeners={{
+        //   tabPress: () => {
+        //     navigation.replace('Curated');
+        //   },
+        // }}
       />
       <Tab.Screen
         name="Explore"
         children={() => <ExploreDrawerNavigator />}
         options={{
           headerShown: false,
-          tabBarLabel: 'Explore',
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                color: focused ? '#171717' : 'grey',
+                fontSize: 12,
+                fontWeight: '500',
+              }}>
+              Explore
+            </Text>
+          ),
           tabBarInactiveTintColor: 'grey',
         }}
-        listeners={{
-          tabPress: () => {
-            navigation.replace('Explore');
-          },
-        }}
+        // listeners={{
+        //   tabPress: () => {
+        //     navigation.replace('Explore');
+        //   },
+        // }}
       />
       <Tab.Screen
         name="Topics"
         options={{
           headerShown: false,
-          tabBarLabel: 'Topics',
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                color: focused ? '#171717' : 'grey',
+                fontSize: 12,
+                fontWeight: '500',
+              }}>
+              Topics
+            </Text>
+          ),
           tabBarInactiveTintColor: 'grey',
         }}
-        listeners={{
-          tabPress: () => {
-            navigation.replace('TopicsScreen');
-          },
-        }}
+        // listeners={{
+        //   tabPress: () => {
+        //     navigation.replace('TopicsScreen');
+        //   },
+        // }}
         children={() => {
           return <TopicsStack />;
         }}
@@ -156,7 +220,16 @@ const TabNavigator = () => {
         // component={SettingsScreen}
         options={{
           headerShown: false,
-          tabBarLabel: 'Profile',
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                color: focused ? '#171717' : 'grey',
+                fontSize: 12,
+                fontWeight: '500',
+              }}>
+              Profile
+            </Text>
+          ),
           tabBarInactiveTintColor: 'grey',
         }}
         // listeners={{

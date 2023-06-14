@@ -171,7 +171,8 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   btnTxt: {
     textAlign: 'center',
-    color: 'white',
+    color: '#1d6e3f',
+    fontWeight: 'bold',
   },
   iconContainer: {
     backgroundColor: '#53C180',
@@ -181,11 +182,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btn: {
-    backgroundColor: '#296146',
+    // backgroundColor: '#296146',
     width: '49%',
     marginRight: 10,
     padding: 8,
     borderRadius: 6,
+    borderColor: '#b3e0bd',
+    borderWidth: 2,
   },
   btnContainer: {
     flexDirection: 'row',

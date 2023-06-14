@@ -51,11 +51,11 @@ const BlogScreen = ({route, navigation}) => {
     data && fetchSimilarBlogs();
   }, [data]);
 
-  if (!data) {
-    return <ActivityIndicator />;
-  }
+  // if (!data) {
+  //   return <ActivityIndicator />;
+  // }
 
-  return data ? (
+  return (
     <>
       <View style={styles.topBar}>
         <TouchableOpacity
@@ -132,56 +132,58 @@ const BlogScreen = ({route, navigation}) => {
           </View>
         </TouchableOpacity> */}
       </View>
-      <ScrollView
-        ref={scrollRef}
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.blog}>
-          <Text style={styles.title}>{data.title}</Text>
-          <View style={styles.categories}>
-            <Text style={styles.topic}>{data.topics[0].name}</Text>
-            <Text style={styles.date}>
-              Posted on {moment(data.createdAt).format('DD MMM YYYY')}
-            </Text>
-          </View>
-          {/* <Image source={{uri: data.image}} style={styles.image} /> */}
-          <FastImage
-            source={{uri: data.image}}
-            style={styles.image}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-          <Text style={styles.previewText}>{data.previewText}</Text>
+      {data ? (
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.blog}>
+            <Text style={styles.title}>{data.title}</Text>
+            <View style={styles.categories}>
+              <Text style={styles.topic}>{data.topics[0].name}</Text>
+              <Text style={styles.date}>
+                Posted on {moment(data.createdAt).format('DD MMM YYYY')}
+              </Text>
+            </View>
+            {/* <Image source={{uri: data.image}} style={styles.image} /> */}
+            <FastImage
+              source={{uri: data.image}}
+              style={styles.image}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+            <Text style={styles.previewText}>{data.previewText}</Text>
 
-          <HTML
-            source={{html: data.news}}
-            contentWidth={width}
-            tagsStyles={markdownStyles}
-          />
+            <HTML
+              source={{html: data.news}}
+              contentWidth={width}
+              tagsStyles={markdownStyles}
+            />
 
-          {/* <View style={styles.shareWrapper}>
+            {/* <View style={styles.shareWrapper}>
           <Text style={styles.shareTitle}>Share this story</Text>
         </View> */}
 
-          <Text
-            style={{
-              fontSize: 25,
-              fontWeight: 'bold',
-              marginTop: 15,
-              marginBottom: 30,
-              color: '#2B2D34',
-            }}>
-            Similar News
-          </Text>
-        </View>
-        <View style={{flex: 1}}>
-          {similarBlogs.map(item => {
-            return <Card key={item.id} item={item} navigation={navigation} />;
-          })}
-        </View>
-      </ScrollView>
+            <Text
+              style={{
+                fontSize: 25,
+                fontWeight: 'bold',
+                marginTop: 15,
+                marginBottom: 30,
+                color: '#2B2D34',
+              }}>
+              Similar News
+            </Text>
+          </View>
+          <View style={{flex: 1}}>
+            {similarBlogs.map(item => {
+              return <Card key={item.id} item={item} navigation={navigation} />;
+            })}
+          </View>
+        </ScrollView>
+      ) : (
+        <ActivityIndicator />
+      )}
     </>
-  ) : (
-    <ActivityIndicator />
   );
 };
 
@@ -235,17 +237,17 @@ const styles = StyleSheet.create({
   date: {
     marginLeft: 8,
     flex: 2,
-    color: '#6F7076',
+    color: '#3F424A',
     fontSize: 15,
   },
   topic: {
     flex: 1,
-    backgroundColor: '#247144',
-    color: '#fff',
+    backgroundColor: '#b3e0bd',
+    color: '#237344',
     fontWeight: 'bold',
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 7,
+    borderRadius: 40,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     textAlign: 'center',
   },
   image: {
@@ -257,13 +259,13 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#757680',
+    color: '#171A21',
   },
   previewText: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 5,
     lineHeight: 24,
-    color: '#A3A4AB',
+    color: '#3F424A',
   },
 });
 
@@ -271,7 +273,7 @@ const markdownStyles = StyleSheet.create({
   p: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#A3A4AB',
+    color: '#3F424A',
   },
   strong: {
     fontWeight: 'bold',

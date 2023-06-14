@@ -14,14 +14,19 @@ import {windowHeight, windowWidth} from '../../helper/usefulConstants';
 const MainScreen = ({navigation}) => {
   return (
     <View style={styles.bottomContainer}>
-      <StatusBar backgroundColor={'#2a2d35'} />
+      <StatusBar backgroundColor={'white'} />
 
       <View style={styles.top}>
         <Image
           source={require('../../assets/logo.png')}
           style={[
             styles.signupIcon,
-            {width: 200, height: 100, resizeMode: 'contain'},
+            {
+              width: 200,
+              height: 100,
+              resizeMode: 'contain',
+              tintColor: '#12ab51',
+            },
           ]}
         />
       </View>
@@ -71,8 +76,8 @@ const MainScreen = ({navigation}) => {
           style={[
             styles.button,
             {
-              backgroundColor: '#3d594f',
-              borderWidth: 0.5,
+              backgroundColor: '#12ab51',
+              borderWidth: 2,
               borderColor: 'white',
               alignItems: 'flex-start',
               marginTop: 30,
@@ -80,8 +85,8 @@ const MainScreen = ({navigation}) => {
             },
           ]}
           onPress={() => {
-            return console.log('clicked');
-            navigation.push('WelcomeSignup');
+            // return console.log('clicked');
+            navigation.push('Signup');
           }}>
           {/* <MaterialIcons name="email" size={24} color="#545760" /> */}
           <Text style={[styles.buttonText, {color: 'white'}]}>
@@ -116,7 +121,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 0.6,
     width: windowWidth,
-    backgroundColor: '#25453a',
+    backgroundColor: '#12ab51',
     borderTopEndRadius: 35,
     borderTopLeftRadius: 35,
     paddingTop: 110,
@@ -130,7 +135,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     flex: 1,
-    backgroundColor: '#2a2d35',
+    backgroundColor: 'white',
   },
   button: {
     flexDirection: 'row',

@@ -86,7 +86,7 @@ const HomeScreen = ({navigation}) => {
   });
 
   const renderItem = ({item}) => {
-    return <BlogItem item={item} navigation={navigation} />;
+    return <BlogItem key={item.id} item={item} navigation={navigation} />;
   };
 
   return (

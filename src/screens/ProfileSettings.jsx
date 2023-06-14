@@ -34,7 +34,7 @@ const ProfileSettings = ({navigation}) => {
   ];
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
       <View style={styles.topBar}>
         <TouchableOpacity
           style={{
@@ -99,7 +99,7 @@ const ProfileSettings = ({navigation}) => {
           </View>
           <TouchableOpacity
             style={{
-              backgroundColor: '#296146',
+              backgroundColor: '#b3e0bd',
               flexDirection: 'row',
               alignItems: 'center',
               padding: 8,
@@ -110,13 +110,13 @@ const ProfileSettings = ({navigation}) => {
               logoutUser();
               navigation.navigate('MainScreen');
             }}>
-            <Text style={{color: 'white'}}>Sign Out</Text>
+            <Text style={{color: '#082313'}}>Sign Out</Text>
             <Image
               source={require('../assets/logout.png')}
               style={{
                 width: 14,
                 height: 14,
-                tintColor: 'white',
+                tintColor: '#082313',
                 resizeMode: 'contain',
                 marginLeft: 10,
               }}
@@ -139,15 +139,15 @@ const ProfileSettings = ({navigation}) => {
             // color="#296146"
             activeText={''}
             inActiveText={''}
-            backgroundActive={'#296146'}
+            backgroundActive={'#27b060'}
             circleSize={30}
             // barHeight={34}
             switchWidthMultiplier={2}
             circleBorderWidth={0}
             outerCircleStyle={{}}
-            backgroundInactive={'#3f424a'}
-            circleActiveColor={'grey'}
-            circleInActiveColor={'lightgrey'}
+            backgroundInactive={'grey'}
+            circleActiveColor={'white'}
+            circleInActiveColor={'white'}
             value={checked}
             onValueChange={value => setChecked(value)}
           />
@@ -227,7 +227,7 @@ const ProfileSettings = ({navigation}) => {
           Password
         </Text>
 
-        <Text style={{color: 'grey', fontSize: 16, marginVertical: 15}}>
+        <Text style={{color: 'black', fontSize: 16, marginVertical: 15}}>
           You changed your password 2 months ago
         </Text>
         <View style={styles.btnContainer}>
@@ -241,7 +241,7 @@ const ProfileSettings = ({navigation}) => {
         <View
           style={{
             width: '100%',
-            backgroundColor: 'black',
+            backgroundColor: 'lightgrey',
             height: 1,
             marginVertical: 20,
           }}></View>
@@ -256,14 +256,14 @@ const ProfileSettings = ({navigation}) => {
         </Text>
         <TouchableOpacity
           style={{
-            backgroundColor: '#7b3446',
+            backgroundColor: '#fecdd3',
             padding: 8,
             borderRadius: 8,
             width: '50%',
           }}>
           <Text
             style={{
-              color: 'white',
+              color: '#881337',
               fontWeight: '500',
               fontSize: 16,
               textAlign: 'center',
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
 
   input: {
     width: '100%',
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'white',
     padding: 5,
     marginVertical: 5,
     borderRadius: 5,
@@ -361,7 +361,8 @@ const styles = StyleSheet.create({
   },
   btnTxt: {
     textAlign: 'center',
-    color: 'white',
+    color: '#176a3a',
+    fontWeight: 'bold',
   },
   iconContainer: {
     backgroundColor: '#53C180',
@@ -371,11 +372,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btn: {
-    backgroundColor: '#296146',
+    // backgroundColor: '#296146',
     width: '49%',
     marginRight: 10,
     padding: 8,
     borderRadius: 6,
+    borderColor: '#c2e4ca',
+    borderWidth: 2,
   },
   btnContainer: {
     flexDirection: 'row',

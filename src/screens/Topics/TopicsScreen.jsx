@@ -114,13 +114,12 @@ const Category = () => {
   };
 
   return (
-    profile && (
-      <View style={{flex: 1, backgroundColor: '#F3F4F7'}}>
-        <View style={styles.topBar}>
-          <Text style={styles.title}>My Topics</Text>
-          <TopicsHeader />
-        </View>
-        {/* <View style={{backgroundColor: '#E6E6E8'}}>
+    <View style={{flex: 1, backgroundColor: '#F3F4F7'}}>
+      <View style={styles.topBar}>
+        <Text style={styles.title}>My Topics</Text>
+        <TopicsHeader />
+      </View>
+      {/* <View style={{backgroundColor: '#E6E6E8'}}>
           <View style={styles.container}>
             <TextInput
               style={styles.input}
@@ -145,77 +144,80 @@ const Category = () => {
             />
           </View>
         </View> */}
-        <View style={{backgroundColor: '#F3F4F7'}}>
-          <View style={styles.container}>
-            <TextInput
-              style={styles.input}
-              placeholder="Search for a topic..."
-              placeholderTextColor="#A9A9A9"
-              value={term}
-              onChangeText={setTerm}
-              onSubmitEditing={searchTopic}
-            />
-            <Icon
-              name="search"
-              size={20}
-              color="#000"
-              onPress={() => {
-                Keyboard.dismiss();
-                if (term.trim().length > 0) {
-                  searchTopic();
-                } else {
-                  setFilteredTopics(data);
-                }
-              }}
-            />
-          </View>
-        </View>
-        <FlatList
-          data={filteredTopics}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity
-                style={styles.link}
+      {profile && (
+        <>
+          <View style={{backgroundColor: '#F3F4F7'}}>
+            <View style={styles.container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Search for a topic..."
+                placeholderTextColor="#A9A9A9"
+                value={term}
+                onChangeText={setTerm}
+                onSubmitEditing={searchTopic}
+              />
+              <Icon
+                name="search"
+                size={20}
+                color="#000"
                 onPress={() => {
-                  let found = false;
+                  Keyboard.dismiss();
+                  if (term.trim().length > 0) {
+                    searchTopic();
+                  } else {
+                    setFilteredTopics(data);
+                  }
+                }}
+              />
+            </View>
+          </View>
+          <FlatList
+            data={filteredTopics}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity
+                  style={styles.link}
+                  onPress={() => {
+                    let found = false;
 
-                  profile.topics.forEach(topic => {
-                    if (topic.id === item.id) {
-                      found = true;
-                      navigation.push('HomeScreen', {
-                        screen: 'CategoryScreen',
+                    profile.topics.forEach(topic => {
+                      if (topic.id === item.id) {
+                        found = true;
+                        navigation.push('HomeScreen', {
+                          screen: 'CategoryScreen',
+                          params: {
+                            id: item.id,
+                          },
+                        });
+                        return false;
+                      }
+                    });
+
+                    if (!found) {
+                      navigation.push('ExploreScreen', {
+                        screen: 'ExploreCategory',
                         params: {
                           id: item.id,
                         },
                       });
-                      return false;
                     }
-                  });
-
-                  if (!found) {
-                    navigation.push('ExploreScreen', {
-                      screen: 'ExploreCategory',
-                      params: {
-                        id: item.id,
-                      },
-                    });
-                  }
-                }}>
-                <Text style={styles.linkTitle}>{item.name}</Text>
-                <Icon
-                  name="arrow-right"
-                  size={22}
-                  color="#6B6F76"
-                  style={styles.linkIcon}
-                />
-              </TouchableOpacity>
-            );
-          }}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    )
+                  }}>
+                  <Text style={styles.linkTitle}>{item.name}</Text>
+                  <Icon
+                    name="arrow-right"
+                    size={22}
+                    color="#6B6F76"
+                    style={styles.linkIcon}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+        </>
+      )}
+    </View>
   );
 };
 

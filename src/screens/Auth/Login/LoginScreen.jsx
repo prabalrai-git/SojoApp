@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Image,
+  StatusBar,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -64,12 +65,18 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <>
+      <StatusBar backgroundColor={'#f3f4f7'} />
       <View style={styles.container}>
         <Image
           source={require('../../../assets/logo.png')}
           style={[
             styles.signupIcon,
-            {width: 200, height: 100, resizeMode: 'contain'},
+            {
+              width: 200,
+              height: 100,
+              resizeMode: 'contain',
+              tintColor: '#12ab51',
+            },
           ]}
         />
         {errorMessage && (
@@ -99,6 +106,7 @@ const LoginScreen = ({navigation}) => {
                 <FontAwesome
                   name={showPassword ? 'eye' : 'eye-slash'}
                   size={20}
+                  color={'grey'}
                 />
               </TouchableOpacity>
             </View>
@@ -134,7 +142,7 @@ const LoginScreen = ({navigation}) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={handleLogin}
+            onPress={() => navigation.navigate('VerifyEmail')}
             style={styles.forgotPasswordBtn}>
             <Text style={[styles.loginText, {color: '#5eb87b'}]}>
               Forgot Password
@@ -153,7 +161,7 @@ const LoginScreen = ({navigation}) => {
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -150} // adjust as needed
         >
           <TouchableOpacity style={styles.bottomContainer}>
-            <Text style={[styles.forgotPassword, {color: '#5eb87b'}]}>
+            <Text style={[styles.forgotPassword, {color: '#176a3a'}]}>
               Create Account
             </Text>
             <MaterialIcons
@@ -172,7 +180,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#2a2d35',
+    backgroundColor: '#f3f4f7',
   },
   content: {
     width: '80%',
@@ -182,13 +190,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     marginBottom: 5,
-    color: 'white',
+    color: 'black',
     fontWeight: '500',
   },
   input: {
     // height: 40,
-    borderColor: '#3F424A',
-    backgroundColor: '#3F424A',
+    borderColor: 'white',
+    backgroundColor: 'white',
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 15,
@@ -196,7 +204,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
 
     // paddingLeft: 5,
-    color: 'white',
+    color: 'black',
   },
   inputContainer: {
     marginVertical: 10,
@@ -204,20 +212,20 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#3F424A',
-    backgroundColor: '#3F424A',
+    borderColor: 'white',
+    backgroundColor: 'white',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
   },
   iconWrapper: {
     padding: 10,
-    backgroundColor: '#3F424A',
+    backgroundColor: 'white',
   },
   passwordInput: {
-    backgroundColor: '#3F424A',
-    borderColor: '#3F424A',
-    color: 'white',
+    backgroundColor: 'white',
+    borderColor: 'white',
+    color: 'black',
 
     flex: 1,
     paddingVertical: 10,
@@ -242,7 +250,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#296146',
+    backgroundColor: '#12ab51',
   },
 
   forgotPasswordBtn: {
@@ -254,11 +262,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#3b3d45',
+    backgroundColor: 'white',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   loginText: {
     color: '#FFFFFF',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   loginButtonIcon: {
     marginLeft: 10,
@@ -278,7 +292,7 @@ const styles = StyleSheet.create({
     borderColor: '#5eb87b',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#2a2d35',
+    backgroundColor: 'white',
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
@@ -286,6 +300,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#000000',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

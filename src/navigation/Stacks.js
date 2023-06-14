@@ -26,10 +26,11 @@ export const AuthStack = () => {
   return (
     <>
       <Stack.Navigator
-        initialRouteName="MainScreen"
+        initialRouteName="SplashScreen"
         screenOptions={{
           headerShown: false,
         }}>
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="AuthHome" component={TabNavigator} />
         <Stack.Screen
@@ -63,6 +64,10 @@ export const AuthStack = () => {
         />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Verify" component={VerifyScreen} />
+        <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+        <Stack.Screen name="Preferences" component={Preferences} />
+        <Stack.Screen name="VerifyOtp" component={VerifyOtp} />
+        <Stack.Screen name="ChangePassword" component={ChangePassword} />
       </Stack.Navigator>
     </>
   );
@@ -159,6 +164,11 @@ import TabNavigator from './Tab';
 import {HomeDrawerNavigator} from './Drawer';
 import ProfileSettings from '../screens/ProfileSettings';
 import SettingsScreen from '../screens/SettingsScreen';
+import SplashScreen from '../screens/Auth/SplashScreen';
+import Preferences from '../screens/Auth/Signup/Preferences';
+import VerifyEmail from '../screens/Auth/Login/VerifyEmail';
+import VerifyOtp from '../screens/Auth/Login/VerifyOtp';
+import ChangePassword from '../screens/Auth/Login/ChangePassword';
 // import Category from './../screens/Category';
 
 export const TopicsStack = () => {
