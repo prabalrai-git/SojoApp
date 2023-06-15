@@ -1,53 +1,118 @@
 import {StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, Text, View, Dimensions} from 'react-native';
+import {TouchableOpacity, Text, View, Dimensions, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Axios from './../api/server';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BlogCard = ({item, navigation}) => {
+  // console.log('this is the item', item?.isBookmarkedByUser);
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
+  const [toggled, setToggled] = useState(
+    item?.isBookmarkedByUser ? item.isBookmarkedByUser : false,
+  );
+  const [config, setConfig] = useState();
 
   useEffect(() => {
     const w = Math.floor(width - 5 / 100);
-    const resizedImageUrl = item.image.replace(
+    const resizedImageUrl = item?.image.replace(
       '/upload/',
       `/upload/w_${w.toString()},h_250,c_fill/`,
     );
     setImage(resizedImageUrl);
-  }, [item.image]);
+  }, [item?.image]);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const config = {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+
+        setConfig(config);
+      }
+    };
+    fetchToken();
+  }, []);
+
+  const bookmarkPressed = () => {
+    const toggleBookmark = async () => {
+      try {
+        const res = await Axios.post(
+          '/users/bookmarks/toggleOrAddBookmark',
+          {userId: 4, newsId: item.id},
+          config,
+        );
+
+        // console.log(
+        //   'this is the log',
+        //   res.data,
+        //   '11111111111111111111111111111111111111',
+        // );
+        setToggled(prev => !prev);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    toggleBookmark();
+  };
   return (
     image && (
       <TouchableOpacity
         style={{marginTop: 30}}
         onPress={() => {
-          navigation.navigate('Blog', {id: item.id});
+          navigation.navigate('Blog', {id: item?.id});
         }}>
         <View style={styles.cardContainer}>
           <View style={styles.wrapper}>
-            <FastImage
-              source={{uri: image}}
-              style={styles.cardImage}
-              resizeMode={FastImage.resizeMode.cover}
-            />
+            <View>
+              <FastImage
+                source={{uri: image}}
+                style={[styles.cardImage, {position: 'relative'}]}
+                resizeMode={FastImage.resizeMode.cover}>
+                <TouchableOpacity onPress={() => bookmarkPressed()}>
+                  <Image
+                    source={
+                      toggled
+                        ? require('../assets/marked.png')
+                        : require('../assets/unmarked.png')
+                    }
+                    style={{
+                      width: 45,
+                      height: 45,
+                      resizeMode: 'contain',
+                      position: 'absolute',
+                      top: 190,
+                      left: 10,
+                    }}
+                  />
+                </TouchableOpacity>
+              </FastImage>
+            </View>
             <Text
               style={styles.cardTitle}
               numberOfLines={2}
               ellipsizeMode="tail">
-              {item.title}
+              {item?.title}
             </Text>
 
             <Text
               style={styles.cardText}
               numberOfLines={4}
               ellipsizeMode="tail">
-              {item.previewText}
+              {item?.previewText}
             </Text>
 
             <View style={styles.footer}>
               <Text style={styles.category}>
                 {
-                  item.topics.sort(
+                  item?.topics?.sort(
                     (a, b) => a.news_topic.order - b.news_topic.order,
                   )[0].name
                 }

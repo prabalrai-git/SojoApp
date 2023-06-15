@@ -50,17 +50,25 @@ const SettingsScreen = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await Axios.get(`/users/news?page=${page}`, config);
+      const res = await Axios.post(
+        '/users/bookmarks/getBookmarkedNews',
+        {userId: 25},
+        config,
+      );
+
+      // return console.log('this is the log', res.data.bookmarkedNews);
 
       news.length > 0
-        ? setNews(prevData => [...prevData, ...res.data.data])
-        : setNews(res.data.data);
+        ? setNews(prevData => [...prevData, ...res.data.bookmarkedNews])
+        : setNews(res.data.bookmarkedNews);
       setLoading(false);
-      setHasMore(res.data.pagination.nextPage !== null);
+      setHasMore(res.data.pagination?.nextPage !== null);
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => console.log(news, 'this updated news'), [news]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -71,7 +79,7 @@ const SettingsScreen = () => {
   }, [navigation]);
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <BlogCard item={item} navigation={navigation} key={item.id} />;
+    return <BlogCard item={item} navigation={navigation} key={item?.id} />;
   });
 
   const renderItem = ({item}) => {
@@ -143,7 +151,7 @@ const SettingsScreen = () => {
           </Text>
         </View>
 
-        {news.map(item => {
+        {news?.map(item => {
           return <BlogItem item={item} navigation={navigation} />;
         })}
         {/* <FlatList
