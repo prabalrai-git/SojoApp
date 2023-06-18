@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -128,78 +130,81 @@ const InfoScreen = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f7'}}>
-        <CreateProfileHeader />
-        <Text
-          style={{
-            color: 'black',
-            paddingHorizontal: 20,
-            paddingLeft: 39,
-            fontSize: 18,
-            textAlign: 'left',
-            marginTop: 30,
-            fontWeight: '500',
-          }}>
-          Tell us about you.
-        </Text>
-        <Text
-          style={{
-            color: 'black',
-            paddingHorizontal: 20,
-            paddingLeft: 39,
-            fontSize: 16,
-            textAlign: 'left',
-            marginTop: 10,
-            fontWeight: '500',
-            marginBottom: 35,
-          }}>
-          Inform us about yourself so we can curate news stories that are
-          relevant to you.
-        </Text>
-        <View style={styles.container}>
-          {errorMessage && (
-            <Text style={styles.errorMessage}>{errorMessage}</Text>
-          )}
-          <View style={styles.content}>
-            <Text style={styles.label}>What age group do you belong to ?</Text>
-            <Picker
-              style={styles.inputContainer}
-              selectedValue={ageGroup}
-              onValueChange={itemValue => setAgeGroup(itemValue)}>
-              <Picker.Item label="14-20" value="14-20" />
-              <Picker.Item label="21-35" value="21-35" />
-              <Picker.Item label="36-50" value="36-50" />
-              <Picker.Item label="51 & above" value="51 & above" />
-            </Picker>
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.label}>What is your gender ?</Text>
-            <Picker
-              style={styles.inputContainer}
-              selectedValue={gender}
-              onValueChange={itemValue => setGender(itemValue)}>
-              <Picker.Item label="Prefer not to say" value="" />
-              <Picker.Item label="Male" value="Male" />
-              <Picker.Item label="Female" value="Female" />
-              <Picker.Item label="Others" value="Others" />
-            </Picker>
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.label}>What occupation are you in ?</Text>
-            <Picker
-              style={styles.inputContainer}
-              selectedValue={occupation}
-              onValueChange={itemValue => setOccupation(itemValue)}>
-              {occupations.map(item => {
-                return (
-                  <Picker.Item
-                    key={item.id}
-                    label={item.name}
-                    value={item.id}
-                  />
-                );
-              })}
-            </Picker>
-            {/* 
+        <ScrollView>
+          <CreateProfileHeader />
+          <Text
+            style={{
+              color: 'black',
+              paddingHorizontal: 20,
+              paddingLeft: 39,
+              fontSize: 18,
+              textAlign: 'left',
+              marginTop: 30,
+              fontWeight: '500',
+            }}>
+            Tell us about you.
+          </Text>
+          <Text
+            style={{
+              color: 'black',
+              paddingHorizontal: 20,
+              paddingLeft: 39,
+              fontSize: 16,
+              textAlign: 'left',
+              marginTop: 10,
+              fontWeight: '500',
+              marginBottom: 35,
+            }}>
+            Inform us about yourself so we can curate news stories that are
+            relevant to you.
+          </Text>
+          <View style={styles.container}>
+            {errorMessage && (
+              <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
+            <View style={styles.content}>
+              <Text style={styles.label}>
+                What age group do you belong to ?
+              </Text>
+              <Picker
+                style={styles.inputContainer}
+                selectedValue={ageGroup}
+                onValueChange={itemValue => setAgeGroup(itemValue)}>
+                <Picker.Item label="14-20" value="14-20" />
+                <Picker.Item label="21-35" value="21-35" />
+                <Picker.Item label="36-50" value="36-50" />
+                <Picker.Item label="51 & above" value="51 & above" />
+              </Picker>
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.label}>What is your gender ?</Text>
+              <Picker
+                style={styles.inputContainer}
+                selectedValue={gender}
+                onValueChange={itemValue => setGender(itemValue)}>
+                <Picker.Item label="Prefer not to say" value="" />
+                <Picker.Item label="Male" value="Male" />
+                <Picker.Item label="Female" value="Female" />
+                <Picker.Item label="Others" value="Others" />
+              </Picker>
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.label}>What occupation are you in ?</Text>
+              <Picker
+                style={styles.inputContainer}
+                selectedValue={occupation}
+                onValueChange={itemValue => setOccupation(itemValue)}>
+                {occupations.map(item => {
+                  return (
+                    <Picker.Item
+                      key={item.id}
+                      label={item.name}
+                      value={item.id}
+                    />
+                  );
+                })}
+              </Picker>
+              {/* 
             <View style={styles.checkboxContainer}>
               <MaterialIcons
                 name={skipNSFW ? 'check-box' : 'check-box-outline-blank'}
@@ -212,54 +217,55 @@ const InfoScreen = ({navigation}) => {
               </Text>
             </View> */}
 
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Preferences');
-                // if (!loading) {
-                //   handleFormSubmit();
-                // }
-              }}
-              style={styles.loginButton}>
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <>
-                  <Text style={styles.loginText}>Continue</Text>
-                  <MaterialIcons
-                    name="arrow-forward"
-                    size={20}
-                    color="#FFFFFF"
-                    style={styles.loginButtonIcon}
-                  />
-                </>
-              )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Preferences');
+                  // if (!loading) {
+                  //   handleFormSubmit();
+                  // }
+                }}
+                style={styles.loginButton}>
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Text style={styles.loginText}>Continue</Text>
+                    <MaterialIcons
+                      name="arrow-forward"
+                      size={20}
+                      color="#FFFFFF"
+                      style={styles.loginButtonIcon}
+                    />
+                  </>
+                )}
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => {
-                if (!loading) {
-                  handleFormSubmit();
-                }
-              }}
-              style={[styles.loginButton, {backgroundColor: 'white'}]}>
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <>
-                  <Text style={[styles.loginText, {color: '#5fbc7d'}]}>
-                    Skip for now
-                  </Text>
-                  <MaterialIcons
-                    name="block-flipped"
-                    size={20}
-                    color="#5fbc7d"
-                    style={styles.loginButtonIcon}
-                  />
-                </>
-              )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (!loading) {
+                    handleFormSubmit();
+                  }
+                }}
+                style={[styles.loginButton, {backgroundColor: 'white'}]}>
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Text style={[styles.loginText, {color: '#5fbc7d'}]}>
+                      Skip for now
+                    </Text>
+                    <MaterialIcons
+                      name="block-flipped"
+                      size={20}
+                      color="#5fbc7d"
+                      style={styles.loginButtonIcon}
+                    />
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </>
   );

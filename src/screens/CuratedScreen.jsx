@@ -131,28 +131,32 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={styles.topBar}>
-        <Text style={styles.title}>My Feed</Text>
-        <HomeHeader />
-      </View>
-      <SearchBar />
-      <FlatList
-        data={news}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ListFooterComponent={renderFooter}
-        onEndReachedThreshold={0.5}
-        showsHorizontalScrollIndicator={false}
-        onEndReached={handleLoadMore}
-        refreshing={page === 1 && loading}
-        onRefresh={() => {
-          setPage(1);
-          setNews([]);
-          navigation.replace('Curated');
-        }}
-      />
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView style={{flex: 1}}>
+        <StatusBar backgroundColor="red" />
+        <View style={styles.topBar}>
+          <Text style={styles.title}>My Feed</Text>
+          <HomeHeader />
+        </View>
+        <SearchBar />
+        <FlatList
+          data={news}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ListFooterComponent={renderFooter}
+          onEndReachedThreshold={0.5}
+          showsHorizontalScrollIndicator={false}
+          onEndReached={handleLoadMore}
+          refreshing={page === 1 && loading}
+          onRefresh={() => {
+            setPage(1);
+            setNews([]);
+            navigation.replace('Curated');
+          }}
+        />
+      </SafeAreaView>
+    </>
   );
 };
 

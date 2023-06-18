@@ -19,7 +19,12 @@ const HomeHeader = () => {
         onPress={() => {
           navigation.navigate('EditTopicsScreen');
         }}>
-        <Icon name="edit" size={18} color="#FEFEFF" style={{marginTop: 2}} />
+        <Icon
+          name="edit"
+          size={18}
+          color="#FEFEFF"
+          style={{marginTop: 2, marginLeft: 4}}
+        />
         <Text style={styles.title}>Edit Topics</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -36,13 +41,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#52c080',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     borderRadius: 8,
     flex: 1.1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 14,
@@ -50,5 +56,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 3,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

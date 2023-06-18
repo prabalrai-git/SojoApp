@@ -136,61 +136,65 @@ const SettingsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={styles.topBar}>
-        <Text style={styles.topBarText}>My Profile</Text>
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
 
-        <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={() => navigation.navigate('ProfileSettings')}>
-          <Image
-            source={require('../assets/settings.png')}
-            style={{
-              width: 20,
-              height: 20,
-              resizeMode: 'contain',
-              tintColor: 'white',
-              alignSelf: 'center',
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.topBar}>
+          <Text style={styles.topBarText}>My Profile</Text>
 
-      {/* start of content/ body */}
-
-      <ScrollView>
-        <View style={{paddingHorizontal: 15, marginTop: 10, marginBottom: -15}}>
-          <Text style={{fontWeight: 'bold', color: 'black', fontSize: 22}}>
-            Albert Flores
-          </Text>
-          <Text style={{color: 'grey', marginBottom: 15}}>Student</Text>
-
-          <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnTxt}>Choose Your Topics</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnTxt}>Edit Profile</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={{
-              width: '100%',
-              backgroundColor: 'lightgrey',
-              height: 1,
-              marginBottom: 20,
-            }}></View>
-
-          <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-            Saved stories
-          </Text>
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => navigation.navigate('ProfileSettings')}>
+            <Image
+              source={require('../assets/settings.png')}
+              style={{
+                width: 20,
+                height: 20,
+                resizeMode: 'contain',
+                tintColor: 'white',
+                alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
         </View>
 
-        {news?.map(item => {
-          return <BlogItem item={item} navigation={navigation} />;
-        })}
-        {/* <FlatList
+        {/* start of content/ body */}
+
+        <ScrollView>
+          <View
+            style={{paddingHorizontal: 15, marginTop: 10, marginBottom: -15}}>
+            <Text style={{fontWeight: 'bold', color: 'black', fontSize: 22}}>
+              Albert Flores
+            </Text>
+            <Text style={{color: 'grey', marginBottom: 15}}>Student</Text>
+
+            <View style={styles.btnContainer}>
+              <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnTxt}>Choose Your Topics</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnTxt}>Edit Profile</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: 'lightgrey',
+                height: 1,
+                marginBottom: 20,
+              }}></View>
+
+            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+              Saved stories
+            </Text>
+          </View>
+
+          {news?.map(item => {
+            return <BlogItem item={item} navigation={navigation} />;
+          })}
+          {/* <FlatList
           data={news}
           renderItem={renderItem}
           keyExtractor={item => item.id}
@@ -205,8 +209,9 @@ const SettingsScreen = () => {
             navigation.replace('Curated');
           }}
         /> */}
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 

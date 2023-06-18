@@ -116,7 +116,8 @@ const Category = () => {
 
   return (
     <>
-      <StatusBar backgroundColor={'#27B161'} />
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+
       <SafeAreaView style={{flex: 1, backgroundColor: '#F3F4F7'}}>
         <View style={styles.topBar}>
           <Text style={styles.title}>My Topics</Text>

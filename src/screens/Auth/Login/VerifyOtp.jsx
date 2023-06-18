@@ -81,7 +81,7 @@ const VerifyOtp = ({navigation}) => {
           />
           <Text style={{color: 'grey', marginVertical: 10}}>
             Resend code after{' '}
-            <Text style={{color: 'black', fontWeight: 'bold '}}>
+            <Text style={{color: 'black', fontWeight: '600'}}>
               {resendCount}
             </Text>{' '}
             seconds?

@@ -6,6 +6,7 @@ import {
   StatusBar,
   TextInput,
   Keyboard,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Axios from './../../api/server';
@@ -126,52 +127,58 @@ const Category = () => {
   }, [term]);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#F3F4F7'}}>
-      <View style={styles.topBar}>
-        <Text style={styles.title}>Explore Topics</Text>
-        <EditTopicsHeader />
-      </View>
-      <View style={{backgroundColor: '#E6E6E8'}}>
-        <View style={styles.container}>
-          <TextInput
-            style={styles.input}
-            placeholder="Search for a topic..."
-            placeholderTextColor="#A9A9A9"
-            value={term}
-            onChangeText={setTerm}
-            onSubmitEditing={searchTopic}
-          />
-          <Icon
-            name="search"
-            size={20}
-            color="#000"
-            onPress={() => {
-              Keyboard.dismiss();
-              if (term.trim().length > 0) {
-                searchTopic();
-              } else {
-                setFilteredTopics(data);
-              }
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{backgroundColor: '#F3F4F7'}}>
+          <View style={styles.topBar}>
+            <Text style={styles.title}>Explore Topics</Text>
+            <EditTopicsHeader />
+          </View>
+          <View style={{backgroundColor: '#E6E6E8'}}>
+            <View style={styles.container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Search for a topic..."
+                placeholderTextColor="#A9A9A9"
+                value={term}
+                onChangeText={setTerm}
+                onSubmitEditing={searchTopic}
+              />
+              <Icon
+                name="search"
+                size={20}
+                color="#000"
+                onPress={() => {
+                  Keyboard.dismiss();
+                  if (term.trim().length > 0) {
+                    searchTopic();
+                  } else {
+                    setFilteredTopics(data);
+                  }
+                }}
+              />
+            </View>
+          </View>
+          <FlatList
+            data={filteredTopics}
+            renderItem={({item}) => {
+              return (
+                <TopicLoading
+                  item={item}
+                  selectedTopics={selectedTopics}
+                  config={config}
+                  fetchProfile={fetchProfile}
+                />
+              );
             }}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
           />
         </View>
-      </View>
-      <FlatList
-        data={filteredTopics}
-        renderItem={({item}) => {
-          return (
-            <TopicLoading
-              item={item}
-              selectedTopics={selectedTopics}
-              config={config}
-              fetchProfile={fetchProfile}
-            />
-          );
-        }}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+      </SafeAreaView>
+    </>
   );
 };
 

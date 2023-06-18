@@ -13,6 +13,8 @@ import {
   Keyboard,
   StatusBar,
   TouchableWithoutFeedback,
+  SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import Axios from './../api/server';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -118,34 +120,36 @@ export const HomeDrawerNavigator = () => {
 
   const CustomHeader = ({navigation}) => {
     return (
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            setTerm('');
-            setFilteredTopics(topics);
-            navigation.closeDrawer();
-          }}>
-          <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
-        </TouchableOpacity>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Search for a topic"
-            placeholderTextColor="#A9A9A9"
-            style={styles.input}
-            value={term}
-            onChangeText={setTerm}
-          />
-          <FontAwesomeIcon
-            name="search"
-            size={22}
-            color="#7C8089"
-            style={styles.searchIcon}
+      <SafeAreaView>
+        <View style={styles.header}>
+          <TouchableOpacity
             onPress={() => {
-              Keyboard.dismiss();
-            }}
-          />
+              setTerm('');
+              setFilteredTopics(topics);
+              navigation.closeDrawer();
+            }}>
+            <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
+          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Search for a topic"
+              placeholderTextColor="#A9A9A9"
+              style={styles.input}
+              value={term}
+              onChangeText={setTerm}
+            />
+            <FontAwesomeIcon
+              name="search"
+              size={22}
+              color="#7C8089"
+              style={styles.searchIcon}
+              onPress={() => {
+                Keyboard.dismiss();
+              }}
+            />
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   };
 
@@ -157,51 +161,55 @@ export const HomeDrawerNavigator = () => {
     }, [isFocused]);
 
     return (
-      <DrawerContentScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          paddingBottom: 10,
-        }}>
-        <TouchableOpacity
-          style={styles.container}
-          onPress={() => {
-            navigation.navigate('Curated');
-            navigation.closeDrawer();
+      <SafeAreaView style={{flex: 1}}>
+        <DrawerContentScrollView
+          showsVerticalScrollIndicator={false}
+          style={{
+            paddingBottom: 10,
           }}>
-          <View style={styles.labelContainer}>
-            <Text style={styles.labelText}>All Topics</Text>
-            <Icon
-              name="arrowright"
-              color="#161B21"
-              size={22}
-              style={styles.drawerItemIcon}
-            />
-          </View>
-        </TouchableOpacity>
-        {filteredTopics.map(item => {
-          return (
-            <TouchableOpacity
-              style={styles.container}
-              key={item.id}
-              onPress={() => {
-                navigation.navigate('CategoryScreen', {
-                  id: item.id,
-                });
-                navigation.closeDrawer();
-              }}>
-              <View style={styles.labelContainer}>
-                <Text style={styles.labelText}>{item.name}</Text>
-                <Icon
-                  name="arrowright"
-                  color="#161B21"
-                  size={22}
-                  style={styles.drawerItemIcon}
-                />
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </DrawerContentScrollView>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => {
+              navigation.navigate('Curated');
+              navigation.closeDrawer();
+            }}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.labelText}>All Topics</Text>
+              <Icon
+                name="arrowright"
+                color="#161B21"
+                size={22}
+                style={styles.drawerItemIcon}
+              />
+            </View>
+          </TouchableOpacity>
+          <ScrollView>
+            {filteredTopics.map(item => {
+              return (
+                <TouchableOpacity
+                  style={styles.container}
+                  key={item.id}
+                  onPress={() => {
+                    navigation.navigate('CategoryScreen', {
+                      id: item.id,
+                    });
+                    navigation.closeDrawer();
+                  }}>
+                  <View style={styles.labelContainer}>
+                    <Text style={styles.labelText}>{item.name}</Text>
+                    <Icon
+                      name="arrowright"
+                      color="#161B21"
+                      size={22}
+                      style={styles.drawerItemIcon}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </DrawerContentScrollView>
+      </SafeAreaView>
     );
   };
   return (
@@ -275,35 +283,37 @@ export const ExploreDrawerNavigator = () => {
     }, [isFocused]);
 
     return (
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            setTerm('');
-            setFilteredTopics(topics);
-            navigation.closeDrawer();
-          }}>
-          <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
-        </TouchableOpacity>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Search for a topic"
-            placeholderTextColor="#A9A9A9"
-            style={styles.input}
-            defaultValue={term}
-            onChangeText={setTerm}
-            onSubmitEditing={searchTopic}
-          />
-          <FontAwesomeIcon
-            name="search"
-            size={22}
-            color="#7C8089"
-            style={styles.searchIcon}
+      <SafeAreaView>
+        <View style={styles.header}>
+          <TouchableOpacity
             onPress={() => {
-              searchTopic();
-            }}
-          />
+              setTerm('');
+              setFilteredTopics(topics);
+              navigation.closeDrawer();
+            }}>
+            <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
+          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Search for a topic"
+              placeholderTextColor="#A9A9A9"
+              style={styles.input}
+              defaultValue={term}
+              onChangeText={setTerm}
+              onSubmitEditing={searchTopic}
+            />
+            <FontAwesomeIcon
+              name="search"
+              size={22}
+              color="#7C8089"
+              style={styles.searchIcon}
+              onPress={() => {
+                searchTopic();
+              }}
+            />
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   };
 

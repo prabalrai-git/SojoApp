@@ -6,6 +6,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  SafeAreaView,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -90,28 +91,33 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.topBar}>
-        <Text style={styles.title}>Explore</Text>
-        <GlobalHeader />
-      </View>
-      <SearchBar />
-      <FlatList
-        data={blogs}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ListFooterComponent={renderFooter}
-        onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-        onEndReached={handleLoadMore}
-        refreshing={page === 1 && loading}
-        onRefresh={() => {
-          setPage(1);
-          setBlogs([]);
-          navigation.replace('Explore');
-        }}
-      />
-    </View>
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView style={{flex: 1}}>
+        <View>
+          <View style={styles.topBar}>
+            <Text style={styles.title}>Explore</Text>
+            <GlobalHeader />
+          </View>
+          <SearchBar />
+          <FlatList
+            data={blogs}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            ListFooterComponent={renderFooter}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            refreshing={page === 1 && loading}
+            onRefresh={() => {
+              setPage(1);
+              setBlogs([]);
+              navigation.replace('Explore');
+            }}
+          />
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
 

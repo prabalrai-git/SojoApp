@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   ActivityIndicator,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -57,63 +58,64 @@ const BlogScreen = ({route, navigation}) => {
 
   return (
     <>
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={{
-            alignSelf: 'center',
-            paddingHorizontal: 15,
-            padding: 6,
-          }}
-          onPress={() => navigation.pop()}>
-          <Image
-            source={require('../assets/arrow-left.png')}
-            style={{tintColor: 'white', width: 20, height: 20}}
-          />
-        </TouchableOpacity>
-
-        <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+      <SafeAreaView style={{backgroundColor: '#26B160'}}>
+        <View style={styles.topBar}>
           <TouchableOpacity
             style={{
-              backgroundColor: '#52c080',
+              alignSelf: 'center',
+              paddingHorizontal: 15,
               padding: 6,
-              borderRadius: 5,
-              paddingHorizontal: 10,
-              flexDirection: 'row',
-            }}>
+            }}
+            onPress={() => navigation.pop()}>
             <Image
-              source={require('../assets/saved.png')}
-              style={{
-                tintColor: 'white',
-                resizeMode: 'contain',
-                width: 20,
-                height: 20,
-                marginRight: 5,
-              }}
-            />
-            <Text style={{color: 'white'}}>Bookmark</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              marginLeft: 10,
-              backgroundColor: '#52c080',
-              padding: 6,
-              borderRadius: 5,
-              paddingHorizontal: 10,
-              flexDirection: 'row',
-            }}>
-            <Image
-              source={require('../assets/share.png')}
-              style={{
-                tintColor: 'white',
-                resizeMode: 'contain',
-                width: 23,
-                height: 23,
-              }}
+              source={require('../assets/arrow-left.png')}
+              style={{tintColor: 'white', width: 20, height: 20}}
             />
           </TouchableOpacity>
-        </View>
 
-        {/* 
+          <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#52c080',
+                padding: 6,
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                flexDirection: 'row',
+              }}>
+              <Image
+                source={require('../assets/saved.png')}
+                style={{
+                  tintColor: 'white',
+                  resizeMode: 'contain',
+                  width: 20,
+                  height: 20,
+                  marginRight: 5,
+                }}
+              />
+              <Text style={{color: 'white'}}>Bookmark</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                marginLeft: 10,
+                backgroundColor: '#52c080',
+                padding: 6,
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                flexDirection: 'row',
+              }}>
+              <Image
+                source={require('../assets/share.png')}
+                style={{
+                  tintColor: 'white',
+                  resizeMode: 'contain',
+                  width: 23,
+                  height: 23,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* 
         <TouchableOpacity style={styles.saveBtn}>
           <View>
             <Image
@@ -131,58 +133,61 @@ const BlogScreen = ({route, navigation}) => {
             <Text style={styles.topBarText}>Save Changes</Text>
           </View>
         </TouchableOpacity> */}
-      </View>
-      {data ? (
-        <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={styles.container}
-          showsVerticalScrollIndicator={false}>
-          <View style={styles.blog}>
-            <Text style={styles.title}>{data.title}</Text>
-            <View style={styles.categories}>
-              <Text style={styles.topic}>{data.topics[0].name}</Text>
-              <Text style={styles.date}>
-                Posted on {moment(data.createdAt).format('DD MMM YYYY')}
-              </Text>
-            </View>
-            {/* <Image source={{uri: data.image}} style={styles.image} /> */}
-            <FastImage
-              source={{uri: data.image}}
-              style={styles.image}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-            <Text style={styles.previewText}>{data.previewText}</Text>
+        </View>
+        {data ? (
+          <ScrollView
+            ref={scrollRef}
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}>
+            <View style={styles.blog}>
+              <Text style={styles.title}>{data.title}</Text>
+              <View style={styles.categories}>
+                <Text style={styles.topic}>{data.topics[0].name}</Text>
+                <Text style={styles.date}>
+                  Posted on {moment(data.createdAt).format('DD MMM YYYY')}
+                </Text>
+              </View>
+              {/* <Image source={{uri: data.image}} style={styles.image} /> */}
+              <FastImage
+                source={{uri: data.image}}
+                style={styles.image}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+              <Text style={styles.previewText}>{data.previewText}</Text>
 
-            <HTML
-              source={{html: data.news}}
-              contentWidth={width}
-              tagsStyles={markdownStyles}
-            />
+              <HTML
+                source={{html: data.news}}
+                contentWidth={width}
+                tagsStyles={markdownStyles}
+              />
 
-            {/* <View style={styles.shareWrapper}>
+              {/* <View style={styles.shareWrapper}>
           <Text style={styles.shareTitle}>Share this story</Text>
         </View> */}
 
-            <Text
-              style={{
-                fontSize: 25,
-                fontWeight: 'bold',
-                marginTop: 15,
-                marginBottom: 30,
-                color: '#2B2D34',
-              }}>
-              Similar News
-            </Text>
-          </View>
-          <View style={{flex: 1}}>
-            {similarBlogs.map(item => {
-              return <Card key={item.id} item={item} navigation={navigation} />;
-            })}
-          </View>
-        </ScrollView>
-      ) : (
-        <ActivityIndicator />
-      )}
+              <Text
+                style={{
+                  fontSize: 25,
+                  fontWeight: 'bold',
+                  marginTop: 15,
+                  marginBottom: 30,
+                  color: '#2B2D34',
+                }}>
+                Similar News
+              </Text>
+            </View>
+            <View style={{flex: 1}}>
+              {similarBlogs.map(item => {
+                return (
+                  <Card key={item.id} item={item} navigation={navigation} />
+                );
+              })}
+            </View>
+          </ScrollView>
+        ) : (
+          <ActivityIndicator />
+        )}
+      </SafeAreaView>
     </>
   );
 };

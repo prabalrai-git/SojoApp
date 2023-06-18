@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 8,
-    flex: 1.3,
+    flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
     // marginRight: 3,
     fontWeight: 'bold',
     textAlign: 'center',
-    flex: 3,
+    flex: 1,
   },
 });

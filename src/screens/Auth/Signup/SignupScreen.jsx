@@ -10,6 +10,7 @@ import {
   Image,
   StatusBar,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -75,112 +76,114 @@ const SignupScreen = ({navigation}) => {
 
   return (
     <>
-      <StatusBar backgroundColor={'#f3f4f7'} />
       <SafeAreaView
         style={{flex: 1, backgroundColor: '#f3f4f7', position: 'relative'}}>
-        <CreateProfileHeader />
+        <StatusBar backgroundColor={'#f3f4f7'} />
+        <ScrollView>
+          <CreateProfileHeader />
 
-        <Text
-          style={{
-            color: 'black',
-            paddingHorizontal: 20,
-            paddingLeft: 39,
-            fontSize: 16,
-            textAlign: 'left',
-            marginTop: 30,
-            fontWeight: '500',
-          }}>
-          Get personalized news stories every day. Create a free account now.
-        </Text>
-        <View style={styles.container}>
-          {errorMessage && (
-            <Text style={styles.errorMessage}>{errorMessage}</Text>
-          )}
-          <View style={styles.content}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <Text style={styles.label}>USERNAME</Text>
-              <TextInput
-                value={username}
-                onChangeText={setUsername}
-                style={styles.input}
-                placeholder="Enter your username"
-              />
-              <Text style={styles.label}>EMAIL ADDRESS</Text>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                style={styles.input}
-                placeholder="Enter your email"
-              />
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>PASSWORD</Text>
-                <View style={styles.inputWrapper}>
-                  <TextInput
-                    value={password}
-                    onChangeText={setPassword}
-                    style={styles.passwordInput}
-                    placeholder="Enter your password"
-                    secureTextEntry={!showPassword}
-                  />
-                  <TouchableOpacity
-                    onPress={toggleShowPassword}
-                    style={styles.iconWrapper}>
-                    <FontAwesome
-                      name={showPassword ? 'eye' : 'eye-slash'}
-                      size={20}
-                      color={'grey'}
+          <Text
+            style={{
+              color: 'black',
+              paddingHorizontal: 20,
+              paddingLeft: 39,
+              fontSize: 16,
+              textAlign: 'left',
+              marginTop: 30,
+              fontWeight: '500',
+            }}>
+            Get personalized news stories every day. Create a free account now.
+          </Text>
+          <View style={styles.container}>
+            {errorMessage && (
+              <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
+            <View style={styles.content}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <Text style={styles.label}>USERNAME</Text>
+                <TextInput
+                  value={username}
+                  onChangeText={setUsername}
+                  style={styles.input}
+                  placeholder="Enter your username"
+                />
+                <Text style={styles.label}>EMAIL ADDRESS</Text>
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  style={styles.input}
+                  placeholder="Enter your email"
+                />
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>PASSWORD</Text>
+                  <View style={styles.inputWrapper}>
+                    <TextInput
+                      value={password}
+                      onChangeText={setPassword}
+                      style={styles.passwordInput}
+                      placeholder="Enter your password"
+                      secureTextEntry={!showPassword}
                     />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={toggleShowPassword}
+                      style={styles.iconWrapper}>
+                      <FontAwesome
+                        name={showPassword ? 'eye' : 'eye-slash'}
+                        size={20}
+                        color={'grey'}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-              <Text style={styles.label}>PHONE NUMBER</Text>
-              <TextInput
-                value={phonenumber}
-                onChangeText={setPhonenumber}
-                style={styles.input}
-                placeholder="Enter your phone number"
-              />
-
-              <View style={styles.checkboxContainer}>
-                <MaterialIcons
-                  name={rememberMe ? 'check-box' : 'check-box-outline-blank'}
-                  size={25}
-                  color="#000000"
-                  onPress={() => setRememberMe(!rememberMe)}
+                <Text style={styles.label}>PHONE NUMBER</Text>
+                <TextInput
+                  value={phonenumber}
+                  onChangeText={setPhonenumber}
+                  style={styles.input}
+                  placeholder="Enter your phone number"
                 />
 
-                <Text style={styles.checkboxLabel}>
-                  I agree to{' '}
-                  <Text style={{color: '#61c17f'}}> Privacy Policy</Text> &
-                  <Text style={{color: '#61c17f'}}> Terms & Conditions</Text>
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('InfoScreen');
-                  // if (!loading) {
-                  //   handleSignup();
-                  // }
-                }}
-                style={styles.loginButton}>
-                {loading ? (
-                  <ActivityIndicator style={styles.loginText} color="#fff" />
-                ) : (
-                  <>
-                    <Text style={styles.loginText}>Create Account</Text>
-                    <MaterialIcons
-                      name="arrow-forward"
-                      size={20}
-                      color="#FFFFFF"
-                      style={styles.loginButtonIcon}
-                    />
-                  </>
-                )}
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
+                <View style={styles.checkboxContainer}>
+                  <MaterialIcons
+                    name={rememberMe ? 'check-box' : 'check-box-outline-blank'}
+                    size={25}
+                    color="#000000"
+                    onPress={() => setRememberMe(!rememberMe)}
+                  />
+
+                  <Text style={styles.checkboxLabel}>
+                    I agree to{' '}
+                    <Text style={{color: '#61c17f'}}> Privacy Policy</Text> &
+                    <Text style={{color: '#61c17f'}}> Terms & Conditions</Text>
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('InfoScreen');
+                    // if (!loading) {
+                    //   handleSignup();
+                    // }
+                  }}
+                  style={styles.loginButton}>
+                  {loading ? (
+                    <ActivityIndicator style={styles.loginText} color="#fff" />
+                  ) : (
+                    <>
+                      <Text style={styles.loginText}>Create Account</Text>
+                      <MaterialIcons
+                        name="arrow-forward"
+                        size={20}
+                        color="#FFFFFF"
+                        style={styles.loginButtonIcon}
+                      />
+                    </>
+                  )}
+                </TouchableOpacity>
+              </KeyboardAvoidingView>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </>
   );
