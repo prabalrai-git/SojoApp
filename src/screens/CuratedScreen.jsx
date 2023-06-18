@@ -13,6 +13,7 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import HomeHeader from './../components/HomeHeader';
+import axios from 'axios';
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
@@ -33,6 +34,7 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('token');
+
       if (token) {
         const config = {
           headers: {
@@ -57,10 +59,10 @@ const HomeScreen = ({navigation}) => {
   const fetchProfile = async () => {
     try {
       const res = await Axios.get('/users/profile', config);
+
       if (!res.data.data.isComplete) {
         return navigation.navigate('Auth', {screen: 'InfoScreen'});
       }
-
       setProfile(res.data.data);
     } catch (err) {
       console.log(err);
@@ -80,8 +82,10 @@ const HomeScreen = ({navigation}) => {
   // fetch user news
   const fetchNews = async () => {
     try {
-      const res = await Axios.get(`/users/news?page=${page}`, config);
-
+      const res = await Axios.get(
+        `/users/news?page=${page}&id=${profile?.id}`,
+        config,
+      );
       news.length > 0
         ? setNews(prevData => [...prevData, ...res.data.data])
         : setNews(res.data.data);
@@ -94,7 +98,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     config && fetchNews(page);
-  }, [config, page]);
+  }, [config, page, profile]);
 
   const handleLoadMore = () => {
     if (hasMore) {
@@ -111,7 +115,14 @@ const HomeScreen = ({navigation}) => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} navigation={navigation} key={item.id} />;
+    return (
+      <Card
+        item={item}
+        navigation={navigation}
+        key={item.id}
+        profile={profile}
+      />
+    );
   });
 
   const renderItem = ({item}) => {

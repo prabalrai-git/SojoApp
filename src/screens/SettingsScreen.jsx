@@ -25,6 +25,8 @@ const SettingsScreen = () => {
   const [page, setPage] = useState(1);
   const [config, setConfig] = useState(null);
   const [hasMore, setHasMore] = useState(false);
+  const [profile, setProfile] = useState();
+  const [renderBookmarked, setRenderBookmarked] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -46,29 +48,53 @@ const SettingsScreen = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [config]);
+  }, [config, renderBookmarked, profile]);
 
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+
+      if (!res.data.data.isComplete) {
+        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+      }
+      setProfile(res.data.data);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setProfile(null);
+        // return router.replace('/');
+      }
+    }
+  };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
   const fetchNews = async () => {
     try {
       const res = await Axios.post(
         '/users/bookmarks/getBookmarkedNews',
-        {userId: 25},
+        {userId: profile?.id},
         config,
       );
 
       // return console.log('this is the log', res.data.bookmarkedNews);
 
-      news.length > 0
-        ? setNews(prevData => [...prevData, ...res.data.bookmarkedNews])
-        : setNews(res.data.bookmarkedNews);
+      setNews(res.data.bookmarkedNews);
       setLoading(false);
       setHasMore(res.data.pagination?.nextPage !== null);
+      // if (news.length > 0) {
+      // }
+      // ? setNews(prevData => [...prevData, ...res.data.bookmarkedNews])
+      // :
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => console.log(news, 'this updated news'), [news]);
+  // useEffect(() => console.log(news, 'this updated news'), [news]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -79,7 +105,16 @@ const SettingsScreen = () => {
   }, [navigation]);
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <BlogCard item={item} navigation={navigation} key={item?.id} />;
+    return (
+      <BlogCard
+        item={item}
+        navigation={navigation}
+        profile={profile}
+        key={item?.id}
+        fromBookmarks={true}
+        setRenderBookmarked={setRenderBookmarked}
+      />
+    );
   });
 
   const renderItem = ({item}) => {

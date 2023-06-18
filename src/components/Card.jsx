@@ -6,13 +6,19 @@ import Axios from './../api/server';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {log} from 'react-native-reanimated';
 
-const BlogCard = ({item, navigation}) => {
-  // console.log('this is the item', item?.isBookmarkedByUser);
+const BlogCard = ({
+  item,
+  navigation,
+  profile,
+  fromBookmarks,
+  setRenderBookmarked,
+}) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
-    item?.isBookmarkedByUser ? item.isBookmarkedByUser : false,
+    item?.isBookmarkedByUser || fromBookmarks ? true : false,
   );
   const [config, setConfig] = useState();
 
@@ -44,17 +50,16 @@ const BlogCard = ({item, navigation}) => {
   const bookmarkPressed = () => {
     const toggleBookmark = async () => {
       try {
+        // return console.log({userId: profile?.id, newsId: item.id});
         const res = await Axios.post(
           '/users/bookmarks/toggleOrAddBookmark',
-          {userId: 4, newsId: item.id},
+          {userId: profile?.id, newsId: item.id},
           config,
         );
-
-        // console.log(
-        //   'this is the log',
-        //   res.data,
-        //   '11111111111111111111111111111111111111',
-        // );
+        console.log(res.data);
+        if (setRenderBookmarked) {
+          setRenderBookmarked(prev => !prev);
+        }
         setToggled(prev => !prev);
       } catch (err) {
         console.log(err);
@@ -80,12 +85,12 @@ const BlogCard = ({item, navigation}) => {
                   <Image
                     source={
                       toggled
-                        ? require('../assets/marked.png')
-                        : require('../assets/unmarked.png')
+                        ? require('../assets/marking.png')
+                        : require('../assets/inmarking.png')
                     }
                     style={{
-                      width: 45,
-                      height: 45,
+                      width: toggled ? 120 : 150,
+                      height: 55,
                       resizeMode: 'contain',
                       position: 'absolute',
                       top: 190,
