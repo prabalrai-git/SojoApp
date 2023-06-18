@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState} from 'react';
 import CreateProfileHeader from '../../../components/CreateProfileHeader';
@@ -18,7 +19,7 @@ const VerifyEmail = ({navigation}) => {
   return (
     <>
       <StatusBar backgroundColor={'#f3f4f7'} />
-      <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f7'}}>
         <CreateProfileHeader />
         <Text
           style={{
@@ -64,7 +65,7 @@ const VerifyEmail = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

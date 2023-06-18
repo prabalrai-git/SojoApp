@@ -14,7 +14,7 @@ const WelcomeScreen = ({navigation}) => {
     navigation && checkIsLoggedIn();
   }, [navigation]);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Image
           source={require('./../../../assets/ion_earth-outline.png')}
@@ -44,7 +44,7 @@ const WelcomeScreen = ({navigation}) => {
           <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

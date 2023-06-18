@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Image,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -75,7 +76,8 @@ const SignupScreen = ({navigation}) => {
   return (
     <>
       <StatusBar backgroundColor={'#f3f4f7'} />
-      <View style={{flex: 1, backgroundColor: '#f3f4f7', position: 'relative'}}>
+      <SafeAreaView
+        style={{flex: 1, backgroundColor: '#f3f4f7', position: 'relative'}}>
         <CreateProfileHeader />
 
         <Text
@@ -179,7 +181,7 @@ const SignupScreen = ({navigation}) => {
             </KeyboardAvoidingView>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -119,7 +120,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.topBar}>
         <Text style={styles.title}>My Feed</Text>
         <HomeHeader />
@@ -140,7 +141,7 @@ const HomeScreen = ({navigation}) => {
           navigation.replace('Curated');
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {logoutUser} from './../helper/auth';
@@ -100,7 +101,7 @@ const SettingsScreen = () => {
   };
 
   return (
-    <View>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.topBar}>
         <Text style={styles.topBarText}>My Profile</Text>
 
@@ -170,7 +171,7 @@ const SettingsScreen = () => {
           }}
         /> */}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

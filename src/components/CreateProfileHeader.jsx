@@ -1,11 +1,18 @@
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {windowWidth} from '../helper/usefulConstants';
 const CreateProfileHeader = () => {
   const navigation = useNavigation();
   return (
-    <View style={styles.header}>
+    <SafeAreaView style={styles.header}>
       <TouchableOpacity
         onPress={() => navigation.pop()}
         style={{
@@ -35,7 +42,7 @@ const CreateProfileHeader = () => {
           }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

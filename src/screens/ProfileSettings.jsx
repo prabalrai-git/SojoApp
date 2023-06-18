@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Button,
   TextInput,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
@@ -34,7 +36,7 @@ const ProfileSettings = ({navigation}) => {
   ];
 
   return (
-    <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f7'}}>
       <View style={styles.topBar}>
         <TouchableOpacity
           style={{
@@ -315,7 +317,7 @@ const ProfileSettings = ({navigation}) => {
           })}
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -328,7 +330,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingVertical: 6,
-    width: '36%',
+    width: '38%',
     // paddingRight: 7,
     paddingLeft: 13,
     backgroundColor: '#FEFEFF',
@@ -349,6 +351,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 3,
     marginLeft: 10,
+    textAlign: 'center',
   },
 
   input: {

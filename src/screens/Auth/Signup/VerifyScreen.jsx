@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -71,7 +72,7 @@ const VerifyScreen = ({navigation, route}) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {errorMessage && (
           <Text style={styles.errorMessage}>{errorMessage}</Text>
         )}
@@ -120,7 +121,7 @@ const VerifyScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

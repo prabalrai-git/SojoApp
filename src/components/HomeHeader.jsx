@@ -1,4 +1,10 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import React, {useState, useEffect} from 'react';
 import Axios from './../api/server';
@@ -22,7 +28,7 @@ const HomeHeader = ({id, isShown = true}) => {
   }, [id]);
 
   return isShown ? (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.titleWrapper}
         onPress={() => {
@@ -36,7 +42,7 @@ const HomeHeader = ({id, isShown = true}) => {
           style={{flex: 1}}
         />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   ) : (
     <></>
   );
@@ -65,6 +71,7 @@ const styles = StyleSheet.create({
     color: '#D5EEDF',
     // marginRight: 3,
     fontWeight: 'bold',
+    textAlign: 'center',
     flex: 3,
   },
 });

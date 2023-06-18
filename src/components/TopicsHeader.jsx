@@ -1,4 +1,10 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -7,7 +13,7 @@ const HomeHeader = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.titleWrapper}
         onPress={() => {
@@ -16,7 +22,7 @@ const HomeHeader = () => {
         <Icon name="edit" size={18} color="#FEFEFF" style={{marginTop: 2}} />
         <Text style={styles.title}>Edit Topics</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

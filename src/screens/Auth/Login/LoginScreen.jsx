@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Image,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -66,7 +67,7 @@ const LoginScreen = ({navigation}) => {
   return (
     <>
       <StatusBar backgroundColor={'#f3f4f7'} />
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Image
           source={require('../../../assets/logo.png')}
           style={[
@@ -172,7 +173,7 @@ const LoginScreen = ({navigation}) => {
             />
           </TouchableOpacity>
         </KeyboardAvoidingView>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

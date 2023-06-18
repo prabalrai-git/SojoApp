@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,7 +21,7 @@ const WelcomeScreen = ({navigation}) => {
     navigation && checkIsLoggedIn();
   }, [navigation]);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Image
           source={require('./../../../assets/ion_earth-outline.png')}
@@ -44,7 +51,7 @@ const WelcomeScreen = ({navigation}) => {
           <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

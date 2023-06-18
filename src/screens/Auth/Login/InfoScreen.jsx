@@ -127,7 +127,7 @@ const InfoScreen = ({navigation}) => {
 
   return (
     <>
-      <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f7'}}>
         <CreateProfileHeader />
         <Text
           style={{
@@ -260,7 +260,7 @@ const InfoScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
