@@ -8,6 +8,7 @@ import {
   TextInput,
   StatusBar,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
@@ -88,243 +89,247 @@ const ProfileSettings = ({navigation}) => {
           </View>
         </TouchableOpacity> */}
         </View>
-        {/* Start of body/ content */}
-        <View style={{paddingHorizontal: 15}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginVertical: 15,
-            }}>
-            <View>
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 22}}>
-                Settings
-              </Text>
-              <Text style={{color: 'grey'}}>sojo_news</Text>
-            </View>
-            <TouchableOpacity
+        <ScrollView>
+          {/* Start of body/ content */}
+          <View style={{paddingHorizontal: 15}}>
+            <View
               style={{
-                backgroundColor: '#b3e0bd',
                 flexDirection: 'row',
-                alignItems: 'center',
-                padding: 8,
-                height: 35,
-                borderRadius: 5,
-              }}
-              onPress={() => {
-                logoutUser();
-                navigation.navigate('MainScreen');
+                justifyContent: 'space-between',
+                marginVertical: 15,
               }}>
-              <Text style={{color: '#082313'}}>Sign Out</Text>
-              <Image
-                source={require('../assets/logout.png')}
+              <View>
+                <Text
+                  style={{color: 'black', fontWeight: 'bold', fontSize: 22}}>
+                  Settings
+                </Text>
+                <Text style={{color: 'grey'}}>sojo_news</Text>
+              </View>
+              <TouchableOpacity
                 style={{
-                  width: 14,
-                  height: 14,
-                  tintColor: '#082313',
-                  resizeMode: 'contain',
-                  marginLeft: 10,
+                  backgroundColor: '#b3e0bd',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 8,
+                  height: 35,
+                  borderRadius: 5,
                 }}
-              />
-            </TouchableOpacity>
-          </View>
+                onPress={() => {
+                  logoutUser();
+                  navigation.navigate('MainScreen');
+                }}>
+                <Text style={{color: '#082313'}}>Sign Out</Text>
+                <Image
+                  source={require('../assets/logout.png')}
+                  style={{
+                    width: 14,
+                    height: 14,
+                    tintColor: '#082313',
+                    resizeMode: 'contain',
+                    marginLeft: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
 
-          <View
-            style={{
-              width: '100%',
-              backgroundColor: 'lightgrey',
-              height: 1,
-              marginBottom: 20,
-            }}></View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-              Send me push notifications
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: 'lightgrey',
+                height: 1,
+                marginBottom: 20,
+              }}></View>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+                Send me push notifications
+              </Text>
+              <Switch
+                // color="#296146"
+                activeText={''}
+                inActiveText={''}
+                backgroundActive={'#27b060'}
+                circleSize={30}
+                // barHeight={34}
+                switchWidthMultiplier={2}
+                circleBorderWidth={0}
+                outerCircleStyle={{}}
+                backgroundInactive={'grey'}
+                circleActiveColor={'white'}
+                circleInActiveColor={'white'}
+                value={checked}
+                onValueChange={value => setChecked(value)}
+              />
+            </View>
+            <View>
+              <Text
+                style={{
+                  color: 'black',
+                  fontWeight: '500',
+                  fontSize: 12,
+                  marginTop: 10,
+                }}>
+                SEND ME NOTIFICATION FOR...
+              </Text>
+
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  editable={false}
+                  value={notiForValue}></TextInput>
+
+                <TouchableOpacity
+                  onPress={() => setModalVisible(prev => !prev)}
+                  style={{
+                    position: 'absolute',
+                    right: 5,
+                    top: '25%',
+                    padding: 5,
+                  }}>
+                  <Image
+                    source={require('../assets/down.png')}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      resizeMode: 'contain',
+                      tintColor: 'black',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View>
+              <Text style={{color: 'black', fontWeight: '500', fontSize: 12}}>
+                NOTIFICATION FREQUENCY
+              </Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  editable={false}
+                  value={notiFreqValue}></TextInput>
+
+                <TouchableOpacity
+                  onPress={() => setModalVisible(prev => !prev)}
+                  style={{
+                    position: 'absolute',
+                    right: 5,
+                    top: '25%',
+                    padding: 5,
+                  }}>
+                  <Image
+                    source={require('../assets/down.png')}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      resizeMode: 'contain',
+                      tintColor: 'black',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: 'lightgrey',
+                height: 1,
+                marginVertical: 20,
+              }}></View>
+
+            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>
+              Password
             </Text>
-            <Switch
-              // color="#296146"
-              activeText={''}
-              inActiveText={''}
-              backgroundActive={'#27b060'}
-              circleSize={30}
-              // barHeight={34}
-              switchWidthMultiplier={2}
-              circleBorderWidth={0}
-              outerCircleStyle={{}}
-              backgroundInactive={'grey'}
-              circleActiveColor={'white'}
-              circleInActiveColor={'white'}
-              value={checked}
-              onValueChange={value => setChecked(value)}
-            />
-          </View>
-          <View>
+
+            <Text style={{color: 'black', fontSize: 16, marginVertical: 15}}>
+              You changed your password 2 months ago
+            </Text>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnTxt}>Change Password</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn}>
+                <Text style={styles.btnTxt}>Forgot Password</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: 'lightgrey',
+                height: 1,
+                marginVertical: 20,
+              }}></View>
             <Text
               style={{
                 color: 'black',
-                fontWeight: '500',
-                fontSize: 12,
-                marginTop: 10,
+                fontWeight: 'bold',
+                fontSize: 18,
+                marginBottom: 20,
               }}>
-              SEND ME NOTIFICATION FOR...
+              Account Settings
             </Text>
-
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                editable={false}
-                value={notiForValue}></TextInput>
-
-              <TouchableOpacity
-                onPress={() => setModalVisible(prev => !prev)}
-                style={{
-                  position: 'absolute',
-                  right: 5,
-                  top: '25%',
-                  padding: 5,
-                }}>
-                <Image
-                  source={require('../assets/down.png')}
-                  style={{
-                    width: 18,
-                    height: 18,
-                    resizeMode: 'contain',
-                    tintColor: 'black',
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View>
-            <Text style={{color: 'black', fontWeight: '500', fontSize: 12}}>
-              NOTIFICATION FREQUENCY
-            </Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                editable={false}
-                value={notiFreqValue}></TextInput>
-
-              <TouchableOpacity
-                onPress={() => setModalVisible(prev => !prev)}
-                style={{
-                  position: 'absolute',
-                  right: 5,
-                  top: '25%',
-                  padding: 5,
-                }}>
-                <Image
-                  source={require('../assets/down.png')}
-                  style={{
-                    width: 18,
-                    height: 18,
-                    resizeMode: 'contain',
-                    tintColor: 'black',
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View
-            style={{
-              width: '100%',
-              backgroundColor: 'lightgrey',
-              height: 1,
-              marginVertical: 20,
-            }}></View>
-
-          <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>
-            Password
-          </Text>
-
-          <Text style={{color: 'black', fontSize: 16, marginVertical: 15}}>
-            You changed your password 2 months ago
-          </Text>
-          <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnTxt}>Change Password</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnTxt}>Forgot Password</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              width: '100%',
-              backgroundColor: 'lightgrey',
-              height: 1,
-              marginVertical: 20,
-            }}></View>
-          <Text
-            style={{
-              color: 'black',
-              fontWeight: 'bold',
-              fontSize: 18,
-              marginBottom: 20,
-            }}>
-            Account Settings
-          </Text>
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#fecdd3',
-              padding: 8,
-              borderRadius: 8,
-              width: '50%',
-            }}>
-            <Text
+            <TouchableOpacity
               style={{
-                color: '#881337',
-                fontWeight: '500',
-                fontSize: 16,
-                textAlign: 'center',
+                backgroundColor: '#fecdd3',
+                padding: 8,
+                borderRadius: 8,
+                width: '50%',
               }}>
-              Deactivate Account
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/* modal */}
-        <Modal
-          isVisible={modalVisible}
-          style={{
-            position: 'relative',
-            margin: 0,
-          }}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              position: 'absolute',
-              bottom: 0,
-              // height: 200,
-              width: '100%',
-              borderTopRightRadius: 20,
-              paddingTop: 25,
-              borderTopLeftRadius: 20,
-            }}>
-            {notificationFrequency.map(item => {
-              return (
-                <TouchableOpacity
-                  key={item.id}
-                  style={{width: windowWidth}}
-                  onPress={() => {
-                    setModalVisible(prev => !prev);
-                    setNotiFreqValue(item.title);
-                  }}>
-                  <Text style={{color: 'black', marginHorizontal: 20}}>
-                    {item.title}
-                  </Text>
-                  <View
-                    style={{
-                      height: 1,
-                      backgroundColor: 'lightgrey',
-                      marginVertical: 18,
-
-                      width: windowWidth,
-                    }}></View>
-                </TouchableOpacity>
-              );
-            })}
+              <Text
+                style={{
+                  color: '#881337',
+                  fontWeight: '500',
+                  fontSize: 16,
+                  textAlign: 'center',
+                }}>
+                Deactivate Account
+              </Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
+          {/* modal */}
+          <Modal
+            isVisible={modalVisible}
+            style={{
+              position: 'relative',
+              margin: 0,
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                position: 'absolute',
+                bottom: 0,
+                // height: 200,
+                width: '100%',
+                borderTopRightRadius: 20,
+                paddingTop: 25,
+                borderTopLeftRadius: 20,
+              }}>
+              {notificationFrequency.map(item => {
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={{width: windowWidth}}
+                    onPress={() => {
+                      setModalVisible(prev => !prev);
+                      setNotiFreqValue(item.title);
+                    }}>
+                    <Text style={{color: 'black', marginHorizontal: 20}}>
+                      {item.title}
+                    </Text>
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: 'lightgrey',
+                        marginVertical: 18,
+
+                        width: windowWidth,
+                      }}></View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </Modal>
+        </ScrollView>
       </SafeAreaView>
     </>
   );

@@ -31,7 +31,7 @@ const MainScreen = ({navigation}) => {
           ]}
         />
       </View>
-      <View style={styles.bottom}>
+      <ScrollView style={styles.bottom}>
         {/*  <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -101,7 +101,7 @@ const MainScreen = ({navigation}) => {
             ]}
           />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 };

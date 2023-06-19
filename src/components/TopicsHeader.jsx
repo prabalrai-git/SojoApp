@@ -8,6 +8,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {windowWidth} from '../helper/usefulConstants';
 
 const HomeHeader = () => {
   const navigation = useNavigation();
@@ -43,12 +44,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
-    flex: 1.1,
+    flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    width: windowWidth * 0.3,
   },
   title: {
     fontSize: 14,

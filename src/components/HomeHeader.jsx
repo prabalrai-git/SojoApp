@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import React, {useState, useEffect} from 'react';
 import Axios from './../api/server';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
+import {windowWidth} from '../helper/usefulConstants';
 
 const HomeHeader = ({id, isShown = true}) => {
   const navigation = useNavigation();
@@ -39,7 +40,7 @@ const HomeHeader = ({id, isShown = true}) => {
           name="keyboard-arrow-down"
           color="#FEFEFF"
           size={24}
-          style={{flex: 1}}
+          // style={{flex: 1}}
         />
       </TouchableOpacity>
     </SafeAreaView>
@@ -53,7 +54,7 @@ export default HomeHeader;
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 6,
-    // paddingRight: 7,
+    paddingRight: 7,
     paddingLeft: 13,
     backgroundColor: '#53C180',
     flexDirection: 'row',
@@ -65,6 +66,8 @@ const styles = StyleSheet.create({
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: windowWidth * 0.3,
   },
   title: {
     fontSize: 14,
@@ -72,6 +75,6 @@ const styles = StyleSheet.create({
     // marginRight: 3,
     fontWeight: 'bold',
     textAlign: 'center',
-    flex: 1,
+    // flex: 1,
   },
 });

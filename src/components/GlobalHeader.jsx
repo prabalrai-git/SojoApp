@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import React, {useState, useEffect} from 'react';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Axios from './../api/server';
+import {windowWidth} from '../helper/usefulConstants';
 
 const GlobalHeader = ({id, isShown = true}) => {
   const navigation = useNavigation();
@@ -54,11 +55,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 8,
-    flex: 1.3,
+    flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: windowWidth * 0.3,
   },
   title: {
     fontSize: 14,
