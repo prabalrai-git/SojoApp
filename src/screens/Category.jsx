@@ -23,13 +23,13 @@ const Category = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      StatusBar.setBackgroundColor('#26B160'); // Set the specific color when the screen is focused
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     StatusBar.setBackgroundColor('#26B160'); // Set the specific color when the screen is focused
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const fetchData = async page => {
     try {

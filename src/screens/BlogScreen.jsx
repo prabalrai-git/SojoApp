@@ -20,14 +20,14 @@ import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 
 const BlogScreen = ({route, navigation}) => {
   const scrollRef = useRef(null);
-  const {id} = route.params;
+  const {id, profile} = route.params;
   const [data, setData] = useState(null);
   const [similarBlogs, setSimilarBlogs] = useState([]);
   const {width} = useWindowDimensions();
 
   const fetchData = async () => {
     try {
-      const res = await Axios.get(`/news/${id}`);
+      const res = await Axios.get(`/news/${id}?userId=${profile.id}`);
       setData(res.data.data);
       scrollRef.current.scrollTo({y: 0, animated: true});
     } catch (err) {
@@ -82,17 +82,23 @@ const BlogScreen = ({route, navigation}) => {
                 paddingHorizontal: 10,
                 flexDirection: 'row',
               }}>
-              <Image
-                source={require('../assets/saved.png')}
-                style={{
-                  tintColor: 'white',
-                  resizeMode: 'contain',
-                  width: 20,
-                  height: 20,
-                  marginRight: 5,
-                }}
-              />
-              <Text style={{color: 'white'}}>Bookmark</Text>
+              {data?.isBookmarkedByUser ? (
+                <Text style={{color: 'white'}}>Bookmarked</Text>
+              ) : (
+                <>
+                  <Image
+                    source={require('../assets/saved.png')}
+                    style={{
+                      tintColor: 'white',
+                      resizeMode: 'contain',
+                      width: 20,
+                      height: 20,
+                      marginRight: 5,
+                    }}
+                  />
+                  <Text style={{color: 'white'}}>Bookmark</Text>
+                </>
+              )}
             </TouchableOpacity>
             <TouchableOpacity
               style={{

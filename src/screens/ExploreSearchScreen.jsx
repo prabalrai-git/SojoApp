@@ -20,13 +20,13 @@ const SearchScreen = ({navigation, route}) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      StatusBar.setBackgroundColor('#27B060'); // Set the specific color when the screen is focused
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     StatusBar.setBackgroundColor('#27B060'); // Set the specific color when the screen is focused
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   useEffect(() => {
     // AsyncStorage.removeItem('token');

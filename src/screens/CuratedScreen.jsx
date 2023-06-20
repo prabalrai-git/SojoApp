@@ -15,6 +15,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import HomeHeader from './../components/HomeHeader';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
@@ -24,13 +26,17 @@ const HomeScreen = ({navigation}) => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      StatusBar.setBackgroundColor('#27B161');
-    }, 1); // set a small delay here (in milliseconds)
+  // console.log(reload, 'yoyoyoyoyoyoy');
 
-    return () => clearTimeout(timeout);
-  }, [navigation]);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     StatusBar.setBackgroundColor('#27B161');
+  //   }, 1); // set a small delay here (in milliseconds)
+
+  //   return () => clearTimeout(timeout);
+  // }, [isFocused]);
+
+  // const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -87,6 +93,7 @@ const HomeScreen = ({navigation}) => {
         `/users/news?page=${page}&id=${profile?.id}`,
         config,
       );
+      // return console.log(res.data.data);
       news.length > 0
         ? setNews(prevData => [...prevData, ...res.data.data])
         : setNews(res.data.data);
@@ -134,7 +141,7 @@ const HomeScreen = ({navigation}) => {
     <>
       <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
       <SafeAreaView style={{flex: 1}}>
-        <StatusBar backgroundColor="red" />
+        <StatusBar backgroundColor="#27B060" />
         <View style={styles.topBar}>
           <Text style={styles.title}>My Feed</Text>
           <HomeHeader />

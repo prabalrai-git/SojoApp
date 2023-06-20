@@ -32,15 +32,15 @@ const Category = () => {
   //   });
 
   //   return unsubscribe;
+  // // }, [navigation]);
+
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     StatusBar.setBackgroundColor('#27B161');
+  //   }, 1); // set a small delay here (in milliseconds)
+
+  //   return () => clearTimeout(timeout);
   // }, [navigation]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      StatusBar.setBackgroundColor('#27B161');
-    }, 1); // set a small delay here (in milliseconds)
-
-    return () => clearTimeout(timeout);
-  }, [navigation]);
 
   const fetchTopics = async () => {
     try {

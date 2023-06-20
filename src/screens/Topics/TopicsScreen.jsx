@@ -25,13 +25,13 @@ const Category = () => {
   const [term, setTerm] = useState('');
   const [filteredTopics, setFilteredTopics] = useState(data);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      StatusBar.setBackgroundColor('#27B161');
-    }, 1); // set a small delay here (in milliseconds)
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     StatusBar.setBackgroundColor('#27B161');
+  //   }, 1); // set a small delay here (in milliseconds)
 
-    return () => clearTimeout(timeout);
-  }, [navigation]);
+  //   return () => clearTimeout(timeout);
+  // }, [navigation]);
 
   useEffect(() => {
     if (term.length > 0) {
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: '#27B161',
     padding: 20,
-    paddingVertical: 15,
+    paddingVertical: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

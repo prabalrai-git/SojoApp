@@ -6,14 +6,17 @@ import Axios from './../api/server';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {log} from 'react-native-reanimated';
+
+import {useSelector, useDispatch} from 'react-redux';
+import {toggle} from '../redux/features/ReloadNewsSlice';
+import {useNavigation} from '@react-navigation/native';
 
 const BlogCard = ({
   item,
   navigation,
-  profile,
   fromBookmarks,
   setRenderBookmarked,
+  profile,
 }) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
@@ -22,6 +25,7 @@ const BlogCard = ({
   );
   const [config, setConfig] = useState();
 
+  const dispatch = useDispatch();
   useEffect(() => {
     const w = Math.floor(width - 5 / 100);
     const resizedImageUrl = item?.image.replace(
@@ -51,28 +55,36 @@ const BlogCard = ({
     const toggleBookmark = async () => {
       try {
         // return console.log({userId: profile?.id, newsId: item.id});
+        // return console.log({userId: profile?.id, newsId: item.id});
         const res = await Axios.post(
           '/users/bookmarks/toggleOrAddBookmark',
           {userId: profile?.id, newsId: item.id},
           config,
         );
-        console.log(res.data);
+        // return console.log(res.data);
+        setToggled(prev => !prev);
         if (setRenderBookmarked) {
           setRenderBookmarked(prev => !prev);
         }
-        setToggled(prev => !prev);
+        dispatch(toggle());
       } catch (err) {
         console.log(err);
       }
     };
     toggleBookmark();
   };
+
   return (
     image && (
       <TouchableOpacity
+        key={item?.id}
         style={{marginTop: 30}}
         onPress={() => {
-          navigation.navigate('Blog', {id: item?.id});
+          navigation.navigate('Blog', {
+            id: item?.id,
+            isBookmarked: item?.isBookmarkedByUser,
+            profile: profile,
+          });
         }}>
         <View style={styles.cardContainer}>
           <View style={styles.wrapper}>
