@@ -18,6 +18,7 @@ import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BlogCard from '../components/Card';
+import {useSelector} from 'react-redux';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
@@ -30,6 +31,7 @@ const SettingsScreen = () => {
   const [renderBookmarked, setRenderBookmarked] = useState(false);
 
   const [loading, setLoading] = useState(true);
+  const reload = useSelector(state => state.reloadNews.value);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -49,7 +51,7 @@ const SettingsScreen = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [config, renderBookmarked, profile]);
+  }, [config, renderBookmarked, profile, reload]);
 
   const fetchProfile = async () => {
     try {
@@ -82,6 +84,7 @@ const SettingsScreen = () => {
       );
 
       // return console.log('this is the log', res.data.bookmarkedNews);
+      // console.log(res.data.bookmarkedNews, '111111111111111111111111111111');
 
       setNews(res.data.bookmarkedNews);
       setLoading(false);
@@ -92,18 +95,19 @@ const SettingsScreen = () => {
       // :
     } catch (err) {
       console.log(err);
+      setNews();
     }
   };
 
   // useEffect(() => console.log(news, 'this updated news'), [news]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      StatusBar.setBackgroundColor('#27B161');
-    }, 1); // set a small delay here (in milliseconds)
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     StatusBar.setBackgroundColor('#27B161');
+  //   }, 1); // set a small delay here (in milliseconds)
 
-    return () => clearTimeout(timeout);
-  }, [navigation]);
+  //   return () => clearTimeout(timeout);
+  // }, [navigation]);
 
   const BlogItem = React.memo(({item, navigation}) => {
     return (
@@ -165,9 +169,9 @@ const SettingsScreen = () => {
           <View
             style={{paddingHorizontal: 15, marginTop: 10, marginBottom: -15}}>
             <Text style={{fontWeight: 'bold', color: 'black', fontSize: 22}}>
-              Albert Flores
+              {profile?.username}
             </Text>
-            <Text style={{color: 'grey', marginBottom: 15}}>Student</Text>
+            <Text style={{color: 'grey', marginBottom: 15}}></Text>
 
             <View style={styles.btnContainer}>
               <TouchableOpacity style={styles.btn}>
@@ -185,15 +189,34 @@ const SettingsScreen = () => {
                 height: 1,
                 marginBottom: 20,
               }}></View>
-
-            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-              Saved stories
-            </Text>
+            {news && (
+              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+                Saved stories
+              </Text>
+            )}
           </View>
 
-          {news?.map(item => {
-            return <BlogItem item={item} navigation={navigation} />;
-          })}
+          {news ? (
+            news?.map(item => {
+              return (
+                <>
+                  <BlogItem item={item} navigation={navigation} />
+                </>
+              );
+            })
+          ) : (
+            <View>
+              <Text
+                style={{
+                  color: 'black',
+                  fontWeight: '600',
+                  textAlign: 'center',
+                  marginTop: 40,
+                }}>
+                No Any Bookmarks!!
+              </Text>
+            </View>
+          )}
           {/* <FlatList
           data={news}
           renderItem={renderItem}
@@ -252,7 +275,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: PRIMARY_COLOR,
     padding: 20,
-    paddingVertical: 12,
+    paddingVertical: 13.3,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth,

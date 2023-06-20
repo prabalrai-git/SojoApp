@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,8 +9,16 @@ import {Image, Text} from 'react-native';
 import SettingsScreen from './../screens/SettingsScreen';
 import {SettingStack, TopicsStack} from './Stacks';
 import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {windowWidth} from '../helper/usefulConstants';
+import {useDispatch, useSelector} from 'react-redux';
+import {toogleStatus} from '../redux/features/ReloadStatusBar';
+import {logoutUser} from '../helper/auth';
+
 const Tab = createMaterialTopTabNavigator();
 
 function CustomTabBarLabel({label, focused}) {
@@ -27,7 +35,8 @@ function CustomTabBarLabel({label, focused}) {
 }
 
 const TabNavigator = () => {
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   return (
     <Tab.Navigator
       keyboardHidesTabBar={true}

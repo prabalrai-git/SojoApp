@@ -14,6 +14,8 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import GlobalHeader from '../components/GlobalHeader';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -22,13 +24,32 @@ const HomeScreen = ({navigation}) => {
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      StatusBar.setBackgroundColor('#27B161');
-    }, 1); // set a small delay here (in milliseconds)
+  // const reload = useSelector(state => state.reloadNews.value);
 
-    return () => clearTimeout(timeout);
-  }, [navigation]);
+  const [profile, setProfile] = useState();
+
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+
+      if (!res.data.data.isComplete) {
+        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+      }
+      setProfile(res.data.data);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setProfile(null);
+        // return router.replace('/');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -55,7 +76,10 @@ const HomeScreen = ({navigation}) => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await Axios.get(`/users/news/global?page=${page}`, config);
+      const res = await Axios.get(
+        `/users/news/global?page=${page}&id=${profile?.id}`,
+        config,
+      );
       blogs.length > 0
         ? setBlogs(prevData => [...prevData, ...res.data.data])
         : setBlogs(res.data.data);
@@ -76,14 +100,21 @@ const HomeScreen = ({navigation}) => {
       setLoading(true);
     }
   };
-
+  // console.log(profile, 'form sc1111111111111111111111111111111111111');
   const renderFooter = () => {
     if (!loading) return null;
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} navigation={navigation} key={item.id} />;
+    return (
+      <Card
+        item={item}
+        navigation={navigation}
+        key={item.id}
+        profile={profile}
+      />
+    );
   });
 
   const renderItem = ({item}) => {
@@ -92,8 +123,9 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B161'}} />
       <SafeAreaView style={{flex: 1}}>
+        <StatusBar backgroundColor={'#27B161'} />
         <View>
           <View style={styles.topBar}>
             <Text style={styles.title}>Explore</Text>
@@ -129,7 +161,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   topBar: {
-    backgroundColor: '#27B060',
+    backgroundColor: '#27B161',
     padding: 20,
     paddingVertical: 15,
     flexDirection: 'row',

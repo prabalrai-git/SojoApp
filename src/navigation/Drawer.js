@@ -39,13 +39,13 @@ export const HomeDrawerNavigator = () => {
   const [config, setConfig] = useState(null);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      StatusBar.setBackgroundColor('#27B060'); // Set the specific color when the screen is focused
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     StatusBar.setBackgroundColor('#27B060'); // Set the specific color when the screen is focused
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   useEffect(() => {
     const fetchToken = async () => {

@@ -39,7 +39,7 @@ const HomeHeader = ({id, isShown = true}) => {
         <Icon
           name="keyboard-arrow-down"
           color="#FEFEFF"
-          size={24}
+          size={24}``
           // style={{flex: 1}}
         />
       </TouchableOpacity>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: windowWidth * 0.3,
   },
   title: {
