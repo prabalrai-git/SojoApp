@@ -11,7 +11,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Axios from './../../../api/server';
+import Axios from '../../../api/server';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -161,7 +161,9 @@ const LoginScreen = ({navigation}) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -150} // adjust as needed
         >
-          <TouchableOpacity style={styles.bottomContainer}>
+          <TouchableOpacity
+            style={styles.bottomContainer}
+            onPress={() => navigation.navigate('Signup')}>
             <Text style={[styles.forgotPassword, {color: '#176a3a'}]}>
               Create Account
             </Text>
@@ -280,7 +282,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   errorMessage: {
-    color: 'white',
+    color: 'black',
     // marginTop: 10,
     fontSize: 14,
   },

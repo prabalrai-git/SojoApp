@@ -6,15 +6,37 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CreateProfileHeader from '../../../components/CreateProfileHeader';
 import {windowWidth} from '../../../helper/usefulConstants';
 import {Image} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Axios from './../../../api/server';
 
-const Preferences = ({navigation}) => {
-  const [rememberMe, setRememberMe] = useState(false);
+const Preferences = ({navigation, route}) => {
+  // const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [skipPolitical, setSkipPolitical] = useState(false);
+  const [skipNSFW, setSkipNSFW] = useState(false);
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        setConfig(config);
+      }
+    };
+    fetchToken();
+  }, []);
 
   const listData = [
     {id: 1, title: 'Self harm or physical violence'},
@@ -23,6 +45,32 @@ const Preferences = ({navigation}) => {
     {id: 4, title: 'Mental or psychological torture'},
     {id: 5, title: 'Anything that’s not safe for work (NSFW)'},
   ];
+  const {ageGroup, gender, occupation} = route.params.data;
+
+  const completeProfile = async () => {
+    const data = {
+      gender,
+      occupation,
+      ageGroup,
+      skipPolitical,
+      skipNSFW,
+    };
+    try {
+      setLoading(true);
+      const res = await Axios.post('/users/profile/complete', data, config);
+      navigation.navigate('TopicsScreenLogin', {
+        config: config,
+      });
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+      if (err && err.response && err.response.data) {
+        console.log(err.response.data);
+        console.log(err.response.data.err);
+      }
+    }
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
@@ -62,10 +110,10 @@ const Preferences = ({navigation}) => {
           Skip and avoid political news and anything political
         </Text>
         <MaterialIcons
-          name={rememberMe ? 'check-box' : 'check-box-outline-blank'}
+          name={skipPolitical ? 'check-box' : 'check-box-outline-blank'}
           size={30}
           color="#000000"
-          onPress={() => setRememberMe(!rememberMe)}
+          onPress={() => setSkipPolitical(!skipPolitical)}
         />
       </View>
       <View style={styles.container}>
@@ -77,10 +125,10 @@ const Preferences = ({navigation}) => {
           Skip and avoid any stories that have the following:
         </Text>
         <MaterialIcons
-          name={rememberMe ? 'check-box' : 'check-box-outline-blank'}
+          name={skipNSFW ? 'check-box' : 'check-box-outline-blank'}
           size={30}
           color="#000000"
-          onPress={() => setRememberMe(!rememberMe)}
+          onPress={() => setSkipNSFW(!skipNSFW)}
         />
       </View>
       <View style={styles.points}>
@@ -96,7 +144,7 @@ const Preferences = ({navigation}) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('TopicsScreenLogin');
+          completeProfile();
           // if (!loading) {
           //   handleFormSubmit();
           // }

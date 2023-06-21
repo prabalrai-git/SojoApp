@@ -10,12 +10,13 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import {logoutUser} from '../helper/auth';
 import {Switch} from 'react-native-switch';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const ProfileSettings = ({navigation}) => {
   const [checked, setChecked] = useState(false);
@@ -36,6 +37,19 @@ const ProfileSettings = ({navigation}) => {
     {id: 4, title: 'Once a week'},
   ];
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '866760448207-ou1v3tpdqteqpr68cajle5sojhuugglh.apps.googleusercontent.com',
+    });
+  }, []);
+  const signOut = async () => {
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
@@ -116,6 +130,7 @@ const ProfileSettings = ({navigation}) => {
                 }}
                 onPress={() => {
                   logoutUser();
+                  signOut();
                   navigation.navigate('MainScreen');
                 }}>
                 <Text style={{color: '#082313'}}>Sign Out</Text>

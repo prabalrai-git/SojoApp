@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,89 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {windowHeight, windowWidth} from '../../helper/usefulConstants';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import Axios from '../../api/server';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen = ({navigation}) => {
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timeout = setTimeout(() => {
+        setErrorMessage('');
+      }, 4000);
+      return () => clearTimeout(timeout);
+    }
+  }, [errorMessage]);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '866760448207-ou1v3tpdqteqpr68cajle5sojhuugglh.apps.googleusercontent.com',
+    });
+  }, []);
+
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      console.log('yo');
+      const {idToken, user} = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      await auth().signInWithCredential(googleCredential);
+      try {
+        const response = await Axios.post(`/auth/googlePhoneLogin`, {
+          username: user.name,
+          email: user.email,
+        });
+        // return console.log(response.data.data);
+
+        const {token} = response.data.data;
+        await AsyncStorage.setItem('token', token);
+        navigation.navigate('Curated');
+        navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
+        // handle successful login, e.g. redirect to home screen
+      } catch (error) {
+        console.error(error);
+        if (error && error.response && error.response.data) {
+          if (error.response.data.err === 'not_active') {
+            navigation.push('Verify', {
+              email,
+            });
+          } else {
+            setErrorMessage(error.response.data.err);
+          }
+        }
+      }
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        console.log(error);
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+        console.log(error);
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        console.log(error);
+      } else {
+        // some other error happened
+        console.log(error);
+      }
+    }
+  };
+  const signOut = async () => {
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <View style={styles.bottomContainer}>
       <StatusBar backgroundColor={'white'} />
@@ -31,7 +112,7 @@ const MainScreen = ({navigation}) => {
           ]}
         />
       </View>
-      <ScrollView style={styles.bottom}>
+      <View style={styles.bottom}>
         {/*  <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -40,8 +121,7 @@ const MainScreen = ({navigation}) => {
           <FontAwesome name="google" size={24} color="#545760" /> 
           <Text style={styles.buttonText}>Continue by logging in</Text>
         </TouchableOpacity>*/}
-
-        <TouchableOpacity style={styles.button}>
+        {/* <TouchableOpacity style={styles.button}>
           <Image
             source={require('../../assets/apple-logo.png')}
             style={styles.signupIcon}
@@ -49,59 +129,74 @@ const MainScreen = ({navigation}) => {
           <Text style={[styles.buttonText, styles.midText]}>
             Continue with Apple
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Image
-            source={require('../../assets/google.png')}
-            style={styles.signupIcon}
-          />
-          <Text style={[styles.buttonText, styles.midText]}>
-            Continue with Google
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.push('Login');
-          }}>
-          {/* <MaterialIcons name="email" size=5{24} color="#545760" /> */}
-          <Image
-            source={require('../../assets/email.png')}
-            style={styles.signupIcon}
-          />
-          <Text style={[styles.buttonText, styles.midText]}>
-            Continue with Email
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              backgroundColor: '#12ab51',
-              borderWidth: 2,
-              borderColor: 'white',
-              alignItems: 'flex-start',
-              marginTop: 30,
-              padding: 13,
-            },
-          ]}
-          onPress={() => {
-            // return console.log('clicked');
-            navigation.push('Signup');
-          }}>
-          {/* <MaterialIcons name="email" size={24} color="#545760" /> */}
-          <Text style={[styles.buttonText, {color: 'white'}]}>
-            Create an account
-          </Text>
-          <Image
-            source={require('../../assets/right-arrow.png')}
+        </TouchableOpacity> */}
+        <ScrollView>
+          {errorMessage && (
+            <Text style={{color: 'red', fontWeight: '600'}}>
+              {errorMessage}
+            </Text>
+          )}
+
+          <TouchableOpacity style={styles.button} onPress={() => signIn()}>
+            <Image
+              source={require('../../assets/google.png')}
+              style={styles.signupIcon}
+            />
+            <Text style={[styles.buttonText, styles.midText]}>
+              Continue with Google
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => signOut()}>
+            <Image
+              source={require('../../assets/google.png')}
+              style={styles.signupIcon}
+            />
+            <Text style={[styles.buttonText, styles.midText]}>Sign OUt</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.push('Login');
+            }}>
+            {/* <MaterialIcons name="email" size=5{24} color="#545760" /> */}
+            <Image
+              source={require('../../assets/email.png')}
+              style={styles.signupIcon}
+            />
+            <Text style={[styles.buttonText, styles.midText]}>
+              Continue with Email
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[
-              styles.signupIcon,
-              {width: 20, height: 20, tintColor: 'white'},
+              styles.button,
+              {
+                backgroundColor: '#12ab51',
+                borderWidth: 2,
+                borderColor: 'white',
+                alignItems: 'flex-start',
+                marginTop: 30,
+                padding: 13,
+              },
             ]}
-          />
-        </TouchableOpacity>
-      </ScrollView>
+            onPress={() => {
+              // return console.log('clicked');
+              navigation.push('Signup');
+            }}>
+            {/* <MaterialIcons name="email" size={24} color="#545760" /> */}
+            <Text style={[styles.buttonText, {color: 'white'}]}>
+              Create an account
+            </Text>
+            <Image
+              source={require('../../assets/right-arrow.png')}
+              style={[
+                styles.signupIcon,
+                {width: 20, height: 20, tintColor: 'white'},
+              ]}
+            />
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
     </View>
   );
 };

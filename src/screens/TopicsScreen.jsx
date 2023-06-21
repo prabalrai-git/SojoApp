@@ -10,22 +10,24 @@ import {
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
 import Axios from './../api/server';
-import Icon from 'react-native-vector-icons/Feather';
-import TopicLoading from '../components/TopicLoading';
 import CreateProfileHeader from '../components/CreateProfileHeader';
 import {windowWidth} from '../helper/usefulConstants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AddtopicsRegister from '../components/AddtopicsRegister';
 
-const TopicsScreen = ({navigation}) => {
+const TopicsScreen = ({navigation, route}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
+
+  const config = route?.params?.config;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await Axios.get('/topics');
         setData(res.data.data);
+        console.log(res.data.data);
       } catch (err) {
         console.log(err);
       }
@@ -37,7 +39,7 @@ const TopicsScreen = ({navigation}) => {
     <>
       <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
         <CreateProfileHeader />
-        <ScrollView StickyHeaderComponent={[]}>
+        <ScrollView stickyHeaderIndices={[2]}>
           <Text
             style={{
               color: 'black',
@@ -71,28 +73,7 @@ const TopicsScreen = ({navigation}) => {
         </Text> */}
             <View style={{marginTop: 20}}>
               {data?.map(item => {
-                return (
-                  <TouchableOpacity style={styles.link}>
-                    <Text style={styles.linkTitle}>{item.name}</Text>
-
-                    <Icon
-                      name={loading ? 'check' : 'plus'}
-                      size={26}
-                      color="#6B6F76"
-                      style={styles.linkIcon}
-                      onPress={async () => {
-                        setLoading(!loading);
-                        // // await Axios.patch(
-                        // //   `/users/profile/topic/${item.id}`,
-                        // //   {},
-                        // //   config,
-                        // // );
-                        // fetchProfile();
-                        // setLoading(false);
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
+                return <AddtopicsRegister item={item} config={config} />;
               })}
             </View>
             {/* <FlatList
@@ -114,7 +95,7 @@ const TopicsScreen = ({navigation}) => {
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('MainScreen');
+            navigation.navigate('Curated');
             // if (!loading) {
             //   handleFormSubmit();
             // }

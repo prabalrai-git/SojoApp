@@ -18,60 +18,114 @@ import {Picker} from '@react-native-picker/picker';
 import CreateProfileHeader from '../../../components/CreateProfileHeader';
 import {windowWidth} from '../../../helper/usefulConstants';
 import {Image} from 'react-native';
-import {Modal} from 'react-native';
+import Modal from 'react-native-modal';
 
 const InfoScreen = ({navigation}) => {
   const [profile, setProfile] = useState(null);
-  const [config, setConfig] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [occupations, setOccupations] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [ageGroup, setAgeGroup] = useState('14-20');
-  const [gender, setGender] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [skipPolitical, setSkipPolitical] = useState(false);
-  const [skipNSFW, setSkipNSFW] = useState(false);
+  const [ageGroup, setAgeGroup] = useState(null);
+  const [gender, setGender] = useState(null);
+  const [occupation, setOccupation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [notiForValue, setNotiForValue] = useState(null);
-  const [notiFreqValue, setNotiFreqValue] = useState(null);
 
-  const notificationFor = [
-    {id: 1, title: 'New stories on topic I follow'},
-    {id: 2, title: 'Featured stories on topics I follow'},
-    {id: 3, title: 'Top stories aggregated by Sojo news'},
+  const [occupationOptions, setOccupationOptions] = useState();
+
+  const [modalSelectionValues, setModalSelectionValues] = useState();
+
+  const [errorMsg, setErrorMsg] = useState(false);
+
+  const genderOptions = [
+    {id: 1, title: 'Male', type: 'gender'},
+    {id: 2, title: 'Female', type: 'gender'},
+    {id: 3, title: 'Others', type: 'gender'},
   ];
 
-  const notificationFrequency = [
-    {id: 1, title: 'Every morning at 8AM'},
-    {id: 2, title: 'Every evening at 6PM'},
-    {id: 3, title: 'Every two days'},
-    {id: 4, title: 'Once a week'},
+  const ageOptions = [
+    {id: 1, title: '14-20', type: 'age'},
+    {id: 2, title: '21-35', type: 'age'},
+    {id: 3, title: '36-50', type: 'age'},
+    {id: 4, title: '51 & above', type: 'age'},
   ];
+  useEffect(() => {
+    getOccupation();
+  }, []);
+  const getOccupation = async () => {
+    const res = await Axios.get('/occupations');
+    let data = res.data.data;
+    console.log(data);
+    let newdata = [];
+    data.map(item => {
+      return newdata.push({id: item.id, title: item.name, type: 'occupation'});
+    });
+
+    setOccupationOptions(newdata);
+  };
+
+  const openRequiredModal = item => {
+    if (item === 'age') {
+      setModalSelectionValues(ageOptions);
+      setModalVisible(true);
+    }
+    if (item === 'gender') {
+      setModalSelectionValues(genderOptions);
+      setModalVisible(true);
+    }
+    if (item === 'occupation') {
+      setModalSelectionValues(occupationOptions);
+      setModalVisible(true);
+    }
+  };
+
+  const setInfoState = item => {
+    if (item.type === 'gender') {
+      setModalVisible(prev => !prev);
+      return setGender(item.title);
+    }
+    if (item.type === 'age') {
+      setModalVisible(prev => !prev);
+
+      return setAgeGroup(item.title);
+    }
+    if (item.type === 'occupation') {
+      setModalVisible(prev => !prev);
+
+      return setOccupation(item.title);
+    }
+  };
+
+  const setOccupationId = item => {
+    if (item === 'Student') {
+      return 1;
+    }
+    if (item === 'Employee') {
+      return 2;
+    }
+    if (item === 'Employer') {
+      return 3;
+    }
+    if (item === 'Business Owner') {
+      return 4;
+    }
+    if (item === 'Others') {
+      return 5;
+    }
+  };
 
   const handleFormSubmit = async () => {
-    setLoading(true);
-    const data = {
-      ageGroup,
-      gender,
-      occupation,
-      skipPolitical,
-      skipNSFW,
-    };
-    try {
-      const res = await Axios.post('/users/profile/complete', data, config);
-      console.log(res);
-      setLoading(false);
-      navigation.replace('TopicsScreenLogin');
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      if (err && err.response && err.response.data) {
-        console.log(err.response.data);
-        console.log(err.response.data.err);
-        setErrorMessage(err.response.data.err);
-      }
+    // setLoading(true);
+
+    if (!ageGroup || !gender || !occupation) {
+      return setErrorMsg(true);
+    } else {
+      const data = {
+        ageGroup,
+        gender,
+        occupation: setOccupationId(occupation),
+      };
+      return navigation.navigate('Preferences', {data});
     }
   };
 
@@ -85,35 +139,7 @@ const InfoScreen = ({navigation}) => {
     }
   }, [errorMessage]);
 
-  // fetch occupations
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await Axios.get('/occupations');
-        setOccupations(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, []);
-
   // set config
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        setConfig(config);
-      }
-    };
-    fetchToken();
-  }, []);
 
   useEffect(() => {
     // AsyncStorage.removeItem('token');
@@ -123,28 +149,28 @@ const InfoScreen = ({navigation}) => {
   }, [navigation]);
 
   // fetch profile
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await Axios.get('/users/profile', config);
-        setProfile(res.data.data);
-        if (res.data.data.isComplete) {
-          navigation.reset({index: 0, routes: [{name: 'Curated'}]});
-        }
-      } catch (err) {
-        console.log(err);
-        if (err && err.response && err.response.status === 401) {
-          logout();
-          setIsLoggedIn(false);
-          setProfile(null);
-          navigation.reset({index: 0, routes: [{name: 'Auth'}]});
-        }
-      }
-    };
-    if (config) {
-      fetchProfile();
-    }
-  }, [config]);
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const res = await Axios.get('/users/profile', config);
+  //       setProfile(res.data.data);
+  //       if (res.data.data.isComplete) {
+  //         navigation.reset({index: 0, routes: [{name: 'Curated'}]});
+  //       }
+  //     } catch (err) {
+  //       console.log(err);
+  //       if (err && err.response && err.response.status === 401) {
+  //         logout();
+  //         setIsLoggedIn(false);
+  //         setProfile(null);
+  //         navigation.reset({index: 0, routes: [{name: 'Auth'}]});
+  //       }
+  //     }
+  //   };
+  //   if (config) {
+  //     fetchProfile();
+  //   }
+  // }, [config]);
 
   return (
     <>
@@ -177,198 +203,15 @@ const InfoScreen = ({navigation}) => {
             Inform us about yourself so we can curate news stories that are
             relevant to you.
           </Text>
-          {/* <View style={styles.container}>
-            {errorMessage && (
-              <Text style={styles.errorMessage}>{errorMessage}</Text>
-            )}
-            <View style={styles.content}>
-              <Text style={styles.label}>
-                What age group do you belong to ?
-              </Text>
-              <Picker
-                style={styles.inputContainer}
-                selectedValue={ageGroup}
-                onValueChange={itemValue => setAgeGroup(itemValue)}>
-                <Picker.Item label="14-20" value="14-20" />
-                <Picker.Item label="21-35" value="21-35" />
-                <Picker.Item label="36-50" value="36-50" />
-                <Picker.Item label="51 & above" value="51 & above" />
-              </Picker>
-            </View>
-            <View>
-              <Text
-                style={{
-                  color: 'black',
-                  fontWeight: '500',
-                  fontSize: 12,
-                  marginTop: 10,
-                }}>
-                What age group do you belong to ?
-              </Text>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  editable={false}
-                  value={'yo'}></TextInput>
-
-                <TouchableOpacity
-                  onPress={() => setModalVisible(prev => !prev)}
-                  style={{
-                    position: 'absolute',
-                    right: 5,
-                    top: '25%',
-                    padding: 5,
-                  }}>
-                  <Image
-                    source={require('../../../assets/down.png')}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      resizeMode: 'contain',
-                      tintColor: 'black',
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.content}>
-              <Text style={styles.label}>What is your gender ?</Text>
-              <Picker
-                style={styles.inputContainer}
-                selectedValue={gender}
-                onValueChange={itemValue => setGender(itemValue)}>
-                <Picker.Item label="Prefer not to say" value="" />
-                <Picker.Item label="Male" value="Male" />
-                <Picker.Item label="Female" value="Female" />
-                <Picker.Item label="Others" value="Others" />
-              </Picker>
-            </View>
-            <View style={styles.content}>
-              <Text style={styles.label}>What occupation are you in ?</Text>
-              <Picker
-                style={styles.inputContainer}
-                selectedValue={occupation}
-                onValueChange={itemValue => setOccupation(itemValue)}>
-                {occupations.map(item => {
-                  return (
-                    <Picker.Item
-                      key={item.id}
-                      label={item.name}
-                      value={item.id}
-                    />
-                  );
-                })}
-              </Picker>
-
-              <View style={styles.checkboxContainer}>
-                <MaterialIcons
-                  name={skipNSFW ? 'check-box' : 'check-box-outline-blank'}
-                  size={20}
-                  // color="#000000"
-                  onPress={() => setSkipNSFW(!skipNSFW)}
-                />
-                <Text style={styles.checkboxLabel}>
-                  Skip everything that is NSFW
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Preferences');
-                  // if (!loading) {
-                  //   handleFormSubmit();
-                  // }
-                }}
-                style={styles.loginButton}>
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <>
-                    <Text style={styles.loginText}>Continue</Text>
-                    <MaterialIcons
-                      name="arrow-forward"
-                      size={20}
-                      color="#FFFFFF"
-                      style={styles.loginButtonIcon}
-                    />
-                  </>
-                )}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  if (!loading) {
-                    handleFormSubmit();
-                  }
-                }}
-                style={[styles.loginButton, {backgroundColor: 'white'}]}>
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <>
-                    <Text style={[styles.loginText, {color: '#5fbc7d'}]}>
-                      Skip for now
-                    </Text>
-                    <MaterialIcons
-                      name="block-flipped"
-                      size={20}
-                      color="#5fbc7d"
-                      style={styles.loginButtonIcon}
-                    />
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View> */}
-          {/* <Modal
-            isVisible={modalVisible}
-            style={{
-              position: 'relative',
-              margin: 0,
-            }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                position: 'absolute',
-                bottom: 0,
-                // height: 200,
-                width: '100%',
-                borderTopRightRadius: 20,
-                paddingTop: 25,
-                borderTopLeftRadius: 20,
-              }}>
-              {notificationFrequency.map(item => {
-                return (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={{width: windowWidth}}
-                    onPress={() => {
-                      setModalVisible(prev => !prev);
-                      setNotiFreqValue(item.title);
-                    }}>
-                    <Text style={{color: 'black', marginHorizontal: 20}}>
-                      {item.title}
-                    </Text>
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: 'lightgrey',
-                        marginVertical: 18,
-
-                        width: windowWidth,
-                      }}></View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </Modal> */}
 
           <View style={styles.eachInputContainer}>
             <Text style={styles.txt}>what age group do you belong to?</Text>
 
             <View style={{flexDirection: 'row', position: 'relative'}}>
-              <TextInput style={styles.txtinput}></TextInput>
+              <TextInput
+                value={ageGroup}
+                editable={false}
+                style={styles.txtinput}></TextInput>
 
               <TouchableOpacity
                 style={{
@@ -377,6 +220,10 @@ const InfoScreen = ({navigation}) => {
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
+                }}
+                onPress={() => {
+                  var title = 'age';
+                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -386,6 +233,10 @@ const InfoScreen = ({navigation}) => {
                     resizeMode: 'contain',
                     tintColor: 'black',
                     alignSelf: 'flex-end',
+                    paddingLeft: 50,
+                    paddingVertical: 10,
+                    // paddingLeft: 500,
+                    // paddingRight: 0,
                   }}
                 />
               </TouchableOpacity>
@@ -395,7 +246,10 @@ const InfoScreen = ({navigation}) => {
             <Text style={styles.txt}>what is your gender?</Text>
 
             <View style={{flexDirection: 'row', position: 'relative'}}>
-              <TextInput style={styles.txtinput}></TextInput>
+              <TextInput
+                value={gender}
+                editable={false}
+                style={styles.txtinput}></TextInput>
 
               <TouchableOpacity
                 style={{
@@ -404,6 +258,10 @@ const InfoScreen = ({navigation}) => {
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
+                }}
+                onPress={() => {
+                  var title = 'gender';
+                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -413,6 +271,8 @@ const InfoScreen = ({navigation}) => {
                     resizeMode: 'contain',
                     tintColor: 'black',
                     alignSelf: 'flex-end',
+                    paddingLeft: 50,
+                    paddingVertical: 10,
                   }}
                 />
               </TouchableOpacity>
@@ -422,7 +282,10 @@ const InfoScreen = ({navigation}) => {
             <Text style={styles.txt}>what occupation are you in?</Text>
 
             <View style={{flexDirection: 'row', position: 'relative'}}>
-              <TextInput style={styles.txtinput}></TextInput>
+              <TextInput
+                value={occupation}
+                editable={false}
+                style={styles.txtinput}></TextInput>
 
               <TouchableOpacity
                 style={{
@@ -431,6 +294,10 @@ const InfoScreen = ({navigation}) => {
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
+                }}
+                onPress={item => {
+                  var title = 'occupation';
+                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -440,18 +307,23 @@ const InfoScreen = ({navigation}) => {
                     resizeMode: 'contain',
                     tintColor: 'black',
                     alignSelf: 'flex-end',
+                    paddingLeft: 50,
+                    paddingVertical: 10,
                   }}
                 />
               </TouchableOpacity>
             </View>
           </View>
+          {errorMsg && (
+            <Text
+              style={{color: 'red', fontWeight: '600', textAlign: 'center'}}>
+              Please select options for all fields.
+            </Text>
+          )}
           <View style={styles.eachInputContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Preferences');
-                // if (!loading) {
-                //   handleFormSubmit();
-                // }
+                handleFormSubmit();
               }}
               style={styles.loginButton}>
               {loading ? (
@@ -471,9 +343,7 @@ const InfoScreen = ({navigation}) => {
 
             <TouchableOpacity
               onPress={() => {
-                if (!loading) {
-                  handleFormSubmit();
-                }
+                handleFormSubmit();
               }}
               style={[styles.loginButton, {backgroundColor: 'white'}]}>
               {loading ? (
@@ -493,6 +363,47 @@ const InfoScreen = ({navigation}) => {
               )}
             </TouchableOpacity>
           </View>
+          <Modal
+            isVisible={modalVisible}
+            style={{
+              position: 'relative',
+              margin: 0,
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                position: 'absolute',
+                bottom: 0,
+                // height: 200,
+                width: '100%',
+                borderTopRightRadius: 20,
+                paddingTop: 25,
+                borderTopLeftRadius: 20,
+              }}>
+              {modalSelectionValues?.map(item => {
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={{width: windowWidth}}
+                    onPress={() => {
+                      setInfoState(item);
+                    }}>
+                    <Text style={{color: 'black', marginHorizontal: 20}}>
+                      {item.title}
+                    </Text>
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: 'lightgrey',
+                        marginVertical: 18,
+
+                        width: windowWidth,
+                      }}></View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </Modal>
         </ScrollView>
       </SafeAreaView>
     </>
@@ -506,7 +417,9 @@ const styles = StyleSheet.create({
     height: 55,
     borderRadius: 6,
     marginTop: 5,
+    color: 'black',
   },
+
   txt: {
     textTransform: 'uppercase',
     color: 'black',

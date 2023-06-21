@@ -19,6 +19,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {windowWidth} from '../../../helper/usefulConstants';
 import CreateProfileHeader from '../../../components/CreateProfileHeader';
 import {CheckBox} from 'react-native-elements';
+import {log} from 'react-native-reanimated';
 
 const SignupScreen = ({navigation}) => {
   const [username, setUsername] = useState('');
@@ -38,17 +39,18 @@ const SignupScreen = ({navigation}) => {
     try {
       if (rememberMe) {
         setLoading(true);
+
         const response = await Axios.post(`/auth/signup`, {
           username,
           email,
           password,
         });
 
+        console.log(response.data.data);
+
         const {token} = response.data.data;
         // navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
-        navigation.push('Verify', {
-          email,
-        });
+        navigation.navigate('InfoScreen');
         setLoading(false);
       } else {
         setErrorMessage('You have to agree to our terms and conditions');
@@ -136,13 +138,13 @@ const SignupScreen = ({navigation}) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                <Text style={styles.label}>PHONE NUMBER</Text>
+                {/* <Text style={styles.label}>PHONE NUMBER</Text>
                 <TextInput
                   value={phonenumber}
                   onChangeText={setPhonenumber}
                   style={styles.input}
                   placeholder="Enter your phone number"
-                />
+                /> */}
 
                 <View style={styles.checkboxContainer}>
                   <MaterialIcons
@@ -160,7 +162,8 @@ const SignupScreen = ({navigation}) => {
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('InfoScreen');
+                    handleSignup();
+                    // navigation.navigate('InfoScreen');
                     // if (!loading) {
                     //   handleSignup();
                     // }
@@ -248,6 +251,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingLeft: 5,
     backgroundColor: 'white',
+    color: 'black',
   },
   checkboxContainer: {
     flexDirection: 'row',

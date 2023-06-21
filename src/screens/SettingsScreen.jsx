@@ -23,7 +23,7 @@ import {useSelector} from 'react-redux';
 const SettingsScreen = () => {
   const navigation = useNavigation();
 
-  const [news, setNews] = useState([]);
+  const [news, setNews] = useState();
   const [page, setPage] = useState(1);
   const [config, setConfig] = useState(null);
   const [hasMore, setHasMore] = useState(false);
@@ -34,18 +34,6 @@ const SettingsScreen = () => {
   const reload = useSelector(state => state.reloadNews.value);
 
   useEffect(() => {
-    const fetchToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        const config = {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        };
-
-        setConfig(config);
-      }
-    };
     fetchToken();
   }, []);
 
@@ -53,12 +41,25 @@ const SettingsScreen = () => {
     fetchNews();
   }, [config, renderBookmarked, profile, reload]);
 
+  const fetchToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (token) {
+      const config = {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+
+      setConfig(config);
+    }
+  };
+
   const fetchProfile = async () => {
     try {
       const res = await Axios.get('/users/profile', config);
 
       if (!res.data.data.isComplete) {
-        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+        // return navigation.navigate('Auth', {screen: 'InfoScreen'});
       }
       setProfile(res.data.data);
     } catch (err) {
@@ -75,6 +76,7 @@ const SettingsScreen = () => {
       fetchProfile();
     }
   }, [config]);
+
   const fetchNews = async () => {
     try {
       const res = await Axios.post(
@@ -168,10 +170,18 @@ const SettingsScreen = () => {
         <ScrollView>
           <View
             style={{paddingHorizontal: 15, marginTop: 10, marginBottom: -15}}>
-            <Text style={{fontWeight: 'bold', color: 'black', fontSize: 22}}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: 'black',
+                fontSize: 22,
+                textTransform: 'capitalize',
+              }}>
               {profile?.username}
             </Text>
-            <Text style={{color: 'grey', marginBottom: 15}}></Text>
+            <Text style={{color: 'grey', marginBottom: 15}}>
+              {/* {profile?.occupation} */}
+            </Text>
 
             <View style={styles.btnContainer}>
               <TouchableOpacity style={styles.btn}>
