@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingVertical: 6,
-    width: '38%',
+    width: windowWidth * 0.35,
     // paddingRight: 7,
     paddingLeft: 13,
     backgroundColor: '#FEFEFF',
@@ -373,6 +373,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    width: windowWidth * 0.3,
+    justifyContent: 'space-around',
   },
   title: {
     fontSize: 13,
@@ -390,6 +392,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 5,
     color: 'black',
+    height: 40,
   },
   btnTxt: {
     textAlign: 'center',

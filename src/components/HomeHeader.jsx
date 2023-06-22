@@ -39,7 +39,7 @@ const HomeHeader = ({id, isShown = true}) => {
         <Icon
           name="keyboard-arrow-down"
           color="#FEFEFF"
-          size={24}
+          size={24}``
           // style={{flex: 1}}
         />
       </TouchableOpacity>
