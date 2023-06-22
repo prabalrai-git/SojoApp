@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [hello, setHello] = useState(false);
 
   useEffect(() => {
     if (errorMessage) {
@@ -42,7 +43,6 @@ const MainScreen = ({navigation}) => {
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      console.log('yo');
       const {idToken, user} = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(googleCredential);
@@ -55,7 +55,7 @@ const MainScreen = ({navigation}) => {
 
         const {token} = response.data.data;
         await AsyncStorage.setItem('token', token);
-        navigation.navigate('Curated');
+        // navigation.navigate('Curated');
         navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
         // handle successful login, e.g. redirect to home screen
       } catch (error) {

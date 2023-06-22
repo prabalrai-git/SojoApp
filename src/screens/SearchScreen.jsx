@@ -18,12 +18,15 @@ const SearchScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+
   useEffect(() => {
     // AsyncStorage.removeItem('token');
     if (navigation && !AsyncStorage.getItem('token')) {
       navigation.replace('WelcomeScreen');
     }
   }, [navigation]);
+
+  console.log(route.params.profile.id, 'from search explore');
 
   const fetchBlogs = async () => {
     try {
@@ -46,7 +49,14 @@ const SearchScreen = ({navigation, route}) => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} navigation={navigation} key={item.id} />;
+    return (
+      <Card
+        item={item}
+        navigation={navigation}
+        key={item.id}
+        profile={route?.params.profile}
+      />
+    );
   });
 
   const renderItem = ({item}) => {

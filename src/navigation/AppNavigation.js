@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
 import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';

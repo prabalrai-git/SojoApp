@@ -9,24 +9,50 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
 import Card from '../components/Card';
 import FastImage from 'react-native-fast-image';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {toggle} from '../redux/features/ReloadNewsSlice';
+import Share from 'react-native-share';
 
 const BlogScreen = ({route, navigation}) => {
   const scrollRef = useRef(null);
   const {id, profile} = route.params;
   const [data, setData] = useState(null);
   const [similarBlogs, setSimilarBlogs] = useState([]);
+  const [config, setConfig] = useState();
+  const [refetch, setRefetch] = useState(false);
+
   const {width} = useWindowDimensions();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const config = {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+
+        setConfig(config);
+      }
+    };
+    fetchToken();
+  }, []);
 
   const fetchData = async () => {
     try {
+      console.log(`/news/${id}?userId=${profile.id}`);
       const res = await Axios.get(`/news/${id}?userId=${profile.id}`);
       setData(res.data.data);
       scrollRef.current.scrollTo({y: 0, animated: true});
@@ -46,7 +72,7 @@ const BlogScreen = ({route, navigation}) => {
 
   useEffect(() => {
     id && fetchData();
-  }, [id]);
+  }, [id, refetch]);
 
   useEffect(() => {
     data && fetchSimilarBlogs();
@@ -55,6 +81,81 @@ const BlogScreen = ({route, navigation}) => {
   // if (!data) {
   //   return <ActivityIndicator />;
   // }
+
+  const toggleBookmark = async () => {
+    try {
+      const res = await Axios.post(
+        '/users/bookmarks/toggleOrAddBookmark',
+        {userId: profile?.id, newsId: id},
+        config,
+      );
+
+      setRefetch(prev => !prev);
+      dispatch(toggle());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const url = `https://sojonews.com/news/${id}`;
+  const title = `${data?.title}`;
+  const message = 'Please check this out.';
+  const icon = 'data:<data_type>/<file_extension>;base64,<base64_data>';
+  const options = Platform.select({
+    ios: {
+      activityItemSources: [
+        {
+          // For sharing url with custom title.
+          placeholderItem: {type: 'url', content: url},
+          item: {
+            default: {type: 'url', content: url},
+          },
+          subject: {
+            default: title,
+          },
+          linkMetadata: {originalUrl: url, url, title},
+        },
+        {
+          // For sharing text.
+          placeholderItem: {type: 'text', content: message},
+          item: {
+            default: {type: 'text', content: message},
+            message: null, // Specify no text to share via Messages app.
+          },
+          linkMetadata: {
+            // For showing app icon on share preview.
+            title: message,
+          },
+        },
+        {
+          // For using custom icon instead of default text icon at share preview when sharing with message.
+          placeholderItem: {
+            type: 'url',
+            content: icon,
+          },
+          item: {
+            default: {
+              type: 'text',
+              content: `${message} ${url}`,
+            },
+          },
+          linkMetadata: {
+            title: message,
+            icon: icon,
+          },
+        },
+      ],
+    },
+    default: {
+      title,
+      subject: title,
+      message: `${message} ${url}`,
+    },
+  });
+
+  const onClickShare = () => {
+    Share.open(options);
+  };
 
   return (
     <>
@@ -74,33 +175,43 @@ const BlogScreen = ({route, navigation}) => {
           </TouchableOpacity>
 
           <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+            {data?.isBookmarkedByUser ? (
+              <TouchableOpacity onPress={() => toggleBookmark()}>
+                <Image
+                  source={require('../assets/whitemarking.png')}
+                  style={{
+                    resizeMode: 'contain',
+                    width: 116,
+                    height: 35,
+                    // marginRight: 5,
+                  }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#52c080',
+                  padding: 6,
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  flexDirection: 'row',
+                }}
+                onPress={() => toggleBookmark()}>
+                <Image
+                  source={require('../assets/saved.png')}
+                  style={{
+                    tintColor: 'white',
+                    resizeMode: 'contain',
+                    width: 20,
+                    height: 20,
+                    marginRight: 5,
+                  }}
+                />
+                <Text style={{color: 'white'}}>Bookmark</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
-              style={{
-                backgroundColor: '#52c080',
-                padding: 6,
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                flexDirection: 'row',
-              }}>
-              {data?.isBookmarkedByUser ? (
-                <Text style={{color: 'white'}}>Bookmarked</Text>
-              ) : (
-                <>
-                  <Image
-                    source={require('../assets/saved.png')}
-                    style={{
-                      tintColor: 'white',
-                      resizeMode: 'contain',
-                      width: 20,
-                      height: 20,
-                      marginRight: 5,
-                    }}
-                  />
-                  <Text style={{color: 'white'}}>Bookmark</Text>
-                </>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
+              onPress={() => onClickShare()}
               style={{
                 marginLeft: 10,
                 backgroundColor: '#52c080',
@@ -182,10 +293,15 @@ const BlogScreen = ({route, navigation}) => {
                 Similar News
               </Text>
             </View>
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, marginBottom: 35}}>
               {similarBlogs.map(item => {
                 return (
-                  <Card key={item.id} item={item} navigation={navigation} />
+                  <Card
+                    key={item.id}
+                    item={item}
+                    navigation={navigation}
+                    profile={profile}
+                  />
                 );
               })}
             </View>

@@ -180,7 +180,7 @@ const SettingsScreen = () => {
               {profile?.username}
             </Text>
             <Text style={{color: 'grey', marginBottom: 15}}>
-              {/* {profile?.occupation} */}
+              {profile?.occupation?.name}
             </Text>
 
             <View style={styles.btnContainer}>
@@ -210,7 +210,11 @@ const SettingsScreen = () => {
             news?.map(item => {
               return (
                 <>
-                  <BlogItem item={item} navigation={navigation} />
+                  <BlogItem
+                    key={item?.id}
+                    item={item}
+                    navigation={navigation}
+                  />
                 </>
               );
             })

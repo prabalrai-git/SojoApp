@@ -46,8 +46,6 @@ const SignupScreen = ({navigation}) => {
           password,
         });
 
-        console.log(response.data.data);
-
         const {token} = response.data.data;
         // navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
         navigation.navigate('InfoScreen');

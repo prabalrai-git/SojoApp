@@ -27,7 +27,6 @@ const TopicsScreen = ({navigation, route}) => {
       try {
         const res = await Axios.get('/topics');
         setData(res.data.data);
-        console.log(res.data.data);
       } catch (err) {
         console.log(err);
       }
@@ -73,7 +72,13 @@ const TopicsScreen = ({navigation, route}) => {
         </Text> */}
             <View style={{marginTop: 20}}>
               {data?.map(item => {
-                return <AddtopicsRegister item={item} config={config} />;
+                return (
+                  <AddtopicsRegister
+                    key={item?.id}
+                    item={item}
+                    config={config}
+                  />
+                );
               })}
             </View>
             {/* <FlatList

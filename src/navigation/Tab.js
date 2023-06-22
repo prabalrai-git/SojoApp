@@ -1,23 +1,13 @@
 import React, {useEffect} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Icon from 'react-native-vector-icons/Feather';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AndDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Image, Text} from 'react-native';
 
 import SettingsScreen from './../screens/SettingsScreen';
 import {SettingStack, TopicsStack} from './Stacks';
 import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+
 import {windowWidth} from '../helper/usefulConstants';
-import {useDispatch, useSelector} from 'react-redux';
-import {toogleStatus} from '../redux/features/ReloadStatusBar';
-import {logoutUser} from '../helper/auth';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -35,8 +25,6 @@ function CustomTabBarLabel({label, focused}) {
 }
 
 const TabNavigator = () => {
-  const dispatch = useDispatch();
-
   return (
     <Tab.Navigator
       keyboardHidesTabBar={true}
@@ -45,13 +33,13 @@ const TabNavigator = () => {
         tabBarLabel: ({label, size, focused}) => {
           return <CustomTabBarLabel label={label} focused={focused} />;
         },
-        tabBarStyle: {height: 70},
+        tabBarStyle: {height: 78},
         tabBarIndicatorStyle: {
           backgroundColor: '#ECF9EF',
-          height: '85%',
-          marginBottom: 6,
-          width: windowWidth * 0.2,
-          marginLeft: 10,
+          height: '74%',
+          marginBottom: 17,
+          width: windowWidth * 0.22,
+          marginLeft: 8,
           borderRadius: 16,
         },
         tabBarActiveTintColor: '#006203',
@@ -89,11 +77,6 @@ const TabNavigator = () => {
             );
           } else if (route.name === 'Settings') {
             return (
-              // <FontAwesome
-              //   name={focused ? 'user' : 'user-o'}
-              //   size={23}
-              //   color={color}
-              // />
               <Image
                 source={
                   focused
@@ -101,14 +84,12 @@ const TabNavigator = () => {
                     : require('../assets/user.png')
                 }
                 style={{
-                  // tintColor: focused ? '#006203' : 'grey',
                   width: 26,
                   height: 26,
                   resizeMode: 'contain',
                 }}
               />
             );
-            iconName = 'profile';
           } else if (route.name === 'Topics') {
             return (
               <Image
@@ -138,14 +119,6 @@ const TabNavigator = () => {
                   resizeMode: 'contain',
                 }}
               />
-              // <Ionicons
-              //   name={focused ? 'compass' : 'compass-outline'}
-              //   size={25}
-              //   color={color}
-              //   onPress={() => {
-              //     console.log('thichyo rey thichyo');
-              //   }}
-              // />
             );
           }
 

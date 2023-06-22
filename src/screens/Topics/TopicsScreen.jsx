@@ -182,6 +182,9 @@ const Category = () => {
                   <TouchableOpacity
                     style={styles.link}
                     onPress={() => {
+                      return navigation.navigate('CategoryScreen', {
+                        id: item.id,
+                      });
                       let found = false;
 
                       profile.topics.forEach(topic => {

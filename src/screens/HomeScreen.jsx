@@ -80,6 +80,7 @@ const HomeScreen = ({navigation}) => {
         `/users/news/global?page=${page}&id=${profile?.id}`,
         config,
       );
+
       blogs.length > 0
         ? setBlogs(prevData => [...prevData, ...res.data.data])
         : setBlogs(res.data.data);

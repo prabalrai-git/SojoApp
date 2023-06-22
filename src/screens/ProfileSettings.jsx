@@ -131,7 +131,11 @@ const ProfileSettings = ({navigation}) => {
                 onPress={() => {
                   logoutUser();
                   signOut();
-                  navigation.navigate('MainScreen');
+                  // navigation.reset({
+                  //   index: 0,
+                  //   routes: [{name: 'Auth'}],
+                  // });
+                  navigation.navigate('Auth', {screen: 'MainScreen'});
                 }}>
                 <Text style={{color: '#082313'}}>Sign Out</Text>
                 <Image

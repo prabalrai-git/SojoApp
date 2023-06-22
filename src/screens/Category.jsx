@@ -12,31 +12,27 @@ import Card from './../components/Card';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import HomeHeader from '../components/HomeHeader';
 import SearchBar from '../components/SearchBar/SearchBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Category = () => {
   const [data, setData] = useState([]);
   const [topic, setTopic] = useState(null);
   const [config, setConfig] = useState(null);
+  const [profile, setProfile] = useState();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     StatusBar.setBackgroundColor('#26B160'); // Set the specific color when the screen is focused
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
-
   const fetchData = async page => {
     try {
       const res = await Axios.get(
-        `/news/categories/${route.params.id}?page=${page}`,
+        `/news/categories/${route.params.id}?page=${page}&userId=${profile?.id}`,
         // config,
       );
+
+      // return console.log(res.data.data);
       setData(prevData => [...prevData, ...res.data.data]);
       setHasMore(res.data.pagination.nextPage !== null);
       setLoading(false);
@@ -66,13 +62,52 @@ const Category = () => {
   }, []);
 
   useEffect(() => {
-    if (topic) {
+    if (topic && profile) {
       if (page === 1) {
         setData([]);
       }
       fetchData(page);
     }
-  }, [topic, page]);
+  }, [topic, page, route.params.id, profile]);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+
+      if (token) {
+        const config = {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+
+        setConfig(config);
+      }
+    };
+    fetchToken();
+  }, []);
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+
+      if (!res.data.data.isComplete) {
+        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+      }
+      setProfile(res.data.data);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setProfile(null);
+        // return router.replace('/');
+      }
+    }
+  };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
 
   const renderFooter = () => {
     if (!loading) return null;
@@ -80,7 +115,14 @@ const Category = () => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} navigation={navigation} key={item.id} />;
+    return (
+      <Card
+        item={item}
+        navigation={navigation}
+        key={item.id}
+        profile={profile}
+      />
+    );
   });
 
   const renderItem = ({item}) => {

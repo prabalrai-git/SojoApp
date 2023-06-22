@@ -47,21 +47,26 @@ export default GlobalHeader;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 6,
     // paddingRight: 7,
-    paddingLeft: 13,
-    backgroundColor: '#52c080',
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 8,
+    // alignItems: 'center',
+    justifyContent: 'space-around',
+
     flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    width: windowWidth * 0.3,
+    paddingLeft: 10,
+    backgroundColor: '#52c080',
+    borderRadius: 8,
+    marginRight: 10,
+
+    paddingVertical: 6,
+
+    justifyContent: 'space-around',
+
+    width: windowWidth * 0.36,
   },
   title: {
     fontSize: 14,

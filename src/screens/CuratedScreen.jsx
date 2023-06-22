@@ -7,6 +7,7 @@ import {
   Text,
   StatusBar,
   SafeAreaView,
+  Button,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -54,14 +55,12 @@ const HomeScreen = ({navigation}) => {
     };
     fetchToken();
   }, []);
-
   useEffect(() => {
     // AsyncStorage.removeItem('token');
     if (navigation && !AsyncStorage.getItem('token')) {
       navigation.replace('WelcomeScreen');
     }
   }, [navigation]);
-
   // fetch profile
   const fetchProfile = async () => {
     try {
