@@ -7,7 +7,6 @@ import {
   Text,
   StatusBar,
   SafeAreaView,
-  Button,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -26,18 +25,6 @@ const HomeScreen = ({navigation}) => {
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
-
-  // console.log(reload, 'yoyoyoyoyoyoy');
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     StatusBar.setBackgroundColor('#27B161');
-  //   }, 1); // set a small delay here (in milliseconds)
-
-  //   return () => clearTimeout(timeout);
-  // }, [isFocused]);
-
-  // const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchToken = async () => {

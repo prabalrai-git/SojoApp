@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
+  BackHandler,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -21,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import Share from 'react-native-share';
+import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
 
 const BlogScreen = ({route, navigation}) => {
   const scrollRef = useRef(null);
@@ -33,6 +35,14 @@ const BlogScreen = ({route, navigation}) => {
   const {width} = useWindowDimensions();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(hideTabBar());
+  }, []);
+
+  BackHandler.addEventListener('hardwareBackPress', () => {
+    dispatch(showTabBar());
+  });
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -157,6 +167,11 @@ const BlogScreen = ({route, navigation}) => {
     Share.open(options);
   };
 
+  const onBackPress = () => {
+    dispatch(showTabBar());
+    navigation.pop();
+  };
+
   return (
     <>
       <SafeAreaView style={{backgroundColor: '#26B160'}}>
@@ -167,7 +182,9 @@ const BlogScreen = ({route, navigation}) => {
               paddingHorizontal: 15,
               padding: 6,
             }}
-            onPress={() => navigation.pop()}>
+            onPress={() => {
+              onBackPress();
+            }}>
             <Image
               source={require('../assets/arrow-left.png')}
               style={{tintColor: 'white', width: 20, height: 20}}

@@ -3,7 +3,7 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {AuthStack} from './Stacks';
+import {AuthStack, TabAndAuthStack} from './Stacks';
 import TabNavigator from './Tab';
 
 export default function MainNavigator() {
@@ -56,7 +56,7 @@ export default function MainNavigator() {
         {profile ? (
           <Stack.Screen
             name="Home"
-            component={TabNavigator}
+            component={TabAndAuthStack}
             options={{
               headerShown: false,
             }}

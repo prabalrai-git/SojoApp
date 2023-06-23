@@ -8,6 +8,7 @@ import {SettingStack, TopicsStack} from './Stacks';
 import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
 
 import {windowWidth} from '../helper/usefulConstants';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -25,6 +26,8 @@ function CustomTabBarLabel({label, focused}) {
 }
 
 const TabNavigator = () => {
+  const hideTabBar = useSelector(state => state.hideTabBar.value);
+
   return (
     <Tab.Navigator
       keyboardHidesTabBar={true}
@@ -33,7 +36,7 @@ const TabNavigator = () => {
         tabBarLabel: ({label, size, focused}) => {
           return <CustomTabBarLabel label={label} focused={focused} />;
         },
-        tabBarStyle: {height: 78},
+        tabBarStyle: {height: hideTabBar ? 0 : 77},
         tabBarIndicatorStyle: {
           backgroundColor: '#ECF9EF',
           height: '74%',

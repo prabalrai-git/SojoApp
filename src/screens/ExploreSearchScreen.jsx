@@ -13,12 +13,15 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
+import ExploreCard from '../components/CardExplore';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [config, setConfig] = useState();
+  const [profile, setProfile] = useState();
 
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener('focus', () => {
@@ -27,6 +30,45 @@ const SearchScreen = ({navigation, route}) => {
 
   //   return unsubscribe;
   // }, [navigation]);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+
+      if (token) {
+        const config = {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+
+        setConfig(config);
+      }
+    };
+    fetchToken();
+  }, []);
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+
+      if (!res.data.data.isComplete) {
+        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+      }
+      setProfile(res.data.data);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setProfile(null);
+        // return router.replace('/');
+      }
+    }
+  };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
 
   useEffect(() => {
     // AsyncStorage.removeItem('token');
@@ -46,6 +88,7 @@ const SearchScreen = ({navigation, route}) => {
     }
   };
 
+  // console.log(blogs, 'from explore search');
   useEffect(() => {
     route.params.term && fetchBlogs();
   }, [route.params.term]);
@@ -56,7 +99,14 @@ const SearchScreen = ({navigation, route}) => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} navigation={navigation} key={item.id} />;
+    return (
+      <ExploreCard
+        item={item}
+        navigation={navigation}
+        key={item.id}
+        profile={profile}
+      />
+    );
   });
 
   const renderItem = ({item}) => {

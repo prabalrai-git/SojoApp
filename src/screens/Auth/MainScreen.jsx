@@ -19,10 +19,15 @@ import {
 import auth from '@react-native-firebase/auth';
 import Axios from '../../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
-const MainScreen = ({navigation}) => {
+const MainScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [hello, setHello] = useState(false);
+
+  const navigation = useNavigation();
+
+  console.log(navigation.getState(), 'hi yayayay');
 
   useEffect(() => {
     if (errorMessage) {
@@ -40,6 +45,9 @@ const MainScreen = ({navigation}) => {
     });
   }, []);
 
+  // useEffect(() => {
+  //   signOut();
+  // });
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -53,10 +61,17 @@ const MainScreen = ({navigation}) => {
         });
         // return console.log(response.data.data);
 
-        const {token} = response.data.data;
+        const {token, userAlereadyExits} = response.data.data;
         await AsyncStorage.setItem('token', token);
-        // navigation.navigate('Curated');
-        navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
+        if (userAlereadyExits) {
+          navigation.replace('AuthHome', {
+            screen: 'HomeTab',
+            params: {screen: 'Home'},
+          });
+        } else {
+          navigation.navigate('InfoScreen');
+        }
+        // navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
         // handle successful login, e.g. redirect to home screen
       } catch (error) {
         console.error(error);
@@ -121,7 +136,7 @@ const MainScreen = ({navigation}) => {
           <FontAwesome name="google" size={24} color="#545760" /> 
           <Text style={styles.buttonText}>Continue by logging in</Text>
         </TouchableOpacity>*/}
-        {/* <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button}>
           <Image
             source={require('../../assets/apple-logo.png')}
             style={styles.signupIcon}
@@ -129,7 +144,7 @@ const MainScreen = ({navigation}) => {
           <Text style={[styles.buttonText, styles.midText]}>
             Continue with Apple
           </Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <ScrollView>
           {errorMessage && (
             <Text style={{color: 'red', fontWeight: '600'}}>
@@ -153,12 +168,12 @@ const MainScreen = ({navigation}) => {
             />
             <Text style={[styles.buttonText, styles.midText]}>Sign OUt</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.button}
             onPress={() => {
               navigation.push('Login');
             }}>
-            {/* <MaterialIcons name="email" size=5{24} color="#545760" /> */}
+            <MaterialIcons name="email" size={24} color="#545760" />
             <Image
               source={require('../../assets/email.png')}
               style={styles.signupIcon}
@@ -166,7 +181,7 @@ const MainScreen = ({navigation}) => {
             <Text style={[styles.buttonText, styles.midText]}>
               Continue with Email
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={[
               styles.button,

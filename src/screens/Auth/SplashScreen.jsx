@@ -48,7 +48,7 @@ const SplashScreen = () => {
   useEffect(() => {
     setTimeout(() => {
       if (!profile) {
-        navigation.navigate('MainScreen');
+        navigation.replace('MainScreen');
       }
     }, 2000);
   }, [profile]);

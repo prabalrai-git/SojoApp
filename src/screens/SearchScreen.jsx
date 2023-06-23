@@ -26,10 +26,11 @@ const SearchScreen = ({navigation, route}) => {
     }
   }, [navigation]);
 
-  console.log(route.params.profile.id, 'from search explore');
+  // console.log(route.params.profile.id, 'from search explore');
 
   const fetchBlogs = async () => {
     try {
+      setBlogs();
       const res = await Axios.get(`/news/search/${route.params.term}`);
       setBlogs(res.data.data);
       setLoading(false);

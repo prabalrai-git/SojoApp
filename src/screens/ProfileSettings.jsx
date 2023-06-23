@@ -17,12 +17,23 @@ import {Switch} from 'react-native-switch';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {useNavigation} from '@react-navigation/native';
 
-const ProfileSettings = ({navigation}) => {
+const ProfileSettings = () => {
   const [checked, setChecked] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [notiForValue, setNotiForValue] = useState(null);
   const [notiFreqValue, setNotiFreqValue] = useState(null);
+
+  const navigation = useNavigation();
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('blur', () => {
+  //     navigation.pop();
+  //   });
+
+  //   // Return the function to unsubscribe from the event so it gets removed on unmount
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const notificationFor = [
     {id: 1, title: 'New stories on topic I follow'},
@@ -129,13 +140,17 @@ const ProfileSettings = ({navigation}) => {
                   borderRadius: 5,
                 }}
                 onPress={() => {
-                  logoutUser();
-                  signOut();
                   // navigation.reset({
                   //   index: 0,
                   //   routes: [{name: 'Auth'}],
                   // });
-                  navigation.navigate('Auth', {screen: 'MainScreen'});
+                  logoutUser();
+                  signOut();
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'MainScreen'}],
+                  });
+                  // navigation.navigate('MainScreen');
                 }}>
                 <Text style={{color: '#082313'}}>Sign Out</Text>
                 <Image

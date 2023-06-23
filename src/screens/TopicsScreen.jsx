@@ -100,7 +100,7 @@ const TopicsScreen = ({navigation, route}) => {
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Curated');
+            navigation.navigate('AuthHome');
             // if (!loading) {
             //   handleFormSubmit();
             // }
@@ -123,6 +123,7 @@ const TopicsScreen = ({navigation, route}) => {
 
         <TouchableOpacity
           onPress={() => {
+            return console.log('hello');
             if (!loading1) {
               handleFormSubmit();
             }

@@ -343,6 +343,7 @@ const InfoScreen = ({navigation}) => {
 
             <TouchableOpacity
               onPress={() => {
+                return console.log('hello');
                 handleFormSubmit();
               }}
               style={[styles.loginButton, {backgroundColor: 'white'}]}>

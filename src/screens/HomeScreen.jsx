@@ -14,8 +14,6 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import GlobalHeader from '../components/GlobalHeader';
-import {useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -24,8 +22,6 @@ const HomeScreen = ({navigation}) => {
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
 
-  // const reload = useSelector(state => state.reloadNews.value);
-
   const [profile, setProfile] = useState();
 
   useEffect(() => {
@@ -33,6 +29,7 @@ const HomeScreen = ({navigation}) => {
       fetchProfile();
     }
   }, [config]);
+
   const fetchProfile = async () => {
     try {
       const res = await Axios.get('/users/profile', config);

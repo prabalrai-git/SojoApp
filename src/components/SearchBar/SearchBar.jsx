@@ -63,7 +63,7 @@ const SearchBar = () => {
           onSubmitEditing={() => {
             if (term.trim().length > 0) {
               setTerm('');
-              navigation.push('SearchScreen', {
+              navigation.navigate('SearchScreen', {
                 term: term,
                 profile: profile,
               });

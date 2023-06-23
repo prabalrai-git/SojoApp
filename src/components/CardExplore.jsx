@@ -18,17 +18,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
 
-const BlogCard = ({
-  item,
-  fromBookmarks,
-  setRenderBookmarked,
-  navigation,
-  profile,
-}) => {
+const ExploreCard = ({item, navigation, profile}) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
-    item?.isBookmarkedByUser || fromBookmarks ? true : false,
+    item?.isBookmarkedByUser ? true : false,
   );
   const [config, setConfig] = useState();
   // console.log(item.id, 'item from explore');
@@ -70,11 +64,9 @@ const BlogCard = ({
           {userId: profile?.id, newsId: item.id},
           config,
         );
-        // return console.log(res.data);
+        // console.log(res.data);
         setToggled(prev => !prev);
-        if (setRenderBookmarked) {
-          setRenderBookmarked(prev => !prev);
-        }
+
         dispatch(toggle());
       } catch (err) {
         console.log(err);
@@ -160,7 +152,7 @@ const BlogCard = ({
   );
 };
 
-export default BlogCard;
+export default ExploreCard;
 
 const styles = StyleSheet.create({
   cardContainer: {

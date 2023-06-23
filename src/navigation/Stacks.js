@@ -191,8 +191,26 @@ export const SettingStack = () => {
       <Stack.Navigator
         initialRouteName="SettingsScreen"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
+        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+      </Stack.Navigator>
+    </>
+  );
+};
+
+// to maintain the bad code of navigation by other developer :(
+export const TabAndAuthStack = () => {
+  return (
+    <>
+      <Stack.Navigator
+        initialRouteName="Tab"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Tab" component={TabNavigator} />
+        <Stack.Screen name="MainScreen" component={MainScreen} />
+        <Stack.Screen name="AuthHome" component={TabNavigator} />
+        <Stack.Screen name="InfoScreen" component={InfoScreen} />
+        <Stack.Screen name="Preferences" component={Preferences} />
+        <Stack.Screen name="TopicsScreenLogin" component={TopicsScreenLogin} />
       </Stack.Navigator>
     </>
   );

@@ -167,6 +167,7 @@ const Preferences = ({navigation, route}) => {
 
       <TouchableOpacity
         onPress={() => {
+          return console.log('hi');
           if (!loading) {
             handleFormSubmit();
           }
