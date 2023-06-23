@@ -42,6 +42,7 @@ const HomeScreen = ({navigation}) => {
     };
     fetchToken();
   }, []);
+
   useEffect(() => {
     // AsyncStorage.removeItem('token');
     if (navigation && !AsyncStorage.getItem('token')) {
@@ -54,7 +55,7 @@ const HomeScreen = ({navigation}) => {
       const res = await Axios.get('/users/profile', config);
 
       if (!res.data.data.isComplete) {
-        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+        return navigation.replace('InfoScreen');
       }
       setProfile(res.data.data);
     } catch (err) {

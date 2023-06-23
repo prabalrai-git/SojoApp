@@ -74,6 +74,7 @@ const MainScreen = () => {
         // navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
         // handle successful login, e.g. redirect to home screen
       } catch (error) {
+        return signOut();
         console.error(error);
         if (error && error.response && error.response.data) {
           if (error.response.data.err === 'not_active') {
@@ -86,6 +87,8 @@ const MainScreen = () => {
         }
       }
     } catch (error) {
+      signOut();
+
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
         console.log(error);
@@ -161,13 +164,13 @@ const MainScreen = () => {
               Continue with Google
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => signOut()}>
+          {/* <TouchableOpacity style={styles.button} onPress={() => signOut()}>
             <Image
               source={require('../../assets/google.png')}
               style={styles.signupIcon}
             />
             <Text style={[styles.buttonText, styles.midText]}>Sign OUt</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -195,7 +198,7 @@ const MainScreen = () => {
               },
             ]}
             onPress={() => {
-              // return console.log('clicked');
+              return console.log('clicked');
               navigation.push('Signup');
             }}>
             {/* <MaterialIcons name="email" size={24} color="#545760" /> */}

@@ -157,6 +157,7 @@ const TabNavigator = () => {
         children={() => <ExploreDrawerNavigator />}
         options={{
           headerShown: false,
+
           tabBarLabel: ({focused}) => (
             <Text
               style={{
