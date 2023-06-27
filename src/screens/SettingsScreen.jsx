@@ -184,7 +184,11 @@ const SettingsScreen = () => {
             </Text>
 
             <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.btn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() =>
+                  navigation.navigate('Topics', {screen: 'EditTopicsScreen'})
+                }>
                 <Text style={styles.btnTxt}>Choose Your Topics</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.btn}>

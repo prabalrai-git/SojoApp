@@ -32,102 +32,105 @@ const TabNavigator = () => {
     <Tab.Navigator
       keyboardHidesTabBar={true}
       tabBarPosition="bottom"
-      screenOptions={({route}) => ({
-        tabBarLabel: ({label, size, focused}) => {
-          return <CustomTabBarLabel label={label} focused={focused} />;
-        },
-        tabBarStyle: {height: hideTabBar ? 0 : 77},
-        tabBarIndicatorStyle: {
-          backgroundColor: '#ECF9EF',
-          height: '74%',
-          marginBottom: 17,
-          width: windowWidth * 0.22,
-          marginLeft: 8,
-          borderRadius: 16,
-        },
-        tabBarActiveTintColor: '#006203',
-        tabBarShowLabel: true,
+      screenOptions={({route}) => {
+        return {
+          tabBarLabel: ({label, size, focused}) => {
+            return <CustomTabBarLabel label={label} focused={focused} />;
+          },
+          swipeEnabled: hideTabBar ? false : true,
+          tabBarStyle: {height: hideTabBar ? 0 : 77},
+          tabBarIndicatorStyle: {
+            backgroundColor: '#ECF9EF',
+            height: '74%',
+            marginBottom: 17,
+            width: windowWidth * 0.22,
+            marginLeft: 8,
+            borderRadius: 16,
+          },
+          tabBarActiveTintColor: '#006203',
+          tabBarShowLabel: true,
 
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
-          textTransform: 'none',
-        },
-        tabBarAndroidRipple: {
-          color: '#ECF9EF',
-          radius: 50,
-        },
-        headerShown: false,
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: '500',
+            textTransform: 'none',
+          },
+          tabBarAndroidRipple: {
+            color: '#ECF9EF',
+            radius: 50,
+          },
+          headerShown: false,
 
-        tabBarIcon: ({color, size, focused}) => {
-          let iconName;
+          tabBarIcon: ({color, size, focused}) => {
+            let iconName;
 
-          if (route.name === 'HomeTab') {
-            // iconName = 'home';
-            return (
-              <Image
-                source={
-                  focused
-                    ? require('../assets/feed_fill.png')
-                    : require('../assets/feed.png')
-                }
-                style={{
-                  width: 26,
-                  height: 26,
-                  resizeMode: 'contain',
-                }}
-              />
-            );
-          } else if (route.name === 'Settings') {
-            return (
-              <Image
-                source={
-                  focused
-                    ? require('../assets/user_fill.png')
-                    : require('../assets/user.png')
-                }
-                style={{
-                  width: 26,
-                  height: 26,
-                  resizeMode: 'contain',
-                }}
-              />
-            );
-          } else if (route.name === 'Topics') {
-            return (
-              <Image
-                source={
-                  focused
-                    ? require('../assets/topics_fill.png')
-                    : require('../assets/topics.png')
-                }
-                style={{
-                  width: 26,
-                  height: 26,
-                  resizeMode: 'contain',
-                }}
-              />
-            );
-          } else if (route.name === 'Explore') {
-            return (
-              <Image
-                source={
-                  focused
-                    ? require('../assets/compass_fill.png')
-                    : require('../assets/compass.png')
-                }
-                style={{
-                  width: 26,
-                  height: 26,
-                  resizeMode: 'contain',
-                }}
-              />
-            );
-          }
+            if (route.name === 'HomeTab') {
+              // iconName = 'home';
+              return (
+                <Image
+                  source={
+                    focused
+                      ? require('../assets/feed_fill.png')
+                      : require('../assets/feed.png')
+                  }
+                  style={{
+                    width: 26,
+                    height: 26,
+                    resizeMode: 'contain',
+                  }}
+                />
+              );
+            } else if (route.name === 'Settings') {
+              return (
+                <Image
+                  source={
+                    focused
+                      ? require('../assets/user_fill.png')
+                      : require('../assets/user.png')
+                  }
+                  style={{
+                    width: 26,
+                    height: 26,
+                    resizeMode: 'contain',
+                  }}
+                />
+              );
+            } else if (route.name === 'Topics') {
+              return (
+                <Image
+                  source={
+                    focused
+                      ? require('../assets/topics_fill.png')
+                      : require('../assets/topics.png')
+                  }
+                  style={{
+                    width: 26,
+                    height: 26,
+                    resizeMode: 'contain',
+                  }}
+                />
+              );
+            } else if (route.name === 'Explore') {
+              return (
+                <Image
+                  source={
+                    focused
+                      ? require('../assets/compass_fill.png')
+                      : require('../assets/compass.png')
+                  }
+                  style={{
+                    width: 26,
+                    height: 26,
+                    resizeMode: 'contain',
+                  }}
+                />
+              );
+            }
 
-          return <Icon name={iconName} size={26} color={color} />;
-        },
-      })}>
+            return <Icon name={iconName} size={26} color={color} />;
+          },
+        };
+      }}>
       <Tab.Screen
         name="HomeTab"
         children={() => <HomeDrawerNavigator />}

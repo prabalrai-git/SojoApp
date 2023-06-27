@@ -7,6 +7,7 @@ import {View, Text, StatusBar, Image} from 'react-native';
 const SplashScreen = () => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [notFirstTime, setNotFirstTime] = useState(null);
   const navigation = useNavigation();
 
   const fetchProfile = async () => {
@@ -46,11 +47,21 @@ const SplashScreen = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!profile) {
-        navigation.replace('MainScreen');
+    const notFirstTimeFn = async () => {
+      const value = await AsyncStorage.getItem('notFirstTime');
+      if (!value) {
+        setTimeout(() => {
+          return navigation.replace('WelcomeSignup');
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          if (!profile) {
+            return navigation.replace('MainScreen');
+          }
+        }, 2000);
       }
-    }, 2000);
+    };
+    notFirstTimeFn();
   }, [profile]);
 
   return (

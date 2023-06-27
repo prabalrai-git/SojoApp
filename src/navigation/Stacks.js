@@ -31,6 +31,12 @@ export const AuthStack = () => {
           headerShown: false,
         }}>
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="WelcomeSignup" component={WelcomeScreenSignup} />
+        <Stack.Screen
+          name="SecondSignupScreen"
+          component={SecondSignupScreen}
+        />
+        <Stack.Screen name="ThirdSignupScreen" component={ThirdSignupScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="AuthHome" component={TabNavigator} />
         <Stack.Screen
@@ -52,12 +58,7 @@ export const AuthStack = () => {
         <Stack.Screen name="TopicsScreenLogin" component={TopicsScreenLogin} />
 
         {/* signup */}
-        <Stack.Screen name="WelcomeSignup" component={WelcomeScreenSignup} />
-        <Stack.Screen
-          name="SecondSignupScreen"
-          component={SecondSignupScreen}
-        />
-        <Stack.Screen name="ThirdSignupScreen" component={ThirdSignupScreen} />
+
         <Stack.Screen
           name="OptionsScreenSignup"
           component={OptionsScreenSignup}
@@ -105,7 +106,7 @@ export const HomeStack = () => {
         <Stack.Screen
           name="Blog"
           component={BlogScreen}
-          options={{headerShown: false}}
+          options={{headerShown: false, gestureEnabled: false}}
         />
 
         <Stack.Screen
@@ -143,7 +144,7 @@ export const ExploreStack = () => {
         <Stack.Screen
           name="Blog"
           component={BlogScreen}
-          options={{headerShown: false}}
+          options={{headerShown: false, gestureEnabled: false}}
         />
 
         <Stack.Screen

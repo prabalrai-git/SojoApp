@@ -27,8 +27,6 @@ const MainScreen = () => {
 
   const navigation = useNavigation();
 
-  console.log(navigation.getState(), 'hi yayayay');
-
   useEffect(() => {
     if (errorMessage) {
       const timeout = setTimeout(() => {

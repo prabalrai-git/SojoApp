@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "866760448207",
-    "project_id": "sojonewsapp",
-    "storage_bucket": "sojonewsapp.appspot.com"
+    "project_number": "550042982411",
+    "project_id": "sojonewsapp-251bd",
+    "storage_bucket": "sojonewsapp-251bd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:866760448207:android:e2e14dd85f6219d5933fba",
+        "mobilesdk_app_id": "1:550042982411:android:7037177227c5da65ac4f0e",
         "android_client_info": {
           "package_name": "com.sojonewsapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "866760448207-g09snbt90sogn1d09ha191k8aembo86f.apps.googleusercontent.com",
+          "client_id": "550042982411-1t73gj9ddnm3rkrnu4hosu7krvf7c92a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sojonewsapp",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "866760448207-ou1v3tpdqteqpr68cajle5sojhuugglh.apps.googleusercontent.com",
+          "client_id": "550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAQImjQ0x_TcLP5nqQkDkmSNg6pdEs3AZs"
+          "current_key": "AIzaSyAJYYEkf0aOiGDRsX2hbDb_Eljfk91d-VA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "866760448207-2fs7hbk1h9u7bv64q7037kb4p1jbv3tf.apps.googleusercontent.com",
+              "client_id": "550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

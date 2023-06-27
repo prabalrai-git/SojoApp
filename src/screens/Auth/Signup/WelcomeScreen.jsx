@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,37 +21,41 @@ const WelcomeScreen = ({navigation}) => {
     navigation && checkIsLoggedIn();
   }, [navigation]);
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Image
-          source={require('./../../../assets/ion_earth-outline.png')}
-          style={styles.image}
-        />
-        <Text style={styles.text}>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro
-          quaerat dolorem quis blanditiis et id harum beatae. Officia, iure
-          facilis?
-        </Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <MaterialIcons
-          name="chevron-left"
-          size={30}
-          color="#000"
-          style={styles.left}
-          onPress={() => {
-            navigation.navigate('MainScreen');
-          }}
-        />
-        <TouchableOpacity
-          style={styles.nextButton}
-          onPress={() => {
-            navigation.push('SecondSignupScreen');
-          }}>
-          <Text style={styles.nextButtonText}>Next</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: 'white'}} />
+
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Image
+            source={require('./../../../assets/ion_earth-outline.png')}
+            style={styles.image}
+          />
+          <Text style={styles.text}>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro
+            quaerat dolorem quis blanditiis et id harum beatae. Officia, iure
+            facilis?
+          </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          {/* <MaterialIcons
+            name="chevron-left"
+            size={30}
+            color="#000"
+            style={styles.left}
+            onPress={() => {
+              navigation.pop();
+            }}
+          /> */}
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={() => {
+              navigation.push('SecondSignupScreen');
+            }}>
+            <Text style={styles.nextButtonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -58,6 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   image: {
     width: 200,
@@ -80,6 +92,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    backgroundColor: 'white',
   },
   nextButton: {
     backgroundColor: '#26B160',

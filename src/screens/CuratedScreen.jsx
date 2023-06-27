@@ -26,6 +26,15 @@ const HomeScreen = ({navigation}) => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
 
+  // to show hoarding board only for first time
+  const setFirstTime = async () => {
+    try {
+      await AsyncStorage.setItem('notFirstTime', 'yes');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('token');
@@ -41,6 +50,7 @@ const HomeScreen = ({navigation}) => {
       }
     };
     fetchToken();
+    setFirstTime();
   }, []);
 
   useEffect(() => {

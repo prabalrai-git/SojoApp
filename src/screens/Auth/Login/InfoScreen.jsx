@@ -55,7 +55,6 @@ const InfoScreen = ({navigation}) => {
   const getOccupation = async () => {
     const res = await Axios.get('/occupations');
     let data = res.data.data;
-    console.log(data);
     let newdata = [];
     data.map(item => {
       return newdata.push({id: item.id, title: item.name, type: 'occupation'});

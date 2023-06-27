@@ -62,7 +62,6 @@ const BlogScreen = ({route, navigation}) => {
 
   const fetchData = async () => {
     try {
-      console.log(`/news/${id}?userId=${profile.id}`);
       const res = await Axios.get(`/news/${id}?userId=${profile.id}`);
       setData(res.data.data);
       scrollRef.current.scrollTo({y: 0, animated: true});

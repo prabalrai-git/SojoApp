@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,37 +21,41 @@ const SecondScreen = ({navigation}) => {
     navigation && checkIsLoggedIn();
   }, [navigation]);
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Image
-          source={require('./../../../assets/second_signup.png')}
-          style={styles.image}
-        />
-        <Text style={styles.text}>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro
-          quaerat dolorem quis blanditiis et id harum beatae. Officia, iure
-          facilis?
-        </Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <MaterialIcons
-          name="chevron-left"
-          size={30}
-          color="#000"
-          style={styles.left}
-          onPress={() => {
-            navigation.navigate('WelcomeSignup');
-          }}
-        />
-        <TouchableOpacity
-          style={styles.nextButton}
-          onPress={() => {
-            navigation.push('ThirdSignupScreen');
-          }}>
-          <Text style={styles.nextButtonText}>Next</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: 'white'}} />
+
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Image
+            source={require('./../../../assets/second_signup.png')}
+            style={styles.image}
+          />
+          <Text style={styles.text}>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro
+            quaerat dolorem quis blanditiis et id harum beatae. Officia, iure
+            facilis?
+          </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <MaterialIcons
+            name="chevron-left"
+            size={30}
+            color="#000"
+            style={styles.left}
+            onPress={() => {
+              navigation.navigate('WelcomeSignup');
+            }}
+          />
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={() => {
+              navigation.push('ThirdSignupScreen');
+            }}>
+            <Text style={styles.nextButtonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -53,6 +64,7 @@ export default SecondScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   content: {
     flex: 1,
