@@ -16,6 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import TopicsHeader from '../../components/TopicsHeader';
 import Icon from 'react-native-vector-icons/Feather';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../../redux/features/HideTabBar';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -32,6 +34,15 @@ const Category = () => {
 
   //   return () => clearTimeout(timeout);
   // }, [navigation]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (term.length > 0) {

@@ -14,6 +14,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
 import ExploreCard from '../components/CardExplore';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
@@ -30,6 +32,16 @@ const SearchScreen = ({navigation, route}) => {
 
   //   return unsubscribe;
   // }, [navigation]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -79,6 +91,7 @@ const SearchScreen = ({navigation, route}) => {
 
   const fetchBlogs = async () => {
     try {
+      setBlogs();
       const res = await Axios.get(`/news/search/${route.params.term}`);
       setBlogs(res.data.data);
       setLoading(false);

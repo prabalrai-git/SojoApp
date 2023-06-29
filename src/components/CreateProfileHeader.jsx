@@ -14,7 +14,7 @@ const CreateProfileHeader = () => {
   return (
     <SafeAreaView style={styles.header}>
       <TouchableOpacity
-        onPress={() => navigation.pop()}
+        onPress={() => navigation.popToTop()}
         style={{
           padding: 10,
           alignSelf: 'center',

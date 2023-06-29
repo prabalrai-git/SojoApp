@@ -27,6 +27,8 @@ import {
   useIsFocused,
   DrawerActions,
 } from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const Drawer = createDrawerNavigator();
 
@@ -46,6 +48,15 @@ export const HomeDrawerNavigator = () => {
 
   //   return unsubscribe;
   // }, [navigation]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -89,6 +100,12 @@ export const HomeDrawerNavigator = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
   useEffect(() => {
     if (config) {
       const unsubscribe = navigation.addListener('focus', async () => {
@@ -300,7 +317,7 @@ export const ExploreDrawerNavigator = () => {
               style={styles.input}
               defaultValue={term}
               onChangeText={setTerm}
-              onSubmitEditing={searchTopic}
+              onSubmitEditing={() => searchTopic()}
             />
             <FontAwesomeIcon
               name="search"

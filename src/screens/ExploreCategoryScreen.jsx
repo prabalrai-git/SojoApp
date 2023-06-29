@@ -12,6 +12,8 @@ import Card from './../components/Card';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import GlobalHeader from '../components/GlobalHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -23,6 +25,16 @@ const Category = () => {
   const [profile, setProfile] = useState();
   const [config, setConfig] = useState();
   const route = useRoute();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener('focus', () => {

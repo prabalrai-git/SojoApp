@@ -16,6 +16,8 @@ import EditTopicsHeader from '../../components/EditTopicsHeader';
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TopicLoading from '../../components/TopicLoading';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../../redux/features/HideTabBar';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -26,6 +28,15 @@ const Category = () => {
   const [term, setTerm] = useState('');
   const [filteredTopics, setFilteredTopics] = useState([]);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener('focus', () => {
   //     StatusBar.setBackgroundColor('#F43E5F'); // Set the specific color when the screen is focused

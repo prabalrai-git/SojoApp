@@ -6,6 +6,8 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
+  Keyboard,
+  TextInput,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -14,19 +16,46 @@ import CreateProfileHeader from '../components/CreateProfileHeader';
 import {windowWidth} from '../helper/usefulConstants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AddtopicsRegister from '../components/AddtopicsRegister';
+import Icon from 'react-native-vector-icons/Feather';
+import {showTabBar} from '../redux/features/HideTabBar';
+import {useDispatch} from 'react-redux';
 
 const TopicsScreen = ({navigation, route}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
+  const [term, setTerm] = useState('');
+  const [filteredTopics, setFilteredTopics] = useState(data);
+  const [userTopics, setUserTopics] = useState(null);
+  const [newTopicAdded, setNewTopicAdded] = useState(false);
 
   const config = route?.params?.config;
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await Axios.get('/users/profile', config);
+        // console.log(res.data.data.topics);
+        setUserTopics(res.data.data.topics);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserData();
+  }, [newTopicAdded]);
+
+  useEffect(() => {
+    console.log(
+      userTopics,
+      'This are the user topics rerendererd sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfs',
+    );
+  }, [userTopics]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await Axios.get('/topics');
         setData(res.data.data);
+        setFilteredTopics(res.data.data);
       } catch (err) {
         console.log(err);
       }
@@ -34,6 +63,22 @@ const TopicsScreen = ({navigation, route}) => {
     fetchData();
   }, [navigation]);
 
+  useEffect(() => {
+    if (term === '') {
+      setFilteredTopics(data);
+    }
+  }, [term]);
+
+  const searchTopic = () => {
+    if (term === '') {
+      setFilteredTopics(data);
+    } else {
+      const filtered = data.filter(topic => {
+        return topic.name.toLowerCase().includes(term.toLowerCase());
+      });
+      setFilteredTopics(filtered);
+    }
+  };
   return (
     <>
       <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
@@ -65,18 +110,45 @@ const TopicsScreen = ({navigation, route}) => {
             Have your news be filtered out for by choosing the topics that you
             want to follow.
           </Text>
-          <SearchBar />
+          {/* <SearchBar /> */}
+          <View style={{backgroundColor: '#F3F4F7'}}>
+            <View style={styles.container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Search for a topic..."
+                placeholderTextColor="#A9A9A9"
+                value={term}
+                onChangeText={setTerm}
+                onSubmitEditing={searchTopic}
+              />
+              <Icon
+                name="search"
+                size={20}
+                color="#000"
+                onPress={() => {
+                  Keyboard.dismiss();
+                  if (term.trim().length > 0) {
+                    searchTopic();
+                  } else {
+                    setFilteredTopics(data);
+                  }
+                }}
+              />
+            </View>
+          </View>
           <View style={{paddingHorizontal: 20}}>
             {/* <Text style={{fontSize: 24, fontWeight: 'bold', color: '#6B6F76'}}>
           Explore Topics
         </Text> */}
             <View style={{marginTop: 20}}>
-              {data?.map(item => {
+              {filteredTopics?.map(item => {
                 return (
                   <AddtopicsRegister
                     key={item?.id}
                     item={item}
                     config={config}
+                    setNewTopicAdded={setNewTopicAdded}
+                    userTopics={userTopics}
                   />
                 );
               })}
@@ -100,7 +172,7 @@ const TopicsScreen = ({navigation, route}) => {
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('AuthHome');
+            navigation.replace('AuthHome');
             // if (!loading) {
             //   handleFormSubmit();
             // }
@@ -209,5 +281,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#3E424B',
     flex: 3,
+  },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 5,
+    marginHorizontal: 15,
+    marginVertical: 10,
+    paddingHorizontal: 15,
+  },
+  input: {
+    flex: 1,
+    fontSize: 17,
+    color: '#919298',
+    paddingLeft: 0,
+    paddingVertical: 8,
+    // backgroundColor: '#E6E6E8',
   },
 });

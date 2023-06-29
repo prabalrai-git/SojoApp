@@ -18,7 +18,8 @@ import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BlogCard from '../components/Card';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
@@ -32,6 +33,15 @@ const SettingsScreen = () => {
 
   const [loading, setLoading] = useState(true);
   const reload = useSelector(state => state.reloadNews.value);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     fetchToken();

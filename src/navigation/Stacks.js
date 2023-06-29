@@ -86,7 +86,8 @@ export const HomeStack = () => {
     <>
       <Stack.Navigator
         initialRouteName={'Curated'}
-        detachInactiveScreens={true}>
+        detachInactiveScreens={true}
+        screenOptions={{}}>
         <Stack.Screen
           name="Curated"
           component={CuratedScreen}
@@ -194,6 +195,11 @@ export const SettingStack = () => {
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+        <Stack.Screen
+          name="Blog"
+          component={BlogScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
       </Stack.Navigator>
     </>
   );
@@ -207,6 +213,12 @@ export const TabAndAuthStack = () => {
         initialRouteName="Tab"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Tab" component={TabNavigator} />
+        {/* <Stack.Screen
+          name="Blog"
+          component={BlogScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        /> */}
+
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="AuthHome" component={TabNavigator} />
         <Stack.Screen name="InfoScreen" component={InfoScreen} />

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
-  BackHandler,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -19,14 +18,14 @@ import Card from '../components/Card';
 import FastImage from 'react-native-fast-image';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import Share from 'react-native-share';
+import {useDispatch} from 'react-redux';
 import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
 
 const BlogScreen = ({route, navigation}) => {
   const scrollRef = useRef(null);
-  const {id, profile} = route.params;
+  const {id, profile, fromBookmarks} = route.params;
   const [data, setData] = useState(null);
   const [similarBlogs, setSimilarBlogs] = useState([]);
   const [config, setConfig] = useState();
@@ -37,12 +36,12 @@ const BlogScreen = ({route, navigation}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(hideTabBar());
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(hideTabBar());
+    });
 
-  BackHandler.addEventListener('hardwareBackPress', () => {
-    dispatch(showTabBar());
-  });
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -167,8 +166,11 @@ const BlogScreen = ({route, navigation}) => {
   };
 
   const onBackPress = () => {
-    dispatch(showTabBar());
-    navigation.pop();
+    if (fromBookmarks) {
+      navigation.navigate('SettingsScreen');
+    } else {
+      navigation.pop();
+    }
   };
 
   return (
@@ -303,7 +305,7 @@ const BlogScreen = ({route, navigation}) => {
                   fontSize: 25,
                   fontWeight: 'bold',
                   marginTop: 15,
-                  marginBottom: 30,
+                  marginBottom: 15,
                   color: '#2B2D34',
                 }}>
                 Similar News
@@ -409,6 +411,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     lineHeight: 24,
     color: '#3F424A',
+    textAlign: 'justify',
   },
 });
 

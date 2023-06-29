@@ -13,6 +13,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import HomeHeader from '../components/HomeHeader';
 import SearchBar from '../components/SearchBar/SearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -24,6 +26,16 @@ const Category = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchData = async page => {
     try {

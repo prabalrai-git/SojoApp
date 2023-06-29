@@ -39,7 +39,7 @@ const MainScreen = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '866760448207-ou1v3tpdqteqpr68cajle5sojhuugglh.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
 
@@ -72,6 +72,7 @@ const MainScreen = () => {
         // navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
         // handle successful login, e.g. redirect to home screen
       } catch (error) {
+        console.log(error);
         return signOut();
         console.error(error);
         if (error && error.response && error.response.data) {
@@ -183,7 +184,7 @@ const MainScreen = () => {
               Continue with Email
             </Text>
           </TouchableOpacity> */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[
               styles.button,
               {
@@ -199,7 +200,7 @@ const MainScreen = () => {
               return console.log('clicked');
               navigation.push('Signup');
             }}>
-            {/* <MaterialIcons name="email" size={24} color="#545760" /> */}
+            <MaterialIcons name="email" size={24} color="#545760" />
             <Text style={[styles.buttonText, {color: 'white'}]}>
               Create an account
             </Text>
@@ -210,7 +211,7 @@ const MainScreen = () => {
                 {width: 20, height: 20, tintColor: 'white'},
               ]}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
       </View>
     </View>
@@ -228,16 +229,16 @@ const styles = StyleSheet.create({
     height: 25,
   },
   top: {
-    flex: 0.4,
+    flex: 0.1,
   },
   bottom: {
-    flex: 0.6,
+    flex: 0.3,
     width: windowWidth,
     backgroundColor: '#12ab51',
     borderTopEndRadius: 35,
     borderTopLeftRadius: 35,
     paddingTop: 110,
-    height: windowHeight * 0.55,
+    height: windowHeight * 0.35,
     position: 'absolute',
     bottom: 0,
   },

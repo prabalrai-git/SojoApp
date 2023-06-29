@@ -18,6 +18,8 @@ import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const ProfileSettings = () => {
   const [checked, setChecked] = useState(false);
@@ -34,6 +36,15 @@ const ProfileSettings = () => {
   //   // Return the function to unsubscribe from the event so it gets removed on unmount
   //   return unsubscribe;
   // }, [navigation]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const notificationFor = [
     {id: 1, title: 'New stories on topic I follow'},
@@ -51,7 +62,7 @@ const ProfileSettings = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '866760448207-ou1v3tpdqteqpr68cajle5sojhuugglh.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
   const signOut = async () => {

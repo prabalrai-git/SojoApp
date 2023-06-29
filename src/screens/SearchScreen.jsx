@@ -12,12 +12,24 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     // AsyncStorage.removeItem('token');

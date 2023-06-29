@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "550042982411-1t73gj9ddnm3rkrnu4hosu7krvf7c92a.apps.googleusercontent.com",
+          "client_id": "550042982411-253tirgj9cle4hsptbvt74th1l4sifc0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sojonewsapp",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "3fdca25b2c60360b3ac63bbd26461ac8a1636e54"
           }
         },
         {

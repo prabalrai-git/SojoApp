@@ -14,6 +14,8 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import GlobalHeader from '../components/GlobalHeader';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -23,6 +25,15 @@ const HomeScreen = ({navigation}) => {
   const [config, setConfig] = useState(null);
 
   const [profile, setProfile] = useState();
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (config) {

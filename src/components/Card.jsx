@@ -89,7 +89,8 @@ const BlogCard = ({
         key={item?.id}
         style={{marginTop: 30}}
         onPress={() => {
-          return navigation.navigate('Blog', {
+          navigation.navigate('Blog', {
+            fromBookmarks: fromBookmarks,
             id: item?.id,
             isBookmarked: item?.isBookmarkedByUser,
             profile: profile,

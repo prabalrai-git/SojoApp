@@ -14,9 +14,9 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import HomeHeader from './../components/HomeHeader';
-import axios from 'axios';
-import {useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import {CommonActions, useRoute} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {showTabBar} from '../redux/features/HideTabBar';
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
@@ -26,6 +26,15 @@ const HomeScreen = ({navigation}) => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(showTabBar());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   // to show hoarding board only for first time
   const setFirstTime = async () => {
     try {
@@ -34,6 +43,15 @@ const HomeScreen = ({navigation}) => {
       console.log(error);
     }
   };
+
+  // useEffect(() => {
+  //   navigation.dispatch(
+  //     CommonActions.reset({
+  //       index: 0,
+  //       routes: [{name: 'Home'}],
+  //     }),
+  //   );
+  // }, []);
 
   useEffect(() => {
     const fetchToken = async () => {

@@ -9,6 +9,7 @@ import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
 
 import {windowWidth} from '../helper/usefulConstants';
 import {useDispatch, useSelector} from 'react-redux';
+import {useRoute} from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 

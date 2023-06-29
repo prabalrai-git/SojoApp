@@ -119,12 +119,13 @@ const InfoScreen = ({navigation}) => {
     if (!ageGroup || !gender || !occupation) {
       return setErrorMsg(true);
     } else {
+      setErrorMsg(false);
       const data = {
         ageGroup,
         gender,
         occupation: setOccupationId(occupation),
       };
-      return navigation.navigate('Preferences', {data});
+      return navigation.replace('Preferences', {data});
     }
   };
 

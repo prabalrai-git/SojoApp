@@ -43,7 +43,7 @@ const Preferences = ({navigation, route}) => {
     {id: 2, title: 'Murder, death or genocide'},
     {id: 3, title: 'Rape or sexual harassment'},
     {id: 4, title: 'Mental or psychological torture'},
-    {id: 5, title: 'Anything that’s not safe for work (NSFW)'},
+    {id: 5, title: `Anything that's not safe for work (NSFW)`},
   ];
   const {ageGroup, gender, occupation} = route.params.data;
 
@@ -58,7 +58,7 @@ const Preferences = ({navigation, route}) => {
     try {
       setLoading(true);
       const res = await Axios.post('/users/profile/complete', data, config);
-      navigation.navigate('TopicsScreenLogin', {
+      navigation.replace('TopicsScreenLogin', {
         config: config,
       });
       setLoading(false);
