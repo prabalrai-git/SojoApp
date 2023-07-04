@@ -340,7 +340,7 @@ const InfoScreen = ({navigation}) => {
                 </>
               )}
             </TouchableOpacity>
-
+{/* 
             <TouchableOpacity
               onPress={() => {
                 return console.log('hello');
@@ -362,7 +362,7 @@ const InfoScreen = ({navigation}) => {
                   />
                 </>
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <Modal
             isVisible={modalVisible}

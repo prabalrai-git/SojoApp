@@ -45,12 +45,6 @@ const TopicsScreen = ({navigation, route}) => {
   }, [newTopicAdded]);
 
   useEffect(() => {
-    console.log(
-      userTopics,
-      'This are the user topics rerendererd sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfs',
-    );
-  }, [userTopics]);
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await Axios.get('/topics');
@@ -177,7 +171,7 @@ const TopicsScreen = ({navigation, route}) => {
             //   handleFormSubmit();
             // }
           }}
-          style={[styles.loginButton, {marginBottom: 5}]}>
+          style={[styles.loginButton, {marginBottom: 35}]}>
           {loading1 ? (
             <ActivityIndicator color="#fff" />
           ) : (
@@ -192,7 +186,7 @@ const TopicsScreen = ({navigation, route}) => {
             </>
           )}
         </TouchableOpacity>
-
+{/* 
         <TouchableOpacity
           onPress={() => {
             return console.log('hello');
@@ -216,7 +210,7 @@ const TopicsScreen = ({navigation, route}) => {
               />
             </>
           )}
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </>
   );
@@ -238,10 +232,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#26B160',
+    
   },
   loginText: {
     color: '#FFFFFF',
     fontSize: 16,
+    
   },
   link: {
     flexDirection: 'row',

@@ -8,13 +8,13 @@ const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
 
   console.log(item);
 
-  const filtered = userTopics.filter(topic => topic.id === item.id);
+  const filtered = userTopics?.filter(topic => topic.id === item.id);
   // console.log(filtered[0].id, 'mfmfmfmf');
 
   return (
     <TouchableOpacity style={styles.link} key={item.id}>
       <Text style={styles.linkTitle}>{item.name}</Text>
-      {filtered[0]?.id ? (
+      {filtered && filtered[0]?.id ? (
         <Icon
           name={loading ? 'loader' : 'check'}
           size={26}

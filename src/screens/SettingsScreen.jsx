@@ -89,9 +89,11 @@ const SettingsScreen = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await Axios.post(
+
+      
+      const res = await Axios.get(
         '/users/bookmarks/getBookmarkedNews',
-        {userId: profile?.id},
+        
         config,
       );
 

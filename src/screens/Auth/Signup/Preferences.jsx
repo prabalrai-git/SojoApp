@@ -165,7 +165,7 @@ const Preferences = ({navigation, route}) => {
         )}
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           return console.log('hi');
           if (!loading) {
@@ -188,7 +188,7 @@ const Preferences = ({navigation, route}) => {
             />
           </>
         )}
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
