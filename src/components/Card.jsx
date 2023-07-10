@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
+import { hideTabBar } from '../redux/features/HideTabBar';
 
 const BlogCard = ({
   item,
@@ -37,7 +38,7 @@ const BlogCard = ({
 
   useEffect(() => {
     const w = Math.floor(width - 5 / 100);
-    const resizedImageUrl = item?.image.replace(
+    const resizedImageUrl = item?.image?.replace(
       '/upload/',
       `/upload/w_${w.toString()},h_250,c_fill/`,
     );
@@ -82,6 +83,7 @@ const BlogCard = ({
     };
     toggleBookmark();
   };
+
 
   return (
     image && (

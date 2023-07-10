@@ -43,6 +43,7 @@ const BlogScreen = ({route, navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
+
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('token');

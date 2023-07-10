@@ -109,15 +109,24 @@ const HomeScreen = ({navigation}) => {
         config,
       );
       // return console.log(res.data.data);
-      news.length > 0
-        ? setNews(prevData => [...prevData, ...res.data.data])
+      const newData = res.data.data;
+      news.length > 0 ? setNews((prevData) => {
+          const filteredData = prevData.filter((item)=>{
+            return !newData.some((newItem) => newItem.id === item.id )
+          })
+        //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
+          return [...filteredData, ...newData]
+        }
+          )
         : setNews(res.data.data);
       setLoading(false);
       setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
-      console.log(err);
+      console.log(err);d
     }
   };
+
+ 
 
   useEffect(() => {
     config && fetchNews(page);

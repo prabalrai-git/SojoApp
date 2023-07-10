@@ -92,7 +92,7 @@ const SearchScreen = ({navigation, route}) => {
   const fetchBlogs = async () => {
     try {
       setBlogs();
-      const res = await Axios.get(`/news/search/${route.params.term}`);
+      const res = await Axios.get(`/news/search/${route.params.term}?userId=${route.params.profile.id}`);
       setBlogs(res.data.data);
       setLoading(false);
     } catch (err) {
@@ -101,7 +101,6 @@ const SearchScreen = ({navigation, route}) => {
     }
   };
 
-  // console.log(blogs, 'from explore search');
   useEffect(() => {
     route.params.term && fetchBlogs();
   }, [route.params.term]);

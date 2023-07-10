@@ -88,9 +88,16 @@ const HomeScreen = ({navigation}) => {
         `/users/news/global?page=${page}&id=${profile?.id}`,
         config,
       );
-
+const newData = res.data.data;
       blogs.length > 0
-        ? setBlogs(prevData => [...prevData, ...res.data.data])
+        ? setBlogs((prevData) =>{
+          const filteredData = prevData.filter((item)=>{
+
+            // return console.log(item.id,'from fiilter explore');
+            return !newData.some(newItem=>newItem.id ===item.id)
+          })
+          return [...filteredData,...newData]
+        })
         : setBlogs(res.data.data);
       setHasMore(res.data.pagination.nextPage !== null);
       setLoading(false);
@@ -109,7 +116,6 @@ const HomeScreen = ({navigation}) => {
       setLoading(true);
     }
   };
-  // console.log(profile, 'form sc1111111111111111111111111111111111111');
   const renderFooter = () => {
     if (!loading) return null;
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
@@ -135,12 +141,14 @@ const HomeScreen = ({navigation}) => {
       <SafeAreaView style={{flex: 0, backgroundColor: '#27B161'}} />
       <SafeAreaView style={{flex: 1}}>
         <StatusBar backgroundColor={'#27B161'} />
-        <View>
+        <View >
           <View style={styles.topBar}>
             <Text style={styles.title}>Explore</Text>
             <GlobalHeader />
           </View>
           <SearchBar />
+          <View style={{marginBottom:288}}>
+
           <FlatList
             data={blogs}
             renderItem={renderItem}
@@ -156,6 +164,7 @@ const HomeScreen = ({navigation}) => {
               navigation.replace('Explore');
             }}
           />
+          </View>
         </View>
       </SafeAreaView>
     </>

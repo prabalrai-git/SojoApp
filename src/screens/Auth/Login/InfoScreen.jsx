@@ -32,6 +32,8 @@ const InfoScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [occupationOptions, setOccupationOptions] = useState();
+  const [statesOptions, setStatesOptions] = useState();
+  const [state, setState] = useState();
 
   const [modalSelectionValues, setModalSelectionValues] = useState();
 
@@ -51,7 +53,26 @@ const InfoScreen = ({navigation}) => {
   ];
   useEffect(() => {
     getOccupation();
+    getStates();
   }, []);
+
+
+
+
+
+const getStates = async () => {
+  const res = await Axios.get('/states/getAllStates');
+  let data = res.data.data;
+  let newdata = [];
+  data.map(item=>{
+    return newdata.push({id:item.id,title:item.name,type:"state"})
+  })
+  setStatesOptions(newdata)
+}
+
+
+
+
   const getOccupation = async () => {
     const res = await Axios.get('/occupations');
     let data = res.data.data;
@@ -76,6 +97,10 @@ const InfoScreen = ({navigation}) => {
       setModalSelectionValues(occupationOptions);
       setModalVisible(true);
     }
+    if(item === 'state'){
+      setModalSelectionValues(statesOptions);
+      setModalVisible(true);
+    }
   };
 
   const setInfoState = item => {
@@ -92,6 +117,12 @@ const InfoScreen = ({navigation}) => {
       setModalVisible(prev => !prev);
 
       return setOccupation(item.title);
+    }
+    if(item.type == "state"){
+      setModalVisible(prev => !prev);
+
+      return setState(item.title);
+
     }
   };
 
@@ -113,6 +144,12 @@ const InfoScreen = ({navigation}) => {
     }
   };
 
+const setStateId = state => {
+
+  const filteredstate = statesOptions.filter(item=>item.title === state)
+return filteredstate[0].id;
+}
+
   const handleFormSubmit = async () => {
     // setLoading(true);
 
@@ -124,7 +161,9 @@ const InfoScreen = ({navigation}) => {
         ageGroup,
         gender,
         occupation: setOccupationId(occupation),
+        state: setStateId(state)
       };
+
       return navigation.replace('Preferences', {data});
     }
   };
@@ -314,6 +353,42 @@ const InfoScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
+          <View style={styles.eachInputContainer}>
+            <Text style={styles.txt}>Which state do you live in?</Text>
+
+            <View style={{flexDirection: 'row', position: 'relative'}}>
+              <TextInput
+                value={state}
+                editable={false}
+                style={styles.txtinput}></TextInput>
+
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 5,
+                  top: 15,
+                  // backgroundColor: 'red',
+                  padding: 10,
+                }}
+                onPress={item => {
+                  var title = 'state';
+                  openRequiredModal(title);
+                }}>
+                <Image
+                  source={require('../../../assets/down.png')}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    resizeMode: 'contain',
+                    tintColor: 'black',
+                    alignSelf: 'flex-end',
+                    paddingLeft: 50,
+                    paddingVertical: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
           {errorMsg && (
             <Text
               style={{color: 'red', fontWeight: '600', textAlign: 'center'}}>
@@ -370,17 +445,20 @@ const InfoScreen = ({navigation}) => {
               position: 'relative',
               margin: 0,
             }}>
+          
             <View
               style={{
                 backgroundColor: 'white',
                 position: 'absolute',
                 bottom: 0,
-                // height: 200,
+                height: 300,
                 width: '100%',
                 borderTopRightRadius: 20,
                 paddingTop: 25,
                 borderTopLeftRadius: 20,
               }}>
+                    <ScrollView>
+                
               {modalSelectionValues?.map(item => {
                 return (
                   <TouchableOpacity
@@ -403,6 +481,7 @@ const InfoScreen = ({navigation}) => {
                   </TouchableOpacity>
                 );
               })}
+                </ScrollView>
             </View>
           </Modal>
         </ScrollView>
