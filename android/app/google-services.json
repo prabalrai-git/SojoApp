@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "550042982411-b4sa661rgvb8evj1el125ebiq1lu28j6.apps.googleusercontent.com",
+          "client_id": "550042982411-2lkpnmafpqvtttfjmuqpitctabqckf81.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sojonewsapp",
@@ -37,6 +37,13 @@
             {
               "client_id": "550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "550042982411-6eagbaj9e4per5k32ga830qoddlfsjkl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.app"
+              }
             }
           ]
         }
