@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 // auth screens
 import MainScreen from '../screens/Auth/MainScreen';
@@ -107,7 +107,7 @@ export const HomeStack = () => {
         <Stack.Screen
           name="Blog"
           component={BlogScreen}
-          options={{headerShown: false, gestureEnabled: false}}
+          options={{headerShown: false}}
         />
 
         <Stack.Screen
@@ -145,7 +145,7 @@ export const ExploreStack = () => {
         <Stack.Screen
           name="Blog"
           component={BlogScreen}
-          options={{headerShown: false, gestureEnabled: false}}
+          options={{headerShown: false}}
         />
 
         <Stack.Screen
@@ -171,6 +171,9 @@ import Preferences from '../screens/Auth/Signup/Preferences';
 import VerifyEmail from '../screens/Auth/Login/VerifyEmail';
 import VerifyOtp from '../screens/Auth/Login/VerifyOtp';
 import ChangePassword from '../screens/Auth/Login/ChangePassword';
+import {useNavigation} from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
+
 // import Category from './../screens/Category';
 
 export const TopicsStack = () => {
@@ -198,7 +201,7 @@ export const SettingStack = () => {
         <Stack.Screen
           name="Blog"
           component={BlogScreen}
-          options={{headerShown: false, gestureEnabled: false}}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </>
@@ -207,17 +210,43 @@ export const SettingStack = () => {
 
 // to maintain the bad code of navigation by other developer :(
 export const TabAndAuthStack = () => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.data.id,
+      );
+      navigation.navigate('Blog', {id: Number(remoteMessage.data.id)});
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.data.id,
+          );
+          navigation.navigate('Blog', {id: Number(remoteMessage.data.id)});
+          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+      });
+  }, []);
   return (
     <>
       <Stack.Navigator
         initialRouteName="Tab"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Tab" component={TabNavigator} />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Blog"
           component={BlogScreen}
           options={{headerShown: false, gestureEnabled: false}}
-        /> */}
+        />
 
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="AuthHome" component={TabNavigator} />

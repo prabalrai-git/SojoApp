@@ -17,24 +17,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
-import { hideTabBar } from '../redux/features/HideTabBar';
+import {hideTabBar} from '../redux/features/HideTabBar';
 
-const BlogCard = ({
-  item,
-  fromBookmarks,
-  setRenderBookmarked,
-  navigation,
-  profile,
-}) => {
+const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
     item?.isBookmarkedByUser || fromBookmarks ? true : false,
   );
   const [config, setConfig] = useState();
+  const [profile, setProfile] = useState();
   // console.log(item.id, 'item from explore');
 
   const dispatch = useDispatch();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const w = Math.floor(width - 5 / 100);
@@ -84,6 +81,28 @@ const BlogCard = ({
     toggleBookmark();
   };
 
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+
+      if (!res.data.data.isComplete) {
+        return navigation.replace('InfoScreen');
+      }
+      setProfile(res.data.data);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setProfile(null);
+        // return router.replace('/');
+      }
+    }
+  };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
 
   return (
     image && (
@@ -95,7 +114,6 @@ const BlogCard = ({
             fromBookmarks: fromBookmarks,
             id: item?.id,
             isBookmarked: item?.isBookmarkedByUser,
-            profile: profile,
           });
         }}>
         <View style={styles.cardContainer}>

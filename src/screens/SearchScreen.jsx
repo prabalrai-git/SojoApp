@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -38,11 +39,12 @@ const SearchScreen = ({navigation, route}) => {
     }
   }, [navigation]);
 
-
   const fetchBlogs = async () => {
     try {
       setBlogs();
-      const res = await Axios.get(`/news/search/${route.params.term}?userId=${route.params.profile.id}`);
+      const res = await Axios.get(
+        `/news/search/${route.params.term}?userId=${route.params.profile.id}`,
+      );
       setBlogs(res.data.data);
       setLoading(false);
     } catch (err) {
@@ -60,15 +62,8 @@ const SearchScreen = ({navigation, route}) => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
-  const BlogItem = React.memo(({item, navigation}) => {
-    return (
-      <Card
-        item={item}
-        navigation={navigation}
-        key={item.id}
-        profile={route?.params.profile}
-      />
-    );
+  const BlogItem = React.memo(({item}) => {
+    return <Card item={item} key={item.id} />;
   });
 
   const renderItem = ({item}) => {
@@ -76,38 +71,41 @@ const SearchScreen = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.topBar}>
-        <Text style={styles.title}>My Feed</Text>
-        <HomeHeader isShown={false} />
-      </View>
-      <SearchBar />
-      <FlatList
-        ListHeaderComponent={() => (
-          <View>
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: 'bold',
-                color: '#171A21',
-                textAlign: 'center',
-                borderBottomColor: '#ECEDEF',
-                borderBottomWidth: 1,
-                padding: 15,
-              }}>
-              Results for "{route.params.term}"
-            </Text>
-          </View>
-        )}
-        data={blogs}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ListFooterComponent={renderFooter}
-        // onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-        // onEndReached={handleLoadMore}
-      />
-    </View>
+    <>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.topBar}>
+          <Text style={styles.title}>My Feed</Text>
+          <HomeHeader isShown={false} />
+        </View>
+        <SearchBar />
+        <FlatList
+          ListHeaderComponent={() => (
+            <View>
+              <Text
+                style={{
+                  fontSize: 17,
+                  fontWeight: 'bold',
+                  color: '#171A21',
+                  textAlign: 'center',
+                  borderBottomColor: '#ECEDEF',
+                  borderBottomWidth: 1,
+                  padding: 15,
+                }}>
+                Results for "{route.params.term}"
+              </Text>
+            </View>
+          )}
+          data={blogs}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ListFooterComponent={renderFooter}
+          // onEndReachedThreshold={0.5}
+          showsVerticalScrollIndicator={false}
+          // onEndReached={handleLoadMore}
+        />
+      </SafeAreaView>
+    </>
   );
 };
 

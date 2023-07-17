@@ -66,11 +66,11 @@ const SplashScreen = () => {
 
   return (
     <>
-      <StatusBar backgroundColor={'#27b060'} />
+      <StatusBar backgroundColor={'white'} />
       <View
         style={{
           flex: 1,
-          backgroundColor: '#27b060',
+          backgroundColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
@@ -80,7 +80,6 @@ const SplashScreen = () => {
             width: 200,
             height: 200,
             resizeMode: 'contain',
-            tintColor: 'white',
           }}
         />
       </View>

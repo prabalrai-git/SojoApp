@@ -137,14 +137,7 @@ const Category = () => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return (
-      <Card
-        item={item}
-        navigation={navigation}
-        key={item.id}
-        profile={profile}
-      />
-    );
+    return <Card item={item} key={item.id} />;
   });
 
   const renderItem = ({item}) => {

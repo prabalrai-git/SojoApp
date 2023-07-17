@@ -88,16 +88,15 @@ const HomeScreen = ({navigation}) => {
         `/users/news/global?page=${page}&id=${profile?.id}`,
         config,
       );
-const newData = res.data.data;
+      const newData = res.data.data;
       blogs.length > 0
-        ? setBlogs((prevData) =>{
-          const filteredData = prevData.filter((item)=>{
-
-            // return console.log(item.id,'from fiilter explore');
-            return !newData.some(newItem=>newItem.id ===item.id)
+        ? setBlogs(prevData => {
+            const filteredData = prevData.filter(item => {
+              // return console.log(item.id,'from fiilter explore');
+              return !newData.some(newItem => newItem.id === item.id);
+            });
+            return [...filteredData, ...newData];
           })
-          return [...filteredData,...newData]
-        })
         : setBlogs(res.data.data);
       setHasMore(res.data.pagination.nextPage !== null);
       setLoading(false);
@@ -122,14 +121,7 @@ const newData = res.data.data;
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return (
-      <Card
-        item={item}
-        navigation={navigation}
-        key={item.id}
-        profile={profile}
-      />
-    );
+    return <Card item={item} key={item.id} />;
   });
 
   const renderItem = ({item}) => {
@@ -141,29 +133,28 @@ const newData = res.data.data;
       <SafeAreaView style={{flex: 0, backgroundColor: '#27B161'}} />
       <SafeAreaView style={{flex: 1}}>
         <StatusBar backgroundColor={'#27B161'} />
-        <View >
+        <View>
           <View style={styles.topBar}>
             <Text style={styles.title}>Explore</Text>
             <GlobalHeader />
           </View>
           <SearchBar />
-          <View style={{marginBottom:288}}>
-
-          <FlatList
-            data={blogs}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            ListFooterComponent={renderFooter}
-            onEndReachedThreshold={0.5}
-            showsVerticalScrollIndicator={false}
-            onEndReached={handleLoadMore}
-            refreshing={page === 1 && loading}
-            onRefresh={() => {
-              setPage(1);
-              setBlogs([]);
-              navigation.replace('Explore');
-            }}
-          />
+          <View style={{marginBottom: 288}}>
+            <FlatList
+              data={blogs}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}
+              ListFooterComponent={renderFooter}
+              onEndReachedThreshold={0.5}
+              showsVerticalScrollIndicator={false}
+              onEndReached={handleLoadMore}
+              refreshing={page === 1 && loading}
+              onRefresh={() => {
+                setPage(1);
+                setBlogs([]);
+                navigation.replace('Explore');
+              }}
+            />
           </View>
         </View>
       </SafeAreaView>

@@ -11,8 +11,34 @@ import {
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import Axios from './../api/server';
+import messaging from '@react-native-firebase/messaging';
 
 const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
+  const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    selectedTopics?.includes(item.id) ? setToggle(true) : setToggle(false);
+  }, [selectedTopics, item]);
+
+  const toogleSubscriptionForFCM = () => {
+    if (toggle === true) {
+      setToggle(false);
+      messaging()
+        .unsubscribeFromTopic(item?.name.toLowerCase())
+        .then(() =>
+          console.log(`Unsubscribed fom the ${item?.name.toLowerCase()}`),
+        );
+    }
+    if (toggle === false) {
+      setToggle(true);
+      messaging()
+        .subscribeToTopic(item?.name.toLowerCase())
+        .then(() =>
+          console.log(`subscribeToTopic ${item?.name.toLowerCase()}`),
+        );
+    }
+  };
+
   const [loading, setLoading] = useState('');
   return (
     <TouchableOpacity style={styles.link}>
@@ -26,6 +52,7 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
           onPress={async () => {
             setLoading(true);
             await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
+            toogleSubscriptionForFCM();
             fetchProfile();
             setLoading(false);
           }}
@@ -39,6 +66,7 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
           onPress={async () => {
             setLoading(true);
             await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
+            toogleSubscriptionForFCM();
             fetchProfile();
             setLoading(false);
           }}

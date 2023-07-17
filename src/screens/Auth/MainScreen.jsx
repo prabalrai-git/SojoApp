@@ -24,7 +24,6 @@ import messaging from '@react-native-firebase/messaging';
 
 const MainScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [fcmToken, setFcmToken] = useState(null)
 
   const navigation = useNavigation();
 
@@ -54,25 +53,12 @@ const MainScreen = () => {
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(googleCredential);
 
-   messaging()
-      .getToken()
-      .then(token => {
-        return setFcmToken(token)
-      });
-
-// return console.log(    user.name,
-//    user.email,
-//  fcmToken);
-
-
       try {
         const response = await Axios.post(`/auth/googlePhoneLogin`, {
           username: user.name,
           email: user.email,
-          fcmToken: fcmToken
         });
 
-        
         // return console.log(response.data.data);
 
         const {token, userAlereadyExits} = response.data.data;
@@ -137,10 +123,9 @@ const MainScreen = () => {
           style={[
             styles.signupIcon,
             {
-              width: 200,
-              height: 100,
+              width: 250,
+              height: 120,
               resizeMode: 'contain',
-              tintColor: '#12ab51',
             },
           ]}
         />

@@ -83,13 +83,6 @@ const Category = () => {
     fetchToken();
   }, []);
 
-  useEffect(() => {
-    // AsyncStorage.removeItem('token');
-    if (navigation && !AsyncStorage.getItem('token')) {
-      navigation.replace('WelcomeScreen');
-    }
-  }, [navigation]);
-
   // fetch profile
   const fetchProfile = async () => {
     try {
@@ -119,6 +112,13 @@ const Category = () => {
       fetchProfile();
     }
   }, [config]);
+
+  useEffect(() => {
+    // AsyncStorage.removeItem('token');
+    if (navigation && !AsyncStorage.getItem('token')) {
+      navigation.replace('WelcomeScreen');
+    }
+  }, [navigation]);
 
   const searchTopic = () => {
     const filtered = data.filter(topic => {

@@ -22,16 +22,21 @@ import {toggle} from '../redux/features/ReloadNewsSlice';
 import Share from 'react-native-share';
 import {useDispatch} from 'react-redux';
 import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
+import {useNavigation} from '@react-navigation/native';
 
-const BlogScreen = ({route, navigation}) => {
+const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
-  const {id, profile, fromBookmarks} = route.params;
+  const {id, fromBookmarks} = route.params;
   const [data, setData] = useState(null);
   const [similarBlogs, setSimilarBlogs] = useState([]);
   const [config, setConfig] = useState();
   const [refetch, setRefetch] = useState(false);
 
+  const [profile, setProfile] = useState();
+
   const {width} = useWindowDimensions();
+
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
 
@@ -42,7 +47,6 @@ const BlogScreen = ({route, navigation}) => {
 
     return unsubscribe;
   }, [navigation]);
-
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -62,7 +66,7 @@ const BlogScreen = ({route, navigation}) => {
 
   const fetchData = async () => {
     try {
-      const res = await Axios.get(`/news/${id}?userId=${profile.id}`);
+      const res = await Axios.get(`/news/${id}?userId=${profile?.id}`);
       setData(res.data.data);
       scrollRef.current.scrollTo({y: 0, animated: true});
     } catch (err) {
@@ -80,8 +84,8 @@ const BlogScreen = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    id && fetchData();
-  }, [id, refetch]);
+    id && profile && fetchData();
+  }, [id, refetch, profile]);
 
   useEffect(() => {
     data && fetchSimilarBlogs();
@@ -173,6 +177,29 @@ const BlogScreen = ({route, navigation}) => {
       navigation.pop();
     }
   };
+
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+
+      if (!res.data.data.isComplete) {
+        return navigation.replace('InfoScreen');
+      }
+      setProfile(res.data.data);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setProfile(null);
+        // return router.replace('/');
+      }
+    }
+  };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
 
   return (
     <>
@@ -314,14 +341,7 @@ const BlogScreen = ({route, navigation}) => {
             </View>
             <View style={{flex: 1, marginBottom: 35}}>
               {similarBlogs.map(item => {
-                return (
-                  <Card
-                    key={item.id}
-                    item={item}
-                    navigation={navigation}
-                    profile={profile}
-                  />
-                );
+                return <Card key={item.id} item={item} />;
               })}
             </View>
           </ScrollView>

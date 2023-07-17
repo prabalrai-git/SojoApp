@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, TabAndAuthStack} from './Stacks';
 import TabNavigator from './Tab';
 
@@ -12,7 +12,7 @@ export default function MainNavigator() {
   const [profile, setProfile] = useState(null);
   const navigation = useNavigation();
 
-  const Stack = createStackNavigator();
+  const Stack = createNativeStackNavigator();
 
   const fetchProfile = async () => {
     try {

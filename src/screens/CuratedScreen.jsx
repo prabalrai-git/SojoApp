@@ -22,7 +22,6 @@ import messaging from '@react-native-firebase/messaging';
 
 import {PermissionsAndroid} from 'react-native';
 
-
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,26 +29,24 @@ const HomeScreen = ({navigation}) => {
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
-  
+
   const dispatch = useDispatch();
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(showTabBar());
     });
 
-
-    
     return unsubscribe;
   }, [navigation]);
 
-  useEffect(()=>{
-    messaging()
-    .getToken()
-    .then(token => {
-      return console.log(token);
-    });
-  },[])
-  
+  // useEffect(() => {
+  //   messaging()
+  //     .getToken()
+  //     .then(token => {
+  //       return console.log(token);
+  //     });
+  // }, []);
+
   // to show hoarding board only for first time
   const setFirstTime = async () => {
     try {
@@ -58,26 +55,28 @@ const HomeScreen = ({navigation}) => {
       console.log(error);
     }
   };
-  
-  // useEffect(() => {
-    //   navigation.dispatch(
-      //     CommonActions.reset({
-        //       index: 0,
-        //       routes: [{name: 'Home'}],
-        //     }),
-        //   );
-        // }, []);
 
-        useEffect(() => {
-          const unsubscribe = messaging().onMessage(async remoteMessage => {
-            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-          });
-      
-          return unsubscribe;
-        }, []);
-        
-        useEffect(() => {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+  // useEffect(() => {
+  //   navigation.dispatch(
+  //     CommonActions.reset({
+  //       index: 0,
+  //       routes: [{name: 'Home'}],
+  //     }),
+  //   );
+  // }, []);
+
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
+
+  //   return unsubscribe;
+  // }, []);
+
+  useEffect(() => {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('token');
 
@@ -134,23 +133,22 @@ const HomeScreen = ({navigation}) => {
       );
       // return console.log(res.data.data);
       const newData = res.data.data;
-      news.length > 0 ? setNews((prevData) => {
-          const filteredData = prevData.filter((item)=>{
-            return !newData.some((newItem) => newItem.id === item.id )
+      news.length > 0
+        ? setNews(prevData => {
+            const filteredData = prevData.filter(item => {
+              return !newData.some(newItem => newItem.id === item.id);
+            });
+            //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
+            return [...filteredData, ...newData];
           })
-        //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
-          return [...filteredData, ...newData]
-        }
-          )
         : setNews(res.data.data);
       setLoading(false);
       setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
-      console.log(err);d
+      console.log(err);
+      d;
     }
   };
-
- 
 
   useEffect(() => {
     config && fetchNews(page);
@@ -171,14 +169,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return (
-      <Card
-        item={item}
-        navigation={navigation}
-        key={item.id}
-        profile={profile}
-      />
-    );
+    return <Card item={item} key={item.id} profile={profile} />;
   });
 
   const renderItem = ({item}) => {
@@ -188,9 +179,12 @@ const HomeScreen = ({navigation}) => {
   function App() {
     useEffect(() => {
       const unsubscribe = messaging().onMessage(async remoteMessage => {
-        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        Alert.alert(
+          'A new FCM message arrived!',
+          JSON.stringify(remoteMessage),
+        );
       });
-  
+
       return unsubscribe;
     }, []);
   }
