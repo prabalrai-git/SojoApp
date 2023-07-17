@@ -5,6 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -14,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
 import ExploreCard from '../components/CardExplore';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 
 const SearchScreen = ({navigation, route}) => {
@@ -92,7 +93,9 @@ const SearchScreen = ({navigation, route}) => {
   const fetchBlogs = async () => {
     try {
       setBlogs();
-      const res = await Axios.get(`/news/search/${route.params.term}?userId=${route.params.profile.id}`);
+      const res = await Axios.get(
+        `/news/search/${route.params.term}?userId=${route.params.profile.id}`,
+      );
       setBlogs(res.data.data);
       setLoading(false);
     } catch (err) {
@@ -125,39 +128,55 @@ const SearchScreen = ({navigation, route}) => {
     return <BlogItem item={item} navigation={navigation} />;
   };
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.topBar}>
-        <Text style={[styles.title]}>Explore</Text>
-        <GlobalHeader isShown={false} />
-      </View>
-      <SearchBar />
-      <FlatList
-        ListHeaderComponent={() => (
-          <View>
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: 'bold',
-                color: '#171A21',
-                textAlign: 'center',
-                borderBottomColor: '#ECEDEF',
-                borderBottomWidth: 1,
-                padding: 15,
-              }}>
-              Results for "{route.params.term}"
-            </Text>
-          </View>
-        )}
-        data={blogs}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ListFooterComponent={renderFooter}
-        // onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-        // onEndReached={handleLoadMore}
+    <>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
       />
-    </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <View style={styles.topBar}>
+          <Text style={[styles.title]}>Explore</Text>
+          <GlobalHeader isShown={false} />
+        </View>
+        <SearchBar />
+        <FlatList
+          ListHeaderComponent={() => (
+            <View>
+              <Text
+                style={{
+                  fontSize: 17,
+                  fontWeight: '400',
+                  color: darkMode ? 'white' : '#171A21',
+                  textAlign: 'center',
+                  borderBottomColor: darkMode ? '#3F424A' : '#ECEDEF',
+                  borderBottomWidth: 1,
+                  padding: 12,
+                }}>
+                Results for "{route.params.term}"
+              </Text>
+            </View>
+          )}
+          data={blogs}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ListFooterComponent={renderFooter}
+          // onEndReachedThreshold={0.5}
+          showsVerticalScrollIndicator={false}
+          // onEndReached={handleLoadMore}
+        />
+      </SafeAreaView>
+    </>
   );
 };
 

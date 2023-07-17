@@ -9,6 +9,7 @@ import {
 import React, {useEffect} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StatusBar} from 'react-native';
 
 const WelcomeScreen = ({navigation}) => {
   useEffect(() => {
@@ -22,6 +23,7 @@ const WelcomeScreen = ({navigation}) => {
   }, [navigation]);
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor={'white'} />
       <View style={styles.content}>
         <Image
           source={require('./../../../assets/ion_earth-outline.png')}

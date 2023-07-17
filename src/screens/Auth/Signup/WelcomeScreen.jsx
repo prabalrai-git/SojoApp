@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -25,6 +26,8 @@ const WelcomeScreen = ({navigation}) => {
       <SafeAreaView style={{flex: 0, backgroundColor: 'white'}} />
 
       <SafeAreaView style={styles.container}>
+        <StatusBar backgroundColor={'white'} />
+
         <View style={styles.content}>
           <Image
             source={require('./../../../assets/ion_earth-outline.png')}

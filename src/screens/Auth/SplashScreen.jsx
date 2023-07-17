@@ -3,12 +3,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/server';
 import {useNavigation} from '@react-navigation/native';
 import {View, Text, StatusBar, Image} from 'react-native';
+import {useSelector} from 'react-redux';
+import '../../../globalThemColor';
 
 const SplashScreen = () => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
   const [notFirstTime, setNotFirstTime] = useState(null);
   const navigation = useNavigation();
+
+  const darkMode = useSelector(state => state.darkMode.value);
 
   const fetchProfile = async () => {
     try {
@@ -66,11 +70,17 @@ const SplashScreen = () => {
 
   return (
     <>
-      <StatusBar backgroundColor={'white'} />
+      <StatusBar
+        backgroundColor={
+          darkMode ? global.backgroundColorDark : global.backgroundColor
+        }
+      />
       <View
         style={{
           flex: 1,
-          backgroundColor: 'white',
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
           justifyContent: 'center',
           alignItems: 'center',
         }}>

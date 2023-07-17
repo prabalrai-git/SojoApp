@@ -9,7 +9,8 @@ import {HomeDrawerNavigator, ExploreDrawerNavigator} from './Drawer';
 
 import {windowWidth} from '../helper/usefulConstants';
 import {useDispatch, useSelector} from 'react-redux';
-import {useRoute} from '@react-navigation/native';
+
+import '../../globalThemColor';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,6 +29,7 @@ function CustomTabBarLabel({label, focused}) {
 
 const TabNavigator = () => {
   const hideTabBar = useSelector(state => state.hideTabBar.value);
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     <Tab.Navigator
@@ -39,9 +41,12 @@ const TabNavigator = () => {
             return <CustomTabBarLabel label={label} focused={focused} />;
           },
           swipeEnabled: hideTabBar ? false : true,
-          tabBarStyle: {height: hideTabBar ? 0 : 77},
+          tabBarStyle: {
+            height: hideTabBar ? 0 : 77,
+            backgroundColor: darkMode ? '#3F424A' : 'white',
+          },
           tabBarIndicatorStyle: {
-            backgroundColor: '#ECF9EF',
+            backgroundColor: darkMode ? '#494C55' : '#ECF9EF',
             height: '74%',
             marginBottom: 17,
             width: windowWidth * 0.22,
@@ -57,7 +62,7 @@ const TabNavigator = () => {
             textTransform: 'none',
           },
           tabBarAndroidRipple: {
-            color: '#ECF9EF',
+            color: darkMode ? '#494C55' : '#ECF9EF',
             radius: 50,
           },
           headerShown: false,
@@ -141,7 +146,7 @@ const TabNavigator = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#171717' : 'grey',
+                color: focused ? (darkMode ? 'white' : '#171717') : 'grey',
                 fontSize: 12,
                 fontWeight: '500',
               }}>
@@ -165,7 +170,7 @@ const TabNavigator = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#171717' : 'grey',
+                color: focused ? (darkMode ? 'white' : '#171717') : 'grey',
                 fontSize: 12,
                 fontWeight: '500',
               }}>
@@ -187,7 +192,7 @@ const TabNavigator = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#171717' : 'grey',
+                color: focused ? (darkMode ? 'white' : '#171717') : 'grey',
                 fontSize: 12,
                 fontWeight: '500',
               }}>
@@ -213,7 +218,7 @@ const TabNavigator = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#171717' : 'grey',
+                color: focused ? (darkMode ? 'white' : '#171717') : 'grey',
                 fontSize: 12,
                 fontWeight: '500',
               }}>

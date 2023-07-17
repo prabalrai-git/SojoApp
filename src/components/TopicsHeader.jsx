@@ -9,14 +9,31 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {windowWidth} from '../helper/usefulConstants';
+import {useSelector} from 'react-redux';
 
 const HomeHeader = () => {
   const navigation = useNavigation();
 
+  const darkMode = useSelector(state => state.darkMode.value);
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor: darkMode
+            ? global.brandColorLightDark
+            : global.brandColorLight,
+        },
+      ]}>
       <TouchableOpacity
-        style={styles.titleWrapper}
+        style={[
+          styles.titleWrapper,
+          {
+            backgroundColor: darkMode
+              ? global.brandColorLightDark
+              : global.brandColorLight,
+          },
+        ]}
         onPress={() => {
           navigation.navigate('EditTopicsScreen');
         }}>
@@ -26,7 +43,17 @@ const HomeHeader = () => {
           color="#FEFEFF"
           style={{marginTop: 2, marginLeft: 4}}
         />
-        <Text style={styles.title}>Edit Topics</Text>
+        <Text
+          style={[
+            styles.title,
+            {
+              backgroundColor: darkMode
+                ? global.brandColorLightDark
+                : global.brandColorLight,
+            },
+          ]}>
+          Edit Topics
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -39,7 +66,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingRight: 7,
     paddingLeft: 7,
-    backgroundColor: '#52c080',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

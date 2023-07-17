@@ -89,11 +89,9 @@ const SettingsScreen = () => {
 
   const fetchNews = async () => {
     try {
-
-      
       const res = await Axios.get(
         '/users/bookmarks/getBookmarkedNews',
-        
+
         config,
       );
 
@@ -153,16 +151,44 @@ const SettingsScreen = () => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
 
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.topBar}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <View
+          style={[
+            styles.topBar,
+            {
+              backgroundColor: darkMode
+                ? global.brandColorDark
+                : global.brandColor,
+            },
+          ]}>
           <Text style={styles.topBarText}>My Profile</Text>
 
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={[
+              styles.iconContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.brandColorLightDark
+                  : global.brandColorLight,
+              },
+            ]}
             onPress={() => navigation.navigate('ProfileSettings')}>
             <Image
               source={require('../assets/settings.png')}
@@ -185,7 +211,7 @@ const SettingsScreen = () => {
             <Text
               style={{
                 fontWeight: 'bold',
-                color: 'black',
+                color: darkMode ? 'white' : 'black',
                 fontSize: 22,
                 textTransform: 'capitalize',
               }}>
@@ -197,26 +223,60 @@ const SettingsScreen = () => {
 
             <View style={styles.btnContainer}>
               <TouchableOpacity
-                style={styles.btn}
+                style={[
+                  styles.btn,
+                  {
+                    backgroundColor: darkMode
+                      ? global.brandColorDark2
+                      : global.backgroundColor,
+                    borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
+                  },
+                ]}
                 onPress={() =>
                   navigation.navigate('Topics', {screen: 'EditTopicsScreen'})
                 }>
-                <Text style={styles.btnTxt}>Choose Your Topics</Text>
+                <Text
+                  style={[
+                    styles.btnTxt,
+                    {color: darkMode ? 'white' : '#1d6e3f'},
+                  ]}>
+                  Choose Your Topics
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnTxt}>Edit Profile</Text>
+              <TouchableOpacity
+                style={[
+                  styles.btn,
+                  {
+                    backgroundColor: darkMode
+                      ? global.brandColorDark2
+                      : global.backgroundColor,
+                    borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styles.btnTxt,
+                    {color: darkMode ? 'white' : '#1d6e3f'},
+                  ]}>
+                  Edit Profile
+                </Text>
               </TouchableOpacity>
             </View>
 
             <View
               style={{
                 width: '100%',
-                backgroundColor: 'lightgrey',
+                backgroundColor: darkMode ? '#3F424A' : 'lightgrey',
                 height: 1,
                 marginBottom: 20,
               }}></View>
             {news && (
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+              <Text
+                style={{
+                  color: darkMode ? 'white' : 'black',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                }}>
                 Saved stories
               </Text>
             )}
@@ -238,7 +298,7 @@ const SettingsScreen = () => {
             <View>
               <Text
                 style={{
-                  color: 'black',
+                  color: darkMode ? 'white' : 'black',
                   fontWeight: '600',
                   textAlign: 'center',
                   marginTop: 40,
@@ -274,7 +334,7 @@ const styles = StyleSheet.create({
   btnTxt: {
     textAlign: 'center',
     color: '#1d6e3f',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   iconContainer: {
     backgroundColor: '#53C180',

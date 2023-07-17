@@ -18,7 +18,7 @@ import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 
 const ProfileSettings = () => {
@@ -72,11 +72,24 @@ const ProfileSettings = () => {
       console.error(error);
     }
   };
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
 
-      <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
         <View style={styles.topBar}>
           <TouchableOpacity
             style={{
@@ -136,14 +149,20 @@ const ProfileSettings = () => {
               }}>
               <View>
                 <Text
-                  style={{color: 'black', fontWeight: 'bold', fontSize: 22}}>
+                  style={{
+                    color: darkMode ? 'white' : 'black',
+                    fontWeight: 'bold',
+                    fontSize: 22,
+                  }}>
                   Settings
                 </Text>
                 <Text style={{color: 'grey'}}>sojo_news</Text>
               </View>
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#b3e0bd',
+                  backgroundColor: darkMode
+                    ? global.brandColorDark2
+                    : '#b3e0bd',
                   flexDirection: 'row',
                   alignItems: 'center',
                   padding: 8,
@@ -163,13 +182,15 @@ const ProfileSettings = () => {
                   });
                   // navigation.navigate('MainScreen');
                 }}>
-                <Text style={{color: '#082313'}}>Sign Out</Text>
+                <Text style={{color: darkMode ? 'white' : '#082313'}}>
+                  Sign Out
+                </Text>
                 <Image
                   source={require('../assets/logout.png')}
                   style={{
                     width: 14,
                     height: 14,
-                    tintColor: '#082313',
+                    tintColor: darkMode ? 'white' : '#082313',
                     resizeMode: 'contain',
                     marginLeft: 10,
                   }}
@@ -180,20 +201,25 @@ const ProfileSettings = () => {
             <View
               style={{
                 width: '100%',
-                backgroundColor: 'lightgrey',
+                backgroundColor: darkMode ? '#3F424A' : 'lightgrey',
                 height: 1,
                 marginBottom: 20,
               }}></View>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+              <Text
+                style={{
+                  color: darkMode ? 'white' : 'black',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                }}>
                 Send me push notifications
               </Text>
               <Switch
                 // color="#296146"
                 activeText={''}
                 inActiveText={''}
-                backgroundActive={'#27b060'}
+                backgroundActive={darkMode ? global.brandColorDark2 : '#27b060'}
                 circleSize={30}
                 // barHeight={34}
                 switchWidthMultiplier={2}
@@ -206,7 +232,7 @@ const ProfileSettings = () => {
                 onValueChange={value => setChecked(value)}
               />
             </View>
-            <View>
+            {/* <View>
               <Text
                 style={{
                   color: 'black',
@@ -272,12 +298,12 @@ const ProfileSettings = () => {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </View> */}
 
             <View
               style={{
                 width: '100%',
-                backgroundColor: 'lightgrey',
+                backgroundColor: darkMode ? '#3F424A' : 'lightgrey',
                 height: 1,
                 marginVertical: 20,
               }}></View>
@@ -306,7 +332,7 @@ const ProfileSettings = () => {
               }}></View> */}
             <Text
               style={{
-                color: 'black',
+                color: darkMode ? 'white' : 'black',
                 fontWeight: 'bold',
                 fontSize: 18,
                 marginBottom: 20,
@@ -315,14 +341,14 @@ const ProfileSettings = () => {
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: '#fecdd3',
+                backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
                 padding: 8,
                 borderRadius: 8,
                 width: '50%',
               }}>
               <Text
                 style={{
-                  color: '#881337',
+                  color: darkMode ? 'white' : '#881337',
                   fontWeight: '500',
                   fontSize: 16,
                   textAlign: 'center',

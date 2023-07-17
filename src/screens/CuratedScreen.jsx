@@ -16,10 +16,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import HomeHeader from './../components/HomeHeader';
 import {CommonActions, useRoute} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import messaging from '@react-native-firebase/messaging';
-
+import '../../globalThemColor';
 import {PermissionsAndroid} from 'react-native';
 
 const HomeScreen = ({navigation}) => {
@@ -39,14 +39,6 @@ const HomeScreen = ({navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
-  // useEffect(() => {
-  //   messaging()
-  //     .getToken()
-  //     .then(token => {
-  //       return console.log(token);
-  //     });
-  // }, []);
-
   // to show hoarding board only for first time
   const setFirstTime = async () => {
     try {
@@ -55,23 +47,6 @@ const HomeScreen = ({navigation}) => {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   navigation.dispatch(
-  //     CommonActions.reset({
-  //       index: 0,
-  //       routes: [{name: 'Home'}],
-  //     }),
-  //   );
-  // }, []);
-
-  // useEffect(() => {
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
-
-  //   return unsubscribe;
-  // }, []);
 
   useEffect(() => {
     PermissionsAndroid.request(
@@ -189,12 +164,35 @@ const HomeScreen = ({navigation}) => {
     }, []);
   }
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar backgroundColor="#27B060" />
-        <View style={styles.topBar}>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <StatusBar
+          backgroundColor={darkMode ? global.brandColorDark : global.brandColor}
+        />
+        <View
+          style={[
+            styles.topBar,
+            {
+              backgroundColor: darkMode
+                ? global.brandColorDark
+                : global.brandColor,
+            },
+          ]}>
           <Text style={styles.title}>My Feed</Text>
           <HomeHeader />
         </View>
@@ -227,7 +225,6 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   topBar: {
-    backgroundColor: '#27B060',
     // height: 50,
     // alignItems: 'center',
     padding: 20,

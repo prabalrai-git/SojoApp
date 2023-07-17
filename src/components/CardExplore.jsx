@@ -74,6 +74,7 @@ const ExploreCard = ({item, navigation, profile}) => {
     };
     toggleBookmark();
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     image && (
@@ -87,7 +88,16 @@ const ExploreCard = ({item, navigation, profile}) => {
             profile: profile,
           });
         }}>
-        <View style={styles.cardContainer}>
+        <View
+          style={[
+            styles.cardContainer,
+            {
+              backgroundColor: darkMode
+                ? global.backgroundColorDark
+                : global.backgroundColor,
+              borderBottomColor: darkMode ? '#3F424A' : '#DADADD',
+            },
+          ]}>
           <View style={styles.wrapper}>
             <View>
               <FastImage
@@ -114,14 +124,17 @@ const ExploreCard = ({item, navigation, profile}) => {
               </FastImage>
             </View>
             <Text
-              style={styles.cardTitle}
+              style={[styles.cardTitle, {color: darkMode ? 'white' : 'black'}]}
               numberOfLines={2}
               ellipsizeMode="tail">
               {item?.title}
             </Text>
 
             <Text
-              style={styles.cardText}
+              style={[
+                styles.cardText,
+                {color: darkMode ? '#9B9EA5' : '#3F424A'},
+              ]}
               numberOfLines={4}
               ellipsizeMode="tail">
               {item?.previewText}

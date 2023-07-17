@@ -14,7 +14,7 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from '../components/SearchBar/SearchBar';
 import GlobalHeader from '../components/GlobalHeader';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 
 const HomeScreen = ({navigation}) => {
@@ -127,11 +127,23 @@ const HomeScreen = ({navigation}) => {
   const renderItem = ({item}) => {
     return <BlogItem key={item.id} item={item} navigation={navigation} />;
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B161'}} />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
         <StatusBar backgroundColor={'#27B161'} />
         <View>
           <View style={styles.topBar}>

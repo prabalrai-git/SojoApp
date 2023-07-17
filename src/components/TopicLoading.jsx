@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import Axios from './../api/server';
 import messaging from '@react-native-firebase/messaging';
+import {useSelector} from 'react-redux';
 
 const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
   const [toggle, setToggle] = useState(false);
@@ -38,17 +39,37 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
         );
     }
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   const [loading, setLoading] = useState('');
   return (
-    <TouchableOpacity style={styles.link}>
-      <Text style={styles.linkTitle}>{item.name}</Text>
+    <TouchableOpacity
+      style={[
+        styles.link,
+        {
+          backgroundColor: darkMode
+            ? selectedTopics?.includes(item.id)
+              ? global.inputColorDark
+              : global.backgroundColorDark
+            : global.inputColor,
+        },
+      ]}>
+      <Text style={[styles.linkTitle, {color: darkMode ? 'white' : '#4B4D54'}]}>
+        {item.name}
+      </Text>
       {selectedTopics?.includes(item.id) ? (
         <Icon
           name={loading ? 'loader' : 'check'}
           size={26}
           color="#6B6F76"
-          style={[styles.linkIcon, {backgroundColor: '#27B060', color: '#fff'}]}
+          style={[
+            styles.linkIcon,
+            {
+              backgroundColor: darkMode ? '#356E53' : global.brandColor,
+              color: '#fff',
+              borderLeftColor: darkMode ? global.inputColorDark : '#DEE1E5',
+            },
+          ]}
           onPress={async () => {
             setLoading(true);
             await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
@@ -61,8 +82,11 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
         <Icon
           name={loading ? 'loader' : 'plus'}
           size={26}
-          color="#6B6F76"
-          style={styles.linkIcon}
+          color={darkMode ? 'white' : '#6B6F76'}
+          style={[
+            styles.linkIcon,
+            {borderLeftColor: darkMode ? global.inputColorDark : '#DEE1E5'},
+          ]}
           onPress={async () => {
             setLoading(true);
             await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);

@@ -16,7 +16,7 @@ import EditTopicsHeader from '../../components/EditTopicsHeader';
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TopicLoading from '../../components/TopicLoading';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../../redux/features/HideTabBar';
 
 const Category = () => {
@@ -137,20 +137,58 @@ const Category = () => {
     }
   }, [term]);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
 
-      <SafeAreaView style={{flex: 1}}>
-        <View style={{backgroundColor: '#F3F4F7'}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <View
+          style={{
+            backgroundColor: darkMode
+              ? global.backgroundColorDark
+              : global.backgroundColor,
+          }}>
           <View style={styles.topBar}>
             <Text style={styles.title}>Explore Topics</Text>
             <EditTopicsHeader />
           </View>
-          <View style={{backgroundColor: '#E6E6E8'}}>
-            <View style={styles.container}>
+          <View
+            style={{
+              backgroundColor: darkMode
+                ? global.backgroundColorDark
+                : global.backgroundColor,
+            }}>
+            <View
+              style={[
+                styles.container,
+                {
+                  backgroundColor: darkMode
+                    ? global.inputColorDark
+                    : global.inputColor,
+                },
+              ]}>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}
                 placeholder="Search for a topic..."
                 placeholderTextColor="#A9A9A9"
                 value={term}
@@ -160,7 +198,7 @@ const Category = () => {
               <Icon
                 name="search"
                 size={20}
-                color="#000"
+                color={darkMode ? '#A9A9A9' : '#000'}
                 onPress={() => {
                   Keyboard.dismiss();
                   if (term.trim().length > 0) {

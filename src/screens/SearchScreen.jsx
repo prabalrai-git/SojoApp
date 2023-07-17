@@ -13,7 +13,7 @@ import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 
 const SearchScreen = ({navigation, route}) => {
@@ -69,11 +69,23 @@ const SearchScreen = ({navigation, route}) => {
   const renderItem = ({item}) => {
     return <BlogItem item={item} navigation={navigation} />;
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
         <View style={styles.topBar}>
           <Text style={styles.title}>My Feed</Text>
           <HomeHeader isShown={false} />
@@ -85,12 +97,12 @@ const SearchScreen = ({navigation, route}) => {
               <Text
                 style={{
                   fontSize: 17,
-                  fontWeight: 'bold',
-                  color: '#171A21',
+                  fontWeight: '400',
+                  color: darkMode ? 'white' : '#171A21',
                   textAlign: 'center',
-                  borderBottomColor: '#ECEDEF',
+                  borderBottomColor: darkMode ? '#3F424A' : '#ECEDEF',
                   borderBottomWidth: 1,
-                  padding: 15,
+                  padding: 12,
                 }}>
                 Results for "{route.params.term}"
               </Text>

@@ -10,6 +10,7 @@ import React, {useState, useEffect} from 'react';
 import Axios from './../api/server';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {windowWidth} from '../helper/usefulConstants';
+import {useSelector} from 'react-redux';
 
 const HomeHeader = ({id, isShown = true}) => {
   const navigation = useNavigation();
@@ -28,8 +29,18 @@ const HomeHeader = ({id, isShown = true}) => {
     id && fetchTopic();
   }, [id]);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return isShown ? (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: darkMode
+            ? global.brandColorLightDark
+            : brandColorLight,
+        },
+      ]}>
       <TouchableOpacity
         style={styles.titleWrapper}
         onPress={() => {

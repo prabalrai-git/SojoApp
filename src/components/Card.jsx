@@ -18,6 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
 import {hideTabBar} from '../redux/features/HideTabBar';
+import '../../globalThemColor';
 
 const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
   const [image, setImage] = useState('');
@@ -104,6 +105,8 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
     }
   }, [config]);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     image && (
       <TouchableOpacity
@@ -116,13 +119,22 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
             isBookmarked: item?.isBookmarkedByUser,
           });
         }}>
-        <View style={styles.cardContainer}>
+        <View
+          style={[
+            styles.cardContainer,
+            {
+              backgroundColor: darkMode
+                ? global.backgroundColorDark
+                : global.backgroundColor,
+              borderBottomColor: darkMode ? '#3F424A' : '#DADADD',
+            },
+          ]}>
           <View style={styles.wrapper}>
             <View>
               <FastImage
                 source={{uri: image}}
                 style={[styles.cardImage, {position: 'relative'}]}
-                resizeMode={FastImage.resizeMode.cover}>
+                resizeMode={FastImage.resizeMode.contain}>
                 <Pressable onPress={() => bookmarkPressed()}>
                   <Image
                     source={
@@ -143,14 +155,17 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
               </FastImage>
             </View>
             <Text
-              style={styles.cardTitle}
+              style={[styles.cardTitle, {color: darkMode ? 'white' : 'black'}]}
               numberOfLines={2}
               ellipsizeMode="tail">
               {item?.title}
             </Text>
 
             <Text
-              style={styles.cardText}
+              style={[
+                styles.cardText,
+                {color: darkMode ? '#9B9EA5' : '#3F424A'},
+              ]}
               numberOfLines={4}
               ellipsizeMode="tail">
               {item?.previewText}
@@ -190,7 +205,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
     borderBottomColor: '#DADADD',
     paddingBottom: 25,
-    backgroundColor: '#F3F4F7',
   },
   wrapper: {
     paddingHorizontal: 15,
@@ -199,6 +213,7 @@ const styles = StyleSheet.create({
     height: 250,
     width: '100%',
     borderRadius: 10,
+    // resizeMode: 'contain',
   },
   cardTitle: {
     marginTop: 10,

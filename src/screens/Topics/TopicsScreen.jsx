@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import TopicsHeader from '../../components/TopicsHeader';
 import Icon from 'react-native-vector-icons/Feather';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../../redux/features/HideTabBar';
 
 const Category = () => {
@@ -124,12 +124,24 @@ const Category = () => {
       setFilteredTopics(filtered);
     }
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#27B060'}} />
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
 
-      <SafeAreaView style={{flex: 1, backgroundColor: '#F3F4F7'}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
         <View style={styles.topBar}>
           <Text style={styles.title}>My Topics</Text>
           <TopicsHeader />
@@ -161,8 +173,21 @@ const Category = () => {
         </View> */}
         {profile && (
           <>
-            <View style={{backgroundColor: '#F3F4F7'}}>
-              <View style={styles.container}>
+            <View
+              style={{
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              }}>
+              <View
+                style={[
+                  styles.container,
+                  {
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}>
                 <TextInput
                   style={styles.input}
                   placeholder="Search for a topic..."
@@ -174,7 +199,7 @@ const Category = () => {
                 <Icon
                   name="search"
                   size={20}
-                  color="#000"
+                  color={darkMode ? '#A9A9A9' : '#000'}
                   onPress={() => {
                     Keyboard.dismiss();
                     if (term.trim().length > 0) {
@@ -191,7 +216,17 @@ const Category = () => {
               renderItem={({item}) => {
                 return (
                   <TouchableOpacity
-                    style={styles.link}
+                    style={[
+                      styles.link,
+                      {
+                        backgroundColor: darkMode
+                          ? global.inputColorDark
+                          : global.inputColor,
+                        borderColor: darkMode
+                          ? global.inputColorDark
+                          : '#D6D7DA',
+                      },
+                    ]}
                     onPress={() => {
                       return navigation.navigate('CategoryScreen', {
                         id: item.id,
@@ -220,12 +255,25 @@ const Category = () => {
                         });
                       }
                     }}>
-                    <Text style={styles.linkTitle}>{item.name}</Text>
+                    <Text
+                      style={[
+                        styles.linkTitle,
+                        {color: darkMode ? 'white' : '#3F424A'},
+                      ]}>
+                      {item.name}
+                    </Text>
                     <Icon
                       name="arrow-right"
                       size={22}
                       color="#6B6F76"
-                      style={styles.linkIcon}
+                      style={[
+                        styles.linkIcon,
+                        {
+                          backgroundColor: darkMode
+                            ? global.inputColorDark
+                            : global.inputColor,
+                        },
+                      ]}
                     />
                   </TouchableOpacity>
                 );
@@ -248,7 +296,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#D6D7DA',
     borderRadius: 5,
     // marginVertical: 10,

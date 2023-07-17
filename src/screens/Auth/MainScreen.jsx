@@ -20,12 +20,16 @@ import auth from '@react-native-firebase/auth';
 import Axios from '../../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import messaging from '@react-native-firebase/messaging';
+import '../../../globalThemColor';
+import {useDispatch, useSelector} from 'react-redux';
+import {toggleDarkMode} from '../../redux/features/DarkMode';
 
 const MainScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const navigation = useNavigation();
+
+  const darkMode = useSelector(state => state.darkMode.value);
 
   useEffect(() => {
     if (errorMessage) {
@@ -114,10 +118,30 @@ const MainScreen = () => {
   };
 
   return (
-    <View style={styles.bottomContainer}>
-      <StatusBar backgroundColor={'white'} />
+    <View
+      style={[
+        styles.bottomContainer,
+        {
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        },
+      ]}>
+      <StatusBar
+        backgroundColor={
+          darkMode ? global.backgroundColorDark : global.backgroundColor
+        }
+      />
 
-      <View style={styles.top}>
+      <View
+        style={[
+          styles.top,
+          {
+            backgroundColor: darkMode
+              ? global.backgroundColorDark
+              : global.backgroundColor,
+          },
+        ]}>
         <Image
           source={require('../../assets/logo.png')}
           style={[
@@ -130,7 +154,15 @@ const MainScreen = () => {
           ]}
         />
       </View>
-      <View style={styles.bottom}>
+      <View
+        style={[
+          styles.bottom,
+          {
+            backgroundColor: darkMode
+              ? global.brandColorDark2
+              : global.brandColor,
+          },
+        ]}>
         {/*  <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -139,7 +171,10 @@ const MainScreen = () => {
           <FontAwesome name="google" size={24} color="#545760" /> 
           <Text style={styles.buttonText}>Continue by logging in</Text>
         </TouchableOpacity>*/}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          // onPress={() => dispatch(toggleDarkMode())}
+        >
           <Image
             source={require('../../assets/apple-logo.png')}
             style={styles.signupIcon}
@@ -249,7 +284,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     flex: 1,
-    backgroundColor: 'white',
   },
   button: {
     flexDirection: 'row',

@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/server';
+import '../../../globalThemColor';
+import {useSelector} from 'react-redux';
 
 const SearchBar = () => {
   const navigation = useNavigation();
@@ -50,10 +52,24 @@ const SearchBar = () => {
       fetchProfile();
     }
   }, [config]);
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
-    <View style={{backgroundColor: '#f3f4f7'}}>
-      <View style={styles.container}>
+    <View
+      style={{
+        backgroundColor: darkMode
+          ? global.backgroundColorDark
+          : global.backgroundColor,
+      }}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: darkMode
+              ? global.inputColorDark
+              : global.inputColor,
+          },
+        ]}>
         <TextInput
           style={styles.input}
           placeholder="Search for a news..."
@@ -73,7 +89,7 @@ const SearchBar = () => {
         <Icon
           name="search"
           size={20}
-          color="#000"
+          color={darkMode ? global.iconColorDark : iconColor}
           onPress={() => {
             if (term.trim().length > 0) {
               setTerm('');
@@ -96,7 +112,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
     borderRadius: 6,
     marginHorizontal: 15,
     marginVertical: 15,
@@ -109,6 +124,5 @@ const styles = StyleSheet.create({
     color: '#919298',
     paddingLeft: 0,
     paddingVertical: 8,
-    backgroundColor: 'white',
   },
 });

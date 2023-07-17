@@ -27,7 +27,7 @@ import {
   useIsFocused,
   DrawerActions,
 } from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 
 const Drawer = createDrawerNavigator();
@@ -135,10 +135,23 @@ export const HomeDrawerNavigator = () => {
     }
   }, [term]);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   const CustomHeader = ({navigation}) => {
     return (
-      <SafeAreaView>
-        <View style={styles.header}>
+      <SafeAreaView
+        style={{
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}>
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: darkMode
+                ? global.backgroundColorDark
+                : global.backgroundColor,
+            },
+          ]}>
           <TouchableOpacity
             onPress={() => {
               setTerm('');
@@ -147,11 +160,26 @@ export const HomeDrawerNavigator = () => {
             }}>
             <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
           </TouchableOpacity>
-          <View style={styles.inputContainer}>
+          <View
+            style={[
+              styles.inputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.inputColorDark
+                  : global.inputColor,
+              },
+            ]}>
             <TextInput
               placeholder="Search for a topic"
               placeholderTextColor="#A9A9A9"
-              style={styles.input}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: darkMode
+                    ? global.inputColorDark
+                    : global.inputColor,
+                },
+              ]}
               value={term}
               onChangeText={setTerm}
             />
@@ -178,7 +206,13 @@ export const HomeDrawerNavigator = () => {
     }, [isFocused]);
 
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
         <DrawerContentScrollView
           showsVerticalScrollIndicator={false}
           style={{
@@ -191,12 +225,21 @@ export const HomeDrawerNavigator = () => {
               navigation.closeDrawer();
             }}>
             <View style={styles.labelContainer}>
-              <Text style={styles.labelText}>All Topics</Text>
+              <Text
+                style={[
+                  styles.labelText,
+                  {color: darkMode ? 'white' : '#41424B'},
+                ]}>
+                All Topics
+              </Text>
               <Icon
                 name="arrowright"
-                color="#161B21"
+                color={darkMode ? 'white' : '#161B21'}
                 size={22}
-                style={styles.drawerItemIcon}
+                style={[
+                  styles.drawerItemIcon,
+                  {borderLeftColor: darkMode ? '#3f424a' : '#DEE0E4'},
+                ]}
               />
             </View>
           </TouchableOpacity>
@@ -213,12 +256,21 @@ export const HomeDrawerNavigator = () => {
                     navigation.closeDrawer();
                   }}>
                   <View style={styles.labelContainer}>
-                    <Text style={styles.labelText}>{item.name}</Text>
+                    <Text
+                      style={[
+                        styles.labelText,
+                        {color: darkMode ? 'white' : '#41424B'},
+                      ]}>
+                      {item.name}
+                    </Text>
                     <Icon
                       name="arrowright"
-                      color="#161B21"
+                      color={darkMode ? 'white' : '#161B21'}
                       size={22}
-                      style={styles.drawerItemIcon}
+                      style={[
+                        styles.drawerItemIcon,
+                        {borderLeftColor: darkMode ? '#3f424a' : '#DEE0E4'},
+                      ]}
                     />
                   </View>
                 </TouchableOpacity>
@@ -292,6 +344,7 @@ export const ExploreDrawerNavigator = () => {
     fetchTopics();
   }, []);
 
+  const darkMode = useSelector(state => state.darkMode.value);
   const CustomExploreHeader = ({navigation}) => {
     useEffect(() => {
       if (!isFocused) {
@@ -300,8 +353,19 @@ export const ExploreDrawerNavigator = () => {
     }, [isFocused]);
 
     return (
-      <SafeAreaView>
-        <View style={styles.header}>
+      <SafeAreaView
+        style={{
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}>
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: darkMode
+                ? global.backgroundColorDark
+                : global.backgroundColor,
+            },
+          ]}>
           <TouchableOpacity
             onPress={() => {
               setTerm('');
@@ -310,11 +374,26 @@ export const ExploreDrawerNavigator = () => {
             }}>
             <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
           </TouchableOpacity>
-          <View style={styles.inputContainer}>
+          <View
+            style={[
+              styles.inputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.inputColorDark
+                  : global.inputColor,
+              },
+            ]}>
             <TextInput
               placeholder="Search for a topic"
               placeholderTextColor="#A9A9A9"
-              style={styles.input}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: darkMode
+                    ? global.inputColorDark
+                    : global.inputColor,
+                },
+              ]}
               defaultValue={term}
               onChangeText={setTerm}
               onSubmitEditing={() => searchTopic()}
@@ -336,51 +415,77 @@ export const ExploreDrawerNavigator = () => {
 
   const CustomExploreDrawerComponent = ({navigation}) => {
     return (
-      <DrawerContentScrollView
-        showsVerticalScrollIndicator={false}
+      <SafeAreaView
         style={{
-          paddingBottom: 10,
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
         }}>
-        <TouchableOpacity
-          style={styles.container}
-          onPress={() => {
-            navigation.push('Explore');
-            navigation.closeDrawer();
+        <DrawerContentScrollView
+          showsVerticalScrollIndicator={false}
+          style={{
+            paddingBottom: 10,
           }}>
-          <View style={styles.labelContainer}>
-            <Text style={styles.labelText}>All Topics</Text>
-            <Icon
-              name="arrowright"
-              color="#161B21"
-              size={22}
-              style={styles.drawerItemIcon}
-            />
-          </View>
-        </TouchableOpacity>
-        {filteredTopics.map(item => {
-          return (
-            <TouchableOpacity
-              style={styles.container}
-              key={item.id}
-              onPress={() => {
-                navigation.push('ExploreCategory', {
-                  id: item.id,
-                });
-                navigation.closeDrawer();
-              }}>
-              <View style={styles.labelContainer}>
-                <Text style={styles.labelText}>{item.name}</Text>
-                <Icon
-                  name="arrowright"
-                  color="#161B21"
-                  size={22}
-                  style={styles.drawerItemIcon}
-                />
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </DrawerContentScrollView>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => {
+              navigation.push('Explore');
+              navigation.closeDrawer();
+            }}>
+            <View style={styles.labelContainer}>
+              <Text
+                style={[
+                  styles.labelText,
+                  {color: darkMode ? 'white' : '#41424B'},
+                ]}>
+                All Topics
+              </Text>
+              <Icon
+                name="arrowright"
+                color={darkMode ? 'white' : '#161B21'}
+                size={22}
+                style={[
+                  styles.drawerItemIcon,
+                  {borderLeftColor: darkMode ? '#3f424a' : '#DEE0E4'},
+                ]}
+              />
+            </View>
+          </TouchableOpacity>
+          {filteredTopics.map(item => {
+            return (
+              <TouchableOpacity
+                style={styles.container}
+                key={item.id}
+                onPress={() => {
+                  navigation.push('ExploreCategory', {
+                    id: item.id,
+                  });
+                  navigation.closeDrawer();
+                }}>
+                <View style={styles.labelContainer}>
+                  <Text
+                    style={[
+                      styles.labelText,
+                      {color: darkMode ? 'white' : '#41424B'},
+                    ]}>
+                    {item.name}
+                  </Text>
+                  <Icon
+                    name="arrowright"
+                    color={darkMode ? 'white' : '#161B21'}
+                    size={22}
+                    style={[
+                      styles.drawerItemIcon,
+                      {borderLeftColor: darkMode ? '#3f424a' : '#DEE0E4'},
+                    ]}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </DrawerContentScrollView>
+      </SafeAreaView>
     );
   };
 

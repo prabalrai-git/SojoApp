@@ -20,7 +20,7 @@ import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import Share from 'react-native-share';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
 import {useNavigation} from '@react-navigation/native';
 
@@ -201,10 +201,23 @@ const BlogScreen = ({route}) => {
     }
   }, [config]);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     <>
-      <SafeAreaView style={{backgroundColor: '#26B160'}}>
-        <View style={styles.topBar}>
+      <SafeAreaView
+        style={{
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}>
+        <View
+          style={[
+            styles.topBar,
+            {
+              backgroundColor: darkMode
+                ? global.brandColorDark
+                : global.brandColor,
+            },
+          ]}>
           <TouchableOpacity
             style={{
               alignSelf: 'center',
@@ -236,7 +249,9 @@ const BlogScreen = ({route}) => {
             ) : (
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#52c080',
+                  backgroundColor: darkMode
+                    ? global.brandColorLightDark
+                    : global.brandColorLight,
                   padding: 6,
                   borderRadius: 5,
                   paddingHorizontal: 10,
@@ -260,7 +275,9 @@ const BlogScreen = ({route}) => {
               onPress={() => onClickShare()}
               style={{
                 marginLeft: 10,
-                backgroundColor: '#52c080',
+                backgroundColor: darkMode
+                  ? global.brandColorLightDark
+                  : global.brandColorLight,
                 padding: 6,
                 borderRadius: 5,
                 paddingHorizontal: 10,
@@ -300,13 +317,27 @@ const BlogScreen = ({route}) => {
         {data ? (
           <ScrollView
             ref={scrollRef}
-            contentContainerStyle={styles.container}
+            contentContainerStyle={[
+              styles.container,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              },
+            ]}
             showsVerticalScrollIndicator={false}>
             <View style={styles.blog}>
-              <Text style={styles.title}>{data.title}</Text>
+              <Text
+                style={[styles.title, {color: darkMode ? 'white' : 'black'}]}>
+                {data.title}
+              </Text>
               <View style={styles.categories}>
                 <Text style={styles.topic}>{data.topics[0].name}</Text>
-                <Text style={styles.date}>
+                <Text
+                  style={[
+                    styles.date,
+                    {color: darkMode ? '#9B9EA5' : '#3F424A'},
+                  ]}>
                   Posted on {moment(data.createdAt).format('DD MMM YYYY')}
                 </Text>
               </View>
@@ -316,7 +347,13 @@ const BlogScreen = ({route}) => {
                 style={styles.image}
                 resizeMode={FastImage.resizeMode.cover}
               />
-              <Text style={styles.previewText}>{data.previewText}</Text>
+              <Text
+                style={[
+                  styles.previewText,
+                  {color: darkMode ? '#9B9EA5' : '#3F424A'},
+                ]}>
+                {data.previewText}
+              </Text>
 
               <HTML
                 source={{html: data.news}}
@@ -334,7 +371,7 @@ const BlogScreen = ({route}) => {
                   fontWeight: 'bold',
                   marginTop: 15,
                   marginBottom: 15,
-                  color: '#2B2D34',
+                  color: darkMode ? 'white' : '#3F424A',
                 }}>
                 Similar News
               </Text>
