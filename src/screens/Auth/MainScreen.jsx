@@ -56,13 +56,11 @@ const MainScreen = () => {
       const {idToken, user} = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(googleCredential);
-
       try {
         const response = await Axios.post(`/auth/googlePhoneLogin`, {
           username: user.name,
           email: user.email,
         });
-
         // return console.log(response.data.data);
 
         const {token, userAlereadyExits} = response.data.data;

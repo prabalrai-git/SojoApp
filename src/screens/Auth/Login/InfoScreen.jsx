@@ -58,22 +58,15 @@ const InfoScreen = ({navigation}) => {
     getStates();
   }, []);
 
-
-
-
-
-const getStates = async () => {
-  const res = await Axios.get('/states/getAllStates');
-  let data = res.data.data;
-  let newdata = [];
-  data.map(item=>{
-    return newdata.push({id:item.id,title:item.name,type:"state"})
-  })
-  setStatesOptions(newdata)
-}
-
-
-
+  const getStates = async () => {
+    const res = await Axios.get('/states/getAllStates');
+    let data = res.data.data;
+    let newdata = [];
+    data.map(item => {
+      return newdata.push({id: item.id, title: item.name, type: 'state'});
+    });
+    setStatesOptions(newdata);
+  };
 
   const getOccupation = async () => {
     const res = await Axios.get('/occupations');
@@ -99,7 +92,7 @@ const getStates = async () => {
       setModalSelectionValues(occupationOptions);
       setModalVisible(true);
     }
-    if(item === 'state'){
+    if (item === 'state') {
       setModalSelectionValues(statesOptions);
       setModalVisible(true);
     }
@@ -120,11 +113,10 @@ const getStates = async () => {
 
       return setOccupation(item.title);
     }
-    if(item.type == "state"){
+    if (item.type == 'state') {
       setModalVisible(prev => !prev);
 
       return setState(item.title);
-
     }
   };
 
@@ -146,11 +138,10 @@ const getStates = async () => {
     }
   };
 
-const setStateId = state => {
-
-  const filteredstate = statesOptions.filter(item=>item.title === state)
-return filteredstate[0].id;
-}
+  const setStateId = state => {
+    const filteredstate = statesOptions.filter(item => item.title === state);
+    return filteredstate[0].id;
+  };
 
   const handleFormSubmit = async () => {
     // setLoading(true);
@@ -163,9 +154,9 @@ return filteredstate[0].id;
         ageGroup,
         gender,
         occupation: setOccupationId(occupation),
-        state: setStateId(state)
+        state: setStateId(state),
       };
-// return console.log(data);
+      // return console.log(data);
       return navigation.replace('Preferences', {data});
     }
   };
@@ -417,7 +408,7 @@ return filteredstate[0].id;
                 </>
               )}
             </TouchableOpacity>
-{/* 
+            {/* 
             <TouchableOpacity
               onPress={() => {
                 return console.log('hello');
@@ -447,7 +438,6 @@ return filteredstate[0].id;
               position: 'relative',
               margin: 0,
             }}>
-          
             <View
               style={{
                 backgroundColor: 'white',
@@ -459,31 +449,30 @@ return filteredstate[0].id;
                 paddingTop: 25,
                 borderTopLeftRadius: 20,
               }}>
-                    <ScrollView>
-                
-              {modalSelectionValues?.map(item => {
-                return (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={{width: windowWidth}}
-                    onPress={() => {
-                      setInfoState(item);
-                    }}>
-                    <Text style={{color: 'black', marginHorizontal: 20}}>
-                      {item.title}
-                    </Text>
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: 'lightgrey',
-                        marginVertical: 18,
+              <ScrollView>
+                {modalSelectionValues?.map(item => {
+                  return (
+                    <TouchableOpacity
+                      key={item.id}
+                      style={{width: windowWidth}}
+                      onPress={() => {
+                        setInfoState(item);
+                      }}>
+                      <Text style={{color: 'black', marginHorizontal: 20}}>
+                        {item.title}
+                      </Text>
+                      <View
+                        style={{
+                          height: 1,
+                          backgroundColor: 'lightgrey',
+                          marginVertical: 18,
 
-                        width: windowWidth,
-                      }}></View>
-                  </TouchableOpacity>
-                );
-              })}
-                </ScrollView>
+                          width: windowWidth,
+                        }}></View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
             </View>
           </Modal>
         </ScrollView>

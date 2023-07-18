@@ -1677,14 +1677,22 @@
   resolved "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.11.tgz"
   integrity sha512-rQfMIGSR/1r/SyN87+VD8xHHzDYeHaJq6elOSCAD+0iLagXkSI2pfA0LmSXP21uw5i3em7GkkRjfJ8wpqWXZNw==
 
+<<<<<<< HEAD
 "@react-native-firebase/app@^18.1.0", "@react-native-firebase/app@18.1.0":
   version "18.1.0"
   resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-18.1.0.tgz"
   integrity sha512-GZSlkNjSZlyB6I2t/5MmD9uDvnteyPOzvYNshaffS/hzRK6LL+3xYTnxqwPl6Kntm8z28FdaQM06OIlkPGQ3+g==
+=======
+"@react-native-firebase/app@^18.0.0", "@react-native-firebase/app@18.0.0":
+  version "18.0.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-18.0.0.tgz"
+  integrity sha512-jvxitPNkcxE6IyGHiOGaURA42ZHBesTeSLbOfqQL6ZtTkQ0sPkFk6VPM2OR5s5S2NfOCfd9dddOhFLIX5VE3ig==
+>>>>>>> 40268184ecd2d7a55682839933dbe10eb4fb8f46
   dependencies:
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+<<<<<<< HEAD
 "@react-native-firebase/auth@^18.1.0":
   version "18.1.0"
   resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-18.1.0.tgz"
@@ -1697,6 +1705,15 @@
   resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-18.1.0.tgz"
   integrity sha512-eNWmXGo+HT45b81dzdQa5g5wz4d4EGv78ywwoh0ONM5wcVZ0bl5a+Ak2HPOruCkGa2adkiKstHkGEZRdWPdJkg==
 
+=======
+"@react-native-firebase/auth@^18.0.0":
+  version "18.0.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-18.0.0.tgz"
+  integrity sha512-9FOsvNH/w5+Cr48nxuJ3Lb85vxFe2A45w37OMxzfZCnLYXJJBvlF1espy3SCMKzwA31RN9+D0jH7OavacKbpzw==
+  dependencies:
+    plist "^3.0.5"
+
+>>>>>>> 40268184ecd2d7a55682839933dbe10eb4fb8f46
 "@react-native-google-signin/google-signin@^10.0.1":
   version "10.0.1"
   resolved "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-10.0.1.tgz"
@@ -1752,10 +1769,17 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
+<<<<<<< HEAD
 "@react-navigation/elements@^1.3.17", "@react-navigation/elements@^1.3.18":
   version "1.3.18"
   resolved "https://registry.npmjs.org/@react-navigation/elements/-/elements-1.3.18.tgz"
   integrity sha512-/0hwnJkrr415yP0Hf4PjUKgGyfshrvNUKFXN85Mrt1gY49hy9IwxZgrrxlh0THXkPeq8q4VWw44eHDfAcQf20Q==
+=======
+"@react-navigation/elements@^1.3.17":
+  version "1.3.17"
+  resolved "https://registry.npmjs.org/@react-navigation/elements/-/elements-1.3.17.tgz"
+  integrity sha512-sui8AzHm6TxeEvWT/NEXlz3egYvCUog4tlXA4Xlb2Vxvy3purVXDq/XsM56lJl344U5Aj/jDzkVanOTMWyk4UA==
+>>>>>>> 40268184ecd2d7a55682839933dbe10eb4fb8f46
 
 "@react-navigation/material-top-tabs@^6.6.2":
   version "6.6.2"
@@ -1765,6 +1789,7 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
+<<<<<<< HEAD
 "@react-navigation/native-stack@^6.9.13":
   version "6.9.13"
   resolved "https://registry.npmjs.org/@react-navigation/native-stack/-/native-stack-6.9.13.tgz"
@@ -1773,6 +1798,8 @@
     "@react-navigation/elements" "^1.3.18"
     warn-once "^0.1.0"
 
+=======
+>>>>>>> 40268184ecd2d7a55682839933dbe10eb4fb8f46
 "@react-navigation/native@^6.0.0", "@react-navigation/native@^6.1.6":
   version "6.1.6"
   resolved "https://registry.npmjs.org/@react-navigation/native/-/native-6.1.6.tgz"

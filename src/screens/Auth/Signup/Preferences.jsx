@@ -54,7 +54,7 @@ const Preferences = ({navigation, route}) => {
       ageGroup,
       skipPolitical,
       skipNSFW,
-      state
+      state,
     };
     try {
       setLoading(true);
