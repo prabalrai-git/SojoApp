@@ -203,11 +203,62 @@ const BlogScreen = ({route}) => {
 
   const darkMode = useSelector(state => state.darkMode.value);
 
+  const markdownStyles = {
+    p: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: darkMode ? '#9B9EA5' : '#3F424A',
+      textAlign: 'justify',
+    },
+    strong: {
+      fontWeight: 'bold',
+    },
+    em: {
+      fontStyle: 'italic',
+    },
+    a: {
+      textDecorationLine: 'underline',
+    },
+    heading1: {
+      fontSize: 28,
+      fontWeight: 'bold',
+    },
+    heading2: {
+      fontSize: 24,
+      fontWeight: 'bold',
+    },
+    heading3: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    heading4: {
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    heading5: {
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    heading6: {
+      fontSize: 14,
+      fontWeight: 'bold',
+    },
+  };
+
   return (
     <>
       <SafeAreaView
         style={{
+          flex: 0,
           backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
         }}>
         <View
           style={[
@@ -383,7 +434,9 @@ const BlogScreen = ({route}) => {
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator />
+          <View style={{marginTop: 50}}>
+            <ActivityIndicator size="large" />
+          </View>
         )}
       </SafeAreaView>
     </>
@@ -470,47 +523,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: '#3F424A',
     textAlign: 'justify',
-  },
-});
-
-const markdownStyles = StyleSheet.create({
-  p: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#3F424A',
-  },
-  strong: {
-    fontWeight: 'bold',
-  },
-  em: {
-    fontStyle: 'italic',
-  },
-  a: {
-    textDecorationLine: 'underline',
-  },
-  heading1: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-  heading2: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  heading3: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  heading4: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  heading5: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  heading6: {
-    fontSize: 14,
-    fontWeight: 'bold',
   },
 });
 

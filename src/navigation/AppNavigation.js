@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, TabAndAuthStack} from './Stacks';
 import TabNavigator from './Tab';
+import {useSelector} from 'react-redux';
 
 export default function MainNavigator() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,27 +51,30 @@ export default function MainNavigator() {
     checkLoginStatus();
   }, []);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
-    <>
-      <Stack.Navigator>
-        {profile ? (
-          <Stack.Screen
-            name="Home"
-            component={TabAndAuthStack}
-            options={{
-              headerShown: false,
-            }}
-          />
-        ) : (
-          <Stack.Screen
-            name="Auth"
-            component={AuthStack}
-            options={{
-              headerShown: false,
-            }}
-          />
-        )}
-      </Stack.Navigator>
-    </>
+    <Stack.Navigator
+      mode="modal"
+      screenOptions={{cardStyle: {backgroundColor: 'transparent'}}}>
+      {profile ? (
+        <Stack.Screen
+          name="Home"
+          component={TabAndAuthStack}
+          options={{
+            headerShown: false,
+            cardStyle: {backgroundColor: 'transparent'},
+          }}
+        />
+      ) : (
+        <Stack.Screen
+          name="Auth"
+          component={AuthStack}
+          options={{
+            headerShown: false,
+          }}
+        />
+      )}
+    </Stack.Navigator>
   );
 }

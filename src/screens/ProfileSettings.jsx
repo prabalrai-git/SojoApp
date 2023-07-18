@@ -20,9 +20,12 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
+import {toggleDarkMode} from '../redux/features/DarkMode';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileSettings = () => {
   const [checked, setChecked] = useState(false);
+  const [darkModeChecked, setDarkModeChecked] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [notiForValue, setNotiForValue] = useState(null);
   const [notiFreqValue, setNotiFreqValue] = useState(null);
@@ -73,6 +76,34 @@ const ProfileSettings = () => {
     }
   };
   const darkMode = useSelector(state => state.darkMode.value);
+
+  // useEffect(() => {
+  //   const setDarkModeInitialVaue = async () => {
+  //     await AsyncStorage.setItem('darkmode', darkMode.toString());
+  //   };
+  //   setDarkModeInitialVaue();
+  // }, []);
+
+  useEffect(() => {
+    const setDarkModeInitialVaue = async () => {
+      await AsyncStorage.setItem('darkmode', darkModeChecked?.toString());
+    };
+    setDarkModeInitialVaue();
+  }, [darkModeChecked]);
+
+  useEffect(() => {
+    const getDarkModeInitialValue = async () => {
+      const darkmode = await AsyncStorage.getItem('darkmode');
+      if (darkmode === 'true' || darkmode === true) {
+        setDarkModeChecked(true);
+        dispatch(toggleDarkMode(true));
+      } else {
+        setDarkModeChecked(false);
+        dispatch(toggleDarkMode(false));
+      }
+    };
+    getDarkModeInitialValue();
+  }, []);
 
   return (
     <>
@@ -230,6 +261,40 @@ const ProfileSettings = () => {
                 circleInActiveColor={'white'}
                 value={checked}
                 onValueChange={value => setChecked(value)}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 35,
+              }}>
+              <Text
+                style={{
+                  color: darkMode ? 'white' : 'black',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                }}>
+                Dark Mode
+              </Text>
+              <Switch
+                // color="#296146"
+                activeText={''}
+                inActiveText={''}
+                backgroundActive={darkMode ? global.brandColorDark2 : '#27b060'}
+                circleSize={30}
+                // barHeight={34}
+                switchWidthMultiplier={2}
+                circleBorderWidth={0}
+                outerCircleStyle={{}}
+                backgroundInactive={'grey'}
+                circleActiveColor={'white'}
+                circleInActiveColor={'white'}
+                value={darkModeChecked}
+                onValueChange={value => {
+                  setDarkModeChecked(value);
+                  dispatch(toggleDarkMode(value));
+                }}
               />
             </View>
             {/* <View>

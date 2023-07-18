@@ -76,7 +76,9 @@ const TabNavigator = () => {
                 <Image
                   source={
                     focused
-                      ? require('../assets/feed_fill.png')
+                      ? darkMode
+                        ? require('../assets/darknews.png')
+                        : require('../assets/feed_fill.png')
                       : require('../assets/feed.png')
                   }
                   style={{
@@ -91,7 +93,9 @@ const TabNavigator = () => {
                 <Image
                   source={
                     focused
-                      ? require('../assets/user_fill.png')
+                      ? darkMode
+                        ? require('../assets/darkuser.png')
+                        : require('../assets/user_fill.png')
                       : require('../assets/user.png')
                   }
                   style={{
@@ -106,7 +110,9 @@ const TabNavigator = () => {
                 <Image
                   source={
                     focused
-                      ? require('../assets/topics_fill.png')
+                      ? darkMode
+                        ? require('../assets/darktopics.png')
+                        : require('../assets/topics_fill.png')
                       : require('../assets/topics.png')
                   }
                   style={{
@@ -121,7 +127,9 @@ const TabNavigator = () => {
                 <Image
                   source={
                     focused
-                      ? require('../assets/compass_fill.png')
+                      ? darkMode
+                        ? require('../assets/darkcompass.png')
+                        : require('../assets/compass_fill.png')
                       : require('../assets/compass.png')
                   }
                   style={{

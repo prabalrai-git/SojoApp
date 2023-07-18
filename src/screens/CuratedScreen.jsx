@@ -121,7 +121,6 @@ const HomeScreen = ({navigation}) => {
       setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
       console.log(err);
-      d;
     }
   };
 

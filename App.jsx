@@ -1,9 +1,13 @@
 import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {
+  DarkTheme,
+  NavigationContainer,
+  useNavigation,
+} from '@react-navigation/native';
 import MainNavigation from './src/navigation/AppNavigation';
 import {store} from './src/redux/store';
-import {Provider} from 'react-redux';
+import {Provider, useSelector} from 'react-redux';
 
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -78,7 +82,7 @@ export default function App() {
   return (
     <>
       <Provider store={store}>
-        <NavigationContainer>
+        <NavigationContainer theme={DarkTheme}>
           <MainNavigation />
         </NavigationContainer>
       </Provider>

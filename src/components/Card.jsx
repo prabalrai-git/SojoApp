@@ -134,7 +134,7 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
               <FastImage
                 source={{uri: image}}
                 style={[styles.cardImage, {position: 'relative'}]}
-                resizeMode={FastImage.resizeMode.contain}>
+                resizeMode={FastImage.resizeMode.cover}>
                 <Pressable onPress={() => bookmarkPressed()}>
                   <Image
                     source={

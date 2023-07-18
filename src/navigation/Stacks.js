@@ -181,7 +181,10 @@ export const TopicsStack = () => {
     <>
       <Stack.Navigator
         initialRouteName="TopicsScreen"
-        screenOptions={{headerShown: false}}>
+        screenOptions={{
+          headerShown: false,
+          cardStyle: {backgroundColor: 'transparent'},
+        }}>
         <Stack.Screen name="TopicsScreen" component={TopicsScreen} />
         <Stack.Screen name="EditTopicsScreen" component={EditTopicsScreen} />
         <Stack.Screen name="HomeScreen" component={HomeDrawerNavigator} />
