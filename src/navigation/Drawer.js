@@ -32,6 +32,115 @@ import {showTabBar} from '../redux/features/HideTabBar';
 
 const Drawer = createDrawerNavigator();
 
+const CustomHeader = ({setFilteredTopics, navigation}) => {
+  const [topics, setTopics] = useState([]);
+  const [term, setTerm] = useState('');
+
+  // useEffect(() => {
+  //   if (term.length > 0) {
+  //     // const delay = setTimeout(() => {
+  //     //   searchTopic();
+  //     // }, 500);
+  //     // return () => clearTimeout(delay);
+  //   } else {
+  //     setFilteredTopics(topics);
+  //   }
+  // }, []);
+
+  // fetch topics
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const res = await Axios.get('/topics');
+        setTopics(res.data.data);
+        setFilteredTopics(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchTopics();
+  }, []);
+  const isFocused = useIsFocused();
+
+  const searchTopic = () => {
+    const filtered = topics.filter(topic => {
+      return topic.name.toLowerCase().includes(term.toLowerCase());
+    });
+
+    setFilteredTopics(filtered);
+    Keyboard.dismiss();
+  };
+
+  useEffect(() => {
+    if (!isFocused) {
+      navigation.closeDrawer();
+    }
+  }, [isFocused]);
+  const darkMode = useSelector(state => state.darkMode.value);
+  return (
+    <SafeAreaView
+      style={{
+        backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+      }}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: darkMode
+              ? global.backgroundColorDark
+              : global.backgroundColor,
+          },
+        ]}>
+        <TouchableOpacity
+          onPress={() => {
+            Keyboard.dismiss();
+            setTerm('');
+            setFilteredTopics(topics);
+            navigation.closeDrawer();
+          }}>
+          <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
+        </TouchableOpacity>
+        <View
+          style={[
+            styles.inputContainer,
+            {
+              backgroundColor: darkMode
+                ? global.inputColorDark
+                : global.inputColor,
+            },
+          ]}>
+          <TextInput
+            placeholder="Search for a topic"
+            placeholderTextColor="#A9A9A9"
+            style={[
+              styles.input,
+              {
+                color: darkMode ? 'white' : 'black',
+                backgroundColor: darkMode
+                  ? global.inputColorDark
+                  : global.inputColor,
+              },
+            ]}
+            onChangeText={setTerm}
+            // onChangeText={newText => setText(newText)}
+            defaultValue={term}
+          />
+          <FontAwesomeIcon
+            name="search"
+            size={22}
+            color="#7C8089"
+            style={styles.searchIcon}
+            onPress={() => {
+              searchTopic();
+              Keyboard.dismiss();
+            }}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
 export const HomeDrawerNavigator = () => {
   const isFocused = useIsFocused();
   const [topics, setTopics] = useState([]);
@@ -55,7 +164,7 @@ export const HomeDrawerNavigator = () => {
       dispatch(showTabBar());
     });
 
-    return unsubscribe;
+    return unsubscribe();
   }, [navigation]);
 
   useEffect(() => {
@@ -116,87 +225,25 @@ export const HomeDrawerNavigator = () => {
     }
   }, [config, navigation]);
 
-  const searchTopic = () => {
-    const filtered = topics.filter(topic => {
-      return topic.name.toLowerCase().includes(term.toLowerCase());
-    });
-    setFilteredTopics(filtered);
-  };
+  // const searchTopic = () => {
+  //   const filtered = topics.filter(topic => {
+  //     return topic.name.toLowerCase().includes(term.toLowerCase());
+  //   });
+  //   setFilteredTopics(filtered);
+  // };
 
-  useEffect(() => {
-    if (term.length > 0) {
-      const delay = setTimeout(() => {
-        searchTopic();
-      }, 500);
-
-      return () => clearTimeout(delay);
-    } else {
-      setFilteredTopics(topics);
-    }
-  }, [term]);
+  // useEffect(() => {
+  //   if (term.length > 0) {
+  //     const delay = setTimeout(() => {
+  //       searchTopic();
+  //     }, 500);
+  //     return () => clearTimeout(delay);
+  //   } else {
+  //     setFilteredTopics(topics);
+  //   }
+  // }, []);
 
   const darkMode = useSelector(state => state.darkMode.value);
-
-  const CustomHeader = ({navigation}) => {
-    return (
-      <SafeAreaView
-        style={{
-          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
-        }}>
-        <View
-          style={[
-            styles.header,
-            {
-              backgroundColor: darkMode
-                ? global.backgroundColorDark
-                : global.backgroundColor,
-            },
-          ]}>
-          <TouchableOpacity
-            onPress={() => {
-              setTerm('');
-              setFilteredTopics(topics);
-              navigation.closeDrawer();
-            }}>
-            <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
-          </TouchableOpacity>
-          <View
-            style={[
-              styles.inputContainer,
-              {
-                backgroundColor: darkMode
-                  ? global.inputColorDark
-                  : global.inputColor,
-              },
-            ]}>
-            <TextInput
-              placeholder="Search for a topic"
-              placeholderTextColor="#A9A9A9"
-              style={[
-                styles.input,
-                {
-                  backgroundColor: darkMode
-                    ? global.inputColorDark
-                    : global.inputColor,
-                },
-              ]}
-              value={term}
-              onChangeText={setTerm}
-            />
-            <FontAwesomeIcon
-              name="search"
-              size={22}
-              color="#7C8089"
-              style={styles.searchIcon}
-              onPress={() => {
-                Keyboard.dismiss();
-              }}
-            />
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  };
 
   const CustomHomeDrawerComponent = ({navigation}) => {
     useEffect(() => {
@@ -288,11 +335,12 @@ export const HomeDrawerNavigator = () => {
         headerShown: false,
         drawerStyle: styles.drawerStyle,
         drawerPosition: 'right',
+        swipeEnabled: false,
       }}
       drawerContent={props => {
         return (
           <>
-            <CustomHeader {...props} />
+            <CustomHeader {...props} setFilteredTopics={setFilteredTopics} />
             <CustomHomeDrawerComponent {...props} />
           </>
         );
@@ -305,30 +353,131 @@ export const HomeDrawerNavigator = () => {
   );
 };
 
-export const ExploreDrawerNavigator = () => {
+const CustomExploreHeader = ({setFilteredTopics, navigation}) => {
   const [topics, setTopics] = useState([]);
   const [term, setTerm] = useState('');
-  const [filteredTopics, setFilteredTopics] = useState([]);
+
+  // useEffect(() => {
+  //   if (term.length > 0) {
+  //     // const delay = setTimeout(() => {
+  //     //   searchTopic();
+  //     // }, 500);
+  //     // return () => clearTimeout(delay);
+  //   } else {
+  //     setFilteredTopics(topics);
+  //   }
+  // }, []);
+
+  // fetch topics
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const res = await Axios.get('/topics');
+        setTopics(res.data.data);
+        setFilteredTopics(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchTopics();
+  }, []);
   const isFocused = useIsFocused();
 
   const searchTopic = () => {
     const filtered = topics.filter(topic => {
       return topic.name.toLowerCase().includes(term.toLowerCase());
     });
+
     setFilteredTopics(filtered);
+    Keyboard.dismiss();
   };
 
   useEffect(() => {
-    if (term.length > 0) {
-      const delay = setTimeout(() => {
-        searchTopic();
-      }, 500);
-
-      return () => clearTimeout(delay);
-    } else {
-      setFilteredTopics(topics);
+    if (!isFocused) {
+      navigation.closeDrawer();
     }
-  }, [term]);
+  }, [isFocused]);
+  const darkMode = useSelector(state => state.darkMode.value);
+
+  return (
+    <SafeAreaView
+      style={{
+        backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+      }}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: darkMode
+              ? global.backgroundColorDark
+              : global.backgroundColor,
+          },
+        ]}>
+        <TouchableOpacity
+          onPress={() => {
+            Keyboard.dismiss();
+            setTerm('');
+            setFilteredTopics(topics);
+            navigation.closeDrawer();
+          }}>
+          <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
+        </TouchableOpacity>
+        <View
+          style={[
+            styles.inputContainer,
+            {
+              backgroundColor: darkMode
+                ? global.inputColorDark
+                : global.inputColor,
+            },
+          ]}>
+          <TextInput
+            placeholder="Search for a topic"
+            placeholderTextColor="#A9A9A9"
+            style={[
+              styles.input,
+              {
+                color: darkMode ? 'white' : 'black',
+
+                backgroundColor: darkMode
+                  ? global.inputColorDark
+                  : global.inputColor,
+              },
+            ]}
+            defaultValue={term}
+            onChangeText={setTerm}
+            // onSubmitEditing={() => searchTopic()}
+          />
+          <FontAwesomeIcon
+            name="search"
+            size={22}
+            color="#7C8089"
+            style={styles.searchIcon}
+            onPress={() => {
+              searchTopic();
+            }}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export const ExploreDrawerNavigator = () => {
+  const [topics, setTopics] = useState([]);
+  const [term, setTerm] = useState('');
+  const [filteredTopics, setFilteredTopics] = useState([]);
+
+  // useEffect(() => {
+  //   if (term.length > 0) {
+  //     // const delay = setTimeout(() => {
+  //     //   searchTopic();
+  //     // }, 500);
+  //     // return () => clearTimeout(delay);
+  //   } else {
+  //     setFilteredTopics(topics);
+  //   }
+  // }, []);
 
   // fetch topics
   useEffect(() => {
@@ -345,73 +494,6 @@ export const ExploreDrawerNavigator = () => {
   }, []);
 
   const darkMode = useSelector(state => state.darkMode.value);
-  const CustomExploreHeader = ({navigation}) => {
-    useEffect(() => {
-      if (!isFocused) {
-        navigation.closeDrawer();
-      }
-    }, [isFocused]);
-
-    return (
-      <SafeAreaView
-        style={{
-          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
-        }}>
-        <View
-          style={[
-            styles.header,
-            {
-              backgroundColor: darkMode
-                ? global.backgroundColorDark
-                : global.backgroundColor,
-            },
-          ]}>
-          <TouchableOpacity
-            onPress={() => {
-              setTerm('');
-              setFilteredTopics(topics);
-              navigation.closeDrawer();
-            }}>
-            <MaterialIcon name="arrow-back" size={22} color="#3F424A" />
-          </TouchableOpacity>
-          <View
-            style={[
-              styles.inputContainer,
-              {
-                backgroundColor: darkMode
-                  ? global.inputColorDark
-                  : global.inputColor,
-              },
-            ]}>
-            <TextInput
-              placeholder="Search for a topic"
-              placeholderTextColor="#A9A9A9"
-              style={[
-                styles.input,
-                {
-                  backgroundColor: darkMode
-                    ? global.inputColorDark
-                    : global.inputColor,
-                },
-              ]}
-              defaultValue={term}
-              onChangeText={setTerm}
-              onSubmitEditing={() => searchTopic()}
-            />
-            <FontAwesomeIcon
-              name="search"
-              size={22}
-              color="#7C8089"
-              style={styles.searchIcon}
-              onPress={() => {
-                searchTopic();
-              }}
-            />
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  };
 
   const CustomExploreDrawerComponent = ({navigation}) => {
     return (
@@ -496,11 +578,15 @@ export const ExploreDrawerNavigator = () => {
         headerShown: false,
         drawerStyle: styles.drawerStyle,
         drawerPosition: 'right',
+        swipeEnabled: false,
       }}
       drawerContent={props => {
         return (
           <>
-            <CustomExploreHeader {...props} />
+            <CustomExploreHeader
+              {...props}
+              setFilteredTopics={setFilteredTopics}
+            />
             <CustomExploreDrawerComponent {...props} />
           </>
         );

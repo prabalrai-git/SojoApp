@@ -65,7 +65,7 @@ const ProfileSettings = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
+        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
     });
   }, []);
   const signOut = async () => {
@@ -139,7 +139,7 @@ const ProfileSettings = () => {
             <TouchableOpacity
               style={styles.titleWrapper}
               onPress={() => {
-                console.log('hello world');
+                navigation.goBack();
               }}>
               <Icon
                 name="save"

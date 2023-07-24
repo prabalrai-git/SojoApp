@@ -8,6 +8,9 @@ import {
   StatusBar,
   SafeAreaView,
   Alert,
+  Modal,
+  Dimensions,
+  Linking,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -21,6 +24,8 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import messaging from '@react-native-firebase/messaging';
 import '../../globalThemColor';
 import {PermissionsAndroid} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import firestore from '@react-native-firebase/firestore';
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
@@ -29,8 +34,28 @@ const HomeScreen = ({navigation}) => {
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [updatedVersion, setUpdatedVersion] = useState();
+
+  const {width, height} = Dimensions.get('window');
 
   const dispatch = useDispatch();
+
+  const openGooglePlay = () => {
+    Linking.openURL(
+      'https://play.google.com/store/apps/details?id=com.sojonewsapp',
+    );
+  };
+
+  useEffect(() => {
+    getVersionFromFirebase();
+  }, []);
+
+  // after deploying new updates in stores please update firestore in firebase for triggering user prompts to update the app
+  const getVersionFromFirebase = async () => {
+    const version = await firestore().collection('sojoNewsAppVersion').get();
+    setUpdatedVersion(version.docs[0]._data.version);
+  };
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(showTabBar());
@@ -183,6 +208,21 @@ const HomeScreen = ({navigation}) => {
         <StatusBar
           backgroundColor={darkMode ? global.brandColorDark : global.brandColor}
         />
+        {updatedVersion && DeviceInfo.getVersion() !== updatedVersion
+          ? Alert.alert(
+              '',
+              `New version version ${updatedVersion} available!`,
+              [
+                {
+                  text: 'Update Now',
+                  onPress: () => openGooglePlay(),
+                  style: 'cancel',
+                },
+                {text: 'Later', onPress: () => console.log('OK Pressed')},
+              ],
+            )
+          : null}
+
         <View
           style={[
             styles.topBar,
@@ -193,8 +233,10 @@ const HomeScreen = ({navigation}) => {
             },
           ]}>
           <Text style={styles.title}>My Feed</Text>
+
           <HomeHeader />
         </View>
+
         <SearchBar />
         <FlatList
           data={news}

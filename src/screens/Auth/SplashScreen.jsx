@@ -97,10 +97,18 @@ const SplashScreen = () => {
         <Image
           source={require('../../assets/logo.png')}
           style={{
-            width: 200,
-            height: 200,
+            width: 110,
+            height: 30,
             resizeMode: 'contain',
             tintColor: 'white',
+          }}
+        />
+        <Image
+          source={require('../../assets/logo1.png')}
+          style={{
+            width: 120,
+            height: 50,
+            resizeMode: 'contain',
           }}
         />
       </View>

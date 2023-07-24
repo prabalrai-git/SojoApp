@@ -70,19 +70,27 @@ const Category = () => {
     fetchToken();
   }, []);
 
-  const fetchTopics = async () => {
-    try {
-      const res = await Axios.get('/topics');
-      setFilteredTopics(res.data.data);
-      setData(res.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const fetchTopics = async () => {
+  //   try {
+  //     const res = await Axios.get('/topics');
+  //     setFilteredTopics(res.data.data);
+  //     setData(res.data.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchTopics();
-  }, []);
+    // fetchTopics();
+    if (profile) {
+      let userTopics = [];
+      for (x in profile.topics) {
+        userTopics.push(profile.topics[x]);
+      }
+      setFilteredTopics(userTopics);
+      setData(userTopics);
+    }
+  }, [profile]);
 
   useEffect(() => {
     // AsyncStorage.removeItem('token');

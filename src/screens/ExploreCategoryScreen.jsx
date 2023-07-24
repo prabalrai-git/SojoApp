@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   FlatList,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Axios from './../api/server';
@@ -12,7 +13,7 @@ import Card from './../components/Card';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import GlobalHeader from '../components/GlobalHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 
 const Category = () => {
@@ -150,37 +151,68 @@ const Category = () => {
       setLoading(true);
     }
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return topic ? (
-    <View style={{flex: 1}}>
-      <View style={styles.topBar}>
-        <Text style={[styles.title]}>Explore</Text>
-        {route.params && route.params.id ? (
-          <GlobalHeader id={route.params.id} />
-        ) : (
-          <GlobalHeader />
-        )}
-      </View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ListFooterComponent={renderFooter}
-        onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-        onEndReached={handleLoadMore}
-        refreshing={page === 1 && loading}
-        onRefresh={() => {
-          navigation.replace('ExploreCategory', {
-            id: route.params.id,
-          });
+    <>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
         }}
       />
-    </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <View style={styles.topBar}>
+          <Text style={[styles.title]}>Explore</Text>
+          {route.params && route.params.id ? (
+            <GlobalHeader id={route.params.id} />
+          ) : (
+            <GlobalHeader />
+          )}
+        </View>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ListFooterComponent={renderFooter}
+          onEndReachedThreshold={0.5}
+          showsVerticalScrollIndicator={false}
+          onEndReached={handleLoadMore}
+          refreshing={page === 1 && loading}
+          onRefresh={() => {
+            navigation.replace('ExploreCategory', {
+              id: route.params.id,
+            });
+          }}
+        />
+      </SafeAreaView>
+    </>
   ) : (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <ActivityIndicator size="large" color="#6B6F76" />
-    </View>
+    <>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <ActivityIndicator size="large" color="#6B6F76" />
+      </SafeAreaView>
+    </>
   );
 };
 
