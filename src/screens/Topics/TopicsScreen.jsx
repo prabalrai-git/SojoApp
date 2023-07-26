@@ -150,7 +150,18 @@ const Category = () => {
             ? global.backgroundColorDark
             : global.backgroundColor,
         }}>
-        <View style={styles.topBar}>
+        <StatusBar
+          backgroundColor={darkMode ? global.brandColorDark : global.brandColor}
+        />
+        <View
+          style={[
+            styles.topBar,
+            {
+              backgroundColor: darkMode
+                ? global.brandColorDark
+                : global.brandColor,
+            },
+          ]}>
           <Text style={styles.title}>My Topics</Text>
           <TopicsHeader />
         </View>

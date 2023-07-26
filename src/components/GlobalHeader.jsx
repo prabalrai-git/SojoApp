@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Axios from './../api/server';
 import {windowWidth} from '../helper/usefulConstants';
+import {useSelector} from 'react-redux';
 
 const GlobalHeader = ({id, isShown = true}) => {
   const navigation = useNavigation();
@@ -22,8 +23,18 @@ const GlobalHeader = ({id, isShown = true}) => {
     id && fetchTopic();
   }, [id]);
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return isShown ? (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: darkMode
+            ? global.brandColorLightDark
+            : brandColorLight,
+        },
+      ]}>
       <TouchableOpacity
         style={styles.titleWrapper}
         onPress={() => {
@@ -33,7 +44,7 @@ const GlobalHeader = ({id, isShown = true}) => {
         <Icon
           name="keyboard-arrow-down"
           size={24}
-          style={{flex: 1}}
+          // style={{flex: 1}}
           color="#FEFEFF"
         />
       </TouchableOpacity>
@@ -47,32 +58,28 @@ export default GlobalHeader;
 
 const styles = StyleSheet.create({
   container: {
-    // paddingRight: 7,
+    paddingVertical: 6,
+    paddingRight: 7,
+    paddingLeft: 13,
+    backgroundColor: '#53C180',
     flexDirection: 'row',
-    // alignItems: 'center',
+    alignItems: 'center',
     justifyContent: 'space-around',
-
-    flex: 1,
+    borderRadius: 8,
+    // flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
-    backgroundColor: '#52c080',
-    borderRadius: 8,
-    marginRight: 10,
+    justifyContent: 'space-between',
 
-    paddingVertical: 6,
-
-    justifyContent: 'space-around',
-
-    width: windowWidth * 0.36,
+    // width: windowWidth * 0.36,
   },
   title: {
     fontSize: 14,
     color: '#D5EEDF',
-    // marginRight: 5,
+    // marginRight: 3,
     fontWeight: 'bold',
-    flex: 3,
+    textAlign: 'center',
   },
 });

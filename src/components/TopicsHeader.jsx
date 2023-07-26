@@ -16,7 +16,7 @@ const HomeHeader = () => {
 
   const darkMode = useSelector(state => state.darkMode.value);
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.container,
         {
@@ -41,7 +41,7 @@ const HomeHeader = () => {
           name="edit"
           size={18}
           color="#FEFEFF"
-          style={{marginTop: 2, marginLeft: 4}}
+          style={{marginTop: 2, marginRight: 6}}
         />
         <Text
           style={[
@@ -55,7 +55,7 @@ const HomeHeader = () => {
           Edit Topics
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -65,24 +65,22 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 6,
     paddingRight: 7,
-    paddingLeft: 7,
+    paddingLeft: 13,
+    backgroundColor: '#53C180',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     borderRadius: 8,
-    flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    width: windowWidth * 0.3,
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 14,
     color: '#D5EEDF',
-    marginLeft: 10,
-    flex: 3,
+    // marginRight: 3,
     fontWeight: 'bold',
     textAlign: 'center',
   },

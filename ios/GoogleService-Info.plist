@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>550042982411-r2hcln2thi32je7aui3glvn1hjf049cn.apps.googleusercontent.com</string>
+	<string>142214910872-qgs7bksp5g2v13gfq4goeitg72c88e7o.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.550042982411-r2hcln2thi32je7aui3glvn1hjf049cn</string>
+	<string>com.googleusercontent.apps.142214910872-qgs7bksp5g2v13gfq4goeitg72c88e7o</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>550042982411-jb8ocu5v7mo6cdr90kf5k0mvanm3bqtf.apps.googleusercontent.com</string>
+	<string>142214910872-e0r2kooua6uigh95441rdad11fsr8hvc.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDCMdHSRaf-xuzuganA-5gf1jwXvTS5Xrs</string>
+	<string>AIzaSyCz3fi_biqil3uLb1TFJ7P0SWbAbRU5nZc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>550042982411</string>
+	<string>142214910872</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.sojonewsapp</string>
 	<key>PROJECT_ID</key>
-	<string>sojonewsapp-251bd</string>
+	<string>sojonewsdebug</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sojonewsapp-251bd.appspot.com</string>
+	<string>sojonewsdebug.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:550042982411:ios:34df61d899da7938ac4f0e</string>
+	<string>1:142214910872:ios:af32a729c9c2d37c5d51ed</string>
 </dict>
 </plist>

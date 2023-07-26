@@ -256,6 +256,7 @@ export const HomeDrawerNavigator = () => {
       <SafeAreaView
         style={{
           flex: 1,
+
           backgroundColor: darkMode
             ? global.backgroundColorDark
             : global.backgroundColor,
@@ -629,6 +630,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 12,
     paddingVertical: 10,
+
     width: '100%',
   },
   headerText: {

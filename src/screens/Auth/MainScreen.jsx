@@ -7,22 +7,25 @@ import {
   StatusBar,
   Image,
   ScrollView,
+  Platform,
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {windowHeight, windowWidth} from '../../helper/usefulConstants';
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
+import auth, {firebase} from '@react-native-firebase/auth';
 import Axios from '../../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import '../../../globalThemColor';
-import {useDispatch, useSelector} from 'react-redux';
-import {toggleDarkMode} from '../../redux/features/DarkMode';
+import {useSelector} from 'react-redux';
+import {
+  appleAuth,
+  appleAuthAndroid,
+} from '@invertase/react-native-apple-authentication';
+import 'react-native-get-random-values';
+import {v4 as uuid} from 'uuid';
 
 const MainScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -47,9 +50,72 @@ const MainScreen = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   signOut();
-  // });
+  async function onAppleButtonPressAndroid() {
+    const rawNonce = uuid();
+    const state = uuid();
+
+    appleAuthAndroid.configure({
+      clientId: 'com.sojonewsappforweb',
+
+      redirectUri: 'https://sojonews.com/',
+
+      responseType: appleAuthAndroid.ResponseType.ALL,
+
+      scope: appleAuthAndroid.Scope.ALL,
+
+      nonce: rawNonce,
+
+      state,
+    });
+
+    const response = await appleAuthAndroid.signIn();
+
+    console.log('====================================');
+    console.log(response.user);
+    console.log('====================================');
+  }
+
+  async function onAppleButtonPress() {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+
+    const {identityToken, nonce} = appleAuthRequestResponse;
+
+    if (identityToken) {
+      const appleCredential = firebase.auth.AppleAuthProvider.credential(
+        identityToken,
+        nonce,
+      );
+
+      const userCredential = await firebase
+        .auth()
+        .signInWithCredential(appleCredential);
+
+      const {email, displayName} = userCredential.user._user;
+
+      try {
+        const response = await Axios.post(`/auth/applePhoneLogin`, {
+          username: displayName ? displayName : 'user',
+          email: email,
+        });
+
+        const {token, userAlereadyExits} = response.data.data;
+        await AsyncStorage.setItem('token', token);
+        if (userAlereadyExits) {
+          navigation.replace('AuthHome', {
+            screen: 'HomeTab',
+            params: {screen: 'Home'},
+          });
+        } else {
+          navigation.navigate('InfoScreen');
+        }
+      } catch (error) {}
+    } else {
+      // handle this - retry?
+    }
+  }
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -73,8 +139,6 @@ const MainScreen = () => {
         } else {
           navigation.navigate('InfoScreen');
         }
-        // navigation.reset({index: 0, routes: [{name: 'AuthHome'}]});
-        // handle successful login, e.g. redirect to home screen
       } catch (error) {
         console.log(error);
         return signOut();
@@ -161,18 +225,15 @@ const MainScreen = () => {
               : global.brandColor,
           },
         ]}>
-        {/*  <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.push('WelcomeLogin');
-          }}>
-          <FontAwesome name="google" size={24} color="#545760" /> 
-          <Text style={styles.buttonText}>Continue by logging in</Text>
-        </TouchableOpacity>*/}
         <TouchableOpacity
           style={styles.button}
-          // onPress={() => dispatch(toggleDarkMode())}
-        >
+          onPress={() => {
+            if (Platform.OS === 'android') {
+              return onAppleButtonPressAndroid();
+            } else if (Platform.OS === 'ios') {
+              return onAppleButtonPress();
+            }
+          }}>
           <Image
             source={require('../../assets/apple-logo.png')}
             style={styles.signupIcon}
@@ -197,55 +258,6 @@ const MainScreen = () => {
               Continue with Google
             </Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.button} onPress={() => signOut()}>
-            <Image
-              source={require('../../assets/google.png')}
-              style={styles.signupIcon}
-            />
-            <Text style={[styles.buttonText, styles.midText]}>Sign OUt</Text>
-          </TouchableOpacity> */}
-          {/* <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              navigation.push('Login');
-            }}>
-            <MaterialIcons name="email" size={24} color="#545760" />
-            <Image
-              source={require('../../assets/email.png')}
-              style={styles.signupIcon}
-            />
-            <Text style={[styles.buttonText, styles.midText]}>
-              Continue with Email
-            </Text>
-          </TouchableOpacity> */}
-          {/* <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: '#12ab51',
-                borderWidth: 2,
-                borderColor: 'white',
-                alignItems: 'flex-start',
-                marginTop: 30,
-                padding: 13,
-              },
-            ]}
-            onPress={() => {
-              return console.log('clicked');
-              navigation.push('Signup');
-            }}>
-            <MaterialIcons name="email" size={24} color="#545760" />
-            <Text style={[styles.buttonText, {color: 'white'}]}>
-              Create an account
-            </Text>
-            <Image
-              source={require('../../assets/right-arrow.png')}
-              style={[
-                styles.signupIcon,
-                {width: 20, height: 20, tintColor: 'white'},
-              ]}
-            />
-          </TouchableOpacity> */}
         </ScrollView>
       </View>
     </View>
@@ -292,15 +304,10 @@ const styles = StyleSheet.create({
     padding: 9,
     backgroundColor: '#E7E7E8',
     borderRadius: 8,
-    // elevation: 1,
-    // borderWidth: 1,
-    // borderColor: '',
-
     marginBottom: 20,
   },
 
   buttonText: {
-    // marginLeft: 10,
     fontSize: 14,
     color: 'black',
     fontWeight: 'bold',

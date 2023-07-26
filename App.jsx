@@ -12,11 +12,16 @@ import {Provider, useSelector} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './src/api/server';
+import DeviceInfo from 'react-native-device-info';
+import firestore from '@react-native-firebase/firestore';
+import {Alert, Linking, Platform} from 'react-native';
+
 export default function App() {
   // to subscribe the users to topics based on their selection of news topic using FCM notification service
 
   const [userTopics, setUserTopics] = useState([]);
   const [config, setConfig] = useState();
+  const [updatedVersion, setUpdatedVersion] = useState();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -74,13 +79,52 @@ export default function App() {
       for (let x in userTopics) {
         messaging()
           .subscribeToTopic(userTopics[x])
-          .then(() => console.log(`Subscribed to ${userTopics[x]}!`));
+          .then(() => console.log(`Subscribed to ${userTopics[x]}!`))
+          .catch(console.log('error'));
       }
     }
   }, [userTopics]);
 
+  /// notification
+
+  const openGoogleORAppStore = () => {
+    if (Platform.OS === 'ios') {
+      return Linking.openURL(
+        'https://play.google.com/store/apps/details?id=com.sojonewsapp',
+      );
+    }
+    if (Platform.OS === 'android') {
+      return Linking.openURL(
+        'https://play.google.com/store/apps/details?id=com.sojonewsapp',
+      );
+    }
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      getVersionFromFirebase();
+    }, 2000);
+  }, []);
+  const getVersionFromFirebase = async () => {
+    const version = await firestore()
+      .collection('sojoNewsAppVersion')
+      .doc('FdH5CyUSU9pZAvjYx89l')
+      .get();
+
+    setUpdatedVersion(version._data.version);
+  };
+
   return (
     <>
+      {updatedVersion && DeviceInfo.getVersion() !== updatedVersion
+        ? Alert.alert('', `New version ${updatedVersion} available!`, [
+            {
+              text: 'Update Now',
+              onPress: () => openGoogleORAppStore(),
+              style: 'cancel',
+            },
+            {text: 'Later', onPress: () => console.log('OK Pressed')},
+          ])
+        : null}
       <Provider store={store}>
         <NavigationContainer theme={DarkTheme}>
           <MainNavigation />

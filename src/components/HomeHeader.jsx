@@ -72,13 +72,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     borderRadius: 8,
-    flex: 1,
+    // flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: windowWidth * 0.3,
+
+    // width: windowWidth * 0.34,
   },
   title: {
     fontSize: 14,
