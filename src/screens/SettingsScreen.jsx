@@ -215,7 +215,9 @@ const SettingsScreen = () => {
                 fontSize: 22,
                 textTransform: 'capitalize',
               }}>
-              {profile?.username}
+              {profile?.username !== 'user' || null
+                ? profile?.username
+                : profile?.email}
             </Text>
             <Text style={{color: 'grey', marginBottom: 15}}>
               {profile?.occupation?.name}

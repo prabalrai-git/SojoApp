@@ -17,7 +17,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
-import {hideTabBar} from '../redux/features/HideTabBar';
 import '../../globalThemColor';
 
 const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
@@ -225,7 +224,7 @@ const styles = StyleSheet.create({
     color: '#171A21',
   },
   cardText: {
-    textAlign: 'left',
+    textAlign: 'justify',
     color: '#3F424A',
     fontSize: 15,
     lineHeight: 20,
@@ -245,7 +244,6 @@ const styles = StyleSheet.create({
   category: {
     backgroundColor: '#B2E1BD',
     // paddingHorizontal: 5,
-    borderRadius: 12,
     paddingVertical: 5,
     color: '#2A784B',
     fontWeight: 'bold',
@@ -254,6 +252,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     flex: 1.1,
     paddingHorizontal: 5,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   link: {
     flexDirection: 'row',

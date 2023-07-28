@@ -83,7 +83,6 @@ const Preferences = ({navigation, route}) => {
           paddingLeft: 39,
           fontSize: 18,
           textAlign: 'left',
-          marginTop: 10,
           fontWeight: 'bold',
         }}>
         Your preferences.
@@ -136,7 +135,8 @@ const Preferences = ({navigation, route}) => {
         {listData.map(item => {
           return (
             <View key={item.id}>
-              <Text style={{color: 'black', fontWeight: '300'}}>
+              <Text
+                style={{color: 'black', fontWeight: '300', marginVertical: 3}}>
                 ● {item.title}
               </Text>
             </View>
@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.7,
     marginLeft: 'auto',
     marginRight: 'auto',
+    marginVertical: 8,
   },
   container: {
     width: windowWidth,
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
   txt: {
     color: 'black',
     textTransform: 'uppercase',
-    width: windowWidth * 0.65,
+    width: windowWidth * 0.6,
     marginHorizontal: 5,
     fontWeight: '400',
   },

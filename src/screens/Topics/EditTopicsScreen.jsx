@@ -7,6 +7,7 @@ import {
   TextInput,
   Keyboard,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Axios from './../../api/server';
@@ -210,6 +211,7 @@ const Category = () => {
               />
             </View>
           </View>
+
           <FlatList
             data={filteredTopics}
             renderItem={({item}) => {
@@ -257,7 +259,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: '#27B060',
     padding: 20,
-    paddingVertical: 15,
+    paddingVertical: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -216,7 +216,7 @@ const InfoScreen = ({navigation}) => {
               paddingLeft: 20,
               fontSize: 18,
               textAlign: 'left',
-              marginTop: 30,
+              marginTop: 0,
               fontWeight: '500',
             }}>
             Tell us about you.
@@ -239,23 +239,24 @@ const InfoScreen = ({navigation}) => {
           <View style={styles.eachInputContainer}>
             <Text style={styles.txt}>what age group do you belong to?</Text>
 
-            <View style={{flexDirection: 'row', position: 'relative'}}>
+            <TouchableOpacity
+              onPress={() => {
+                var title = 'age';
+                openRequiredModal(title);
+              }}
+              style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={ageGroup}
                 editable={false}
                 style={styles.txtinput}></TextInput>
 
-              <TouchableOpacity
+              <View
                 style={{
                   position: 'absolute',
                   right: 5,
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
-                }}
-                onPress={() => {
-                  var title = 'age';
-                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -271,29 +272,30 @@ const InfoScreen = ({navigation}) => {
                     // paddingRight: 0,
                   }}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.eachInputContainer}>
             <Text style={styles.txt}>what is your gender?</Text>
 
-            <View style={{flexDirection: 'row', position: 'relative'}}>
+            <TouchableOpacity
+              onPress={() => {
+                var title = 'gender';
+                openRequiredModal(title);
+              }}
+              style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={gender}
                 editable={false}
                 style={styles.txtinput}></TextInput>
 
-              <TouchableOpacity
+              <View
                 style={{
                   position: 'absolute',
                   right: 5,
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
-                }}
-                onPress={() => {
-                  var title = 'gender';
-                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -307,29 +309,30 @@ const InfoScreen = ({navigation}) => {
                     paddingVertical: 10,
                   }}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.eachInputContainer}>
             <Text style={styles.txt}>what occupation are you in?</Text>
 
-            <View style={{flexDirection: 'row', position: 'relative'}}>
+            <TouchableOpacity
+              onPress={item => {
+                var title = 'occupation';
+                openRequiredModal(title);
+              }}
+              style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={occupation}
                 editable={false}
                 style={styles.txtinput}></TextInput>
 
-              <TouchableOpacity
+              <View
                 style={{
                   position: 'absolute',
                   right: 5,
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
-                }}
-                onPress={item => {
-                  var title = 'occupation';
-                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -343,29 +346,30 @@ const InfoScreen = ({navigation}) => {
                     paddingVertical: 10,
                   }}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.eachInputContainer}>
             <Text style={styles.txt}>Which state do you live in?</Text>
 
-            <View style={{flexDirection: 'row', position: 'relative'}}>
+            <TouchableOpacity
+              onPress={item => {
+                var title = 'state';
+                openRequiredModal(title);
+              }}
+              style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={state}
                 editable={false}
                 style={styles.txtinput}></TextInput>
 
-              <TouchableOpacity
+              <View
                 style={{
                   position: 'absolute',
                   right: 5,
                   top: 15,
                   // backgroundColor: 'red',
                   padding: 10,
-                }}
-                onPress={item => {
-                  var title = 'state';
-                  openRequiredModal(title);
                 }}>
                 <Image
                   source={require('../../../assets/down.png')}
@@ -379,8 +383,8 @@ const InfoScreen = ({navigation}) => {
                     paddingVertical: 10,
                   }}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
           {errorMsg && (
             <Text
@@ -489,6 +493,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 5,
     color: 'black',
+    paddingLeft: 14,
   },
 
   txt: {

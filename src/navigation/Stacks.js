@@ -222,6 +222,7 @@ export const TabAndAuthStack = () => {
         'Notification caused app to open from background state:',
         remoteMessage.data.id,
       );
+
       navigation.navigate('Blog', {id: Number(remoteMessage.data.id)});
     });
 

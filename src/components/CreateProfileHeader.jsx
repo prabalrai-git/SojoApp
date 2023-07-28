@@ -31,14 +31,12 @@ const CreateProfileHeader = () => {
       </TouchableOpacity>
       <View style={{alignSelf: 'flex-start'}}>
         <Image
-          source={require('../assets/logo.png')}
+          source={require('../assets/logoLogin.png')}
           style={{
-            tintColor: 'black',
-            width: 150,
-            height: 50,
+            width: 160,
+            height: 120,
             marginRight: '25%',
             resizeMode: 'contain',
-            tintColor: '#27b060',
           }}
         />
       </View>
@@ -56,7 +54,7 @@ const styles = StyleSheet.create({
     padding: 6,
     paddingHorizontal: 14,
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 1,
     // alignItems: 'flex-start',
     // backgroundColor: 'red',
   },

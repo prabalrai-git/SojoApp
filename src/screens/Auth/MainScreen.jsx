@@ -26,6 +26,7 @@ import {
 } from '@invertase/react-native-apple-authentication';
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
+import jwt_decode from 'jwt-decode';
 
 const MainScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -46,7 +47,7 @@ const MainScreen = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
 
@@ -70,15 +71,52 @@ const MainScreen = () => {
 
     const response = await appleAuthAndroid.signIn();
 
-    console.log('====================================');
-    console.log(response.user);
-    console.log('====================================');
+    const credentials = jwt_decode(response.id_token);
+
+    const {email} = credentials;
+
+    try {
+      const response = await Axios.post('/auth/applePhoneLogin', {
+        username: 'user',
+        email: email,
+      });
+      // fetch('https://backendv1.sojonews.com/api/v1/auth/applePhoneLogin', {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     username: 'user',
+      //     email: email,
+      //   }),
+      // })
+      //   .then(response => response.json())
+      //   .then(responseJson => {
+      //     console.log(responseJson);
+      //   });
+
+      // console.log('====================================');
+      // console.log(response.data);
+      // console.log('====================================');
+
+      const {token, userAlereadyExits} = response.data.data;
+      await AsyncStorage.setItem('token', token);
+      if (userAlereadyExits) {
+        navigation.replace('AuthHome', {
+          screen: 'HomeTab',
+          params: {screen: 'Home'},
+        });
+      } else {
+        navigation.navigate('InfoScreen');
+      }
+    } catch (error) {}
   }
 
   async function onAppleButtonPress() {
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
-      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
     });
 
     const {identityToken, nonce} = appleAuthRequestResponse;
@@ -96,10 +134,12 @@ const MainScreen = () => {
       const {email, displayName} = userCredential.user._user;
 
       try {
-        const response = await Axios.post(`/auth/applePhoneLogin`, {
-          username: displayName ? displayName : 'user',
-          email: email,
-        });
+        const response =
+          email &&
+          (await Axios.post('/auth/applePhoneLogin', {
+            username: displayName ? displayName : 'user',
+            email: email,
+          }));
 
         const {token, userAlereadyExits} = response.data.data;
         await AsyncStorage.setItem('token', token);

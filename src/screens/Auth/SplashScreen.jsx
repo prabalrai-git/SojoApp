@@ -2,15 +2,17 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/server';
 import {useNavigation} from '@react-navigation/native';
-import {View, Text, StatusBar, Image} from 'react-native';
+import {View, Text, StatusBar, Image, Alert} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import '../../../globalThemColor';
 import {toggleDarkMode} from '../../redux/features/DarkMode';
+import NetInfo from '@react-native-community/netinfo';
 
 const SplashScreen = () => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
   const [notFirstTime, setNotFirstTime] = useState(null);
+  const [isconnectedToInternet, setIsConnectedToInternet] = useState();
   const navigation = useNavigation();
 
   const darkMode = useSelector(state => state.darkMode.value);
@@ -37,6 +39,7 @@ const SplashScreen = () => {
   // check if user is logged in
   useEffect(() => {
     // Check if the user is logged in
+
     async function checkLoginStatus() {
       // await AsyncStorage.removeItem('token');
       const token = await AsyncStorage.getItem('token');
@@ -62,25 +65,41 @@ const SplashScreen = () => {
       }
     }
     getDarkModeValue();
+
+    NetInfo.fetch().then(state => {
+      if (state.isConnected) {
+        setIsConnectedToInternet(state.isConnected);
+      } else {
+        Alert.alert(
+          'No internet connection',
+          'Please check your network settings and try again.',
+        );
+      }
+    });
   }, []);
+
+  useEffect(() => {});
 
   useEffect(() => {
     const notFirstTimeFn = async () => {
       const value = await AsyncStorage.getItem('notFirstTime');
-      if (!value) {
+
+      if (!value && isconnectedToInternet) {
         setTimeout(() => {
           return navigation.replace('WelcomeSignup');
-        }, 2000);
-      } else {
+        }, 500);
+      } else if (isconnectedToInternet) {
         setTimeout(() => {
           if (!profile) {
             return navigation.replace('MainScreen');
           }
-        }, 2000);
+        }, 500);
       }
     };
-    notFirstTimeFn();
-  }, [profile]);
+    setTimeout(() => {
+      notFirstTimeFn();
+    }, 1000);
+  }, [profile, isconnectedToInternet]);
 
   return (
     <>
@@ -107,7 +126,7 @@ const SplashScreen = () => {
           source={require('../../assets/logo1.png')}
           style={{
             width: 120,
-            height: 50,
+            height: 40,
             resizeMode: 'contain',
           }}
         />

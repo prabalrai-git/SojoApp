@@ -22,23 +22,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import {toggleDarkMode} from '../redux/features/DarkMode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Axios from '../api/server';
+import messaging from '@react-native-firebase/messaging';
 
 const ProfileSettings = () => {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(null);
   const [darkModeChecked, setDarkModeChecked] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [notiForValue, setNotiForValue] = useState(null);
   const [notiFreqValue, setNotiFreqValue] = useState(null);
+  const [config, setConfig] = useState();
+  const [userTopics, setUserTopics] = useState([]);
 
   const navigation = useNavigation();
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('blur', () => {
-  //     navigation.pop();
-  //   });
 
-  //   // Return the function to unsubscribe from the event so it gets removed on unmount
-  //   return unsubscribe;
-  // }, [navigation]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,12 +44,6 @@ const ProfileSettings = () => {
 
     return unsubscribe;
   }, [navigation]);
-
-  const notificationFor = [
-    {id: 1, title: 'New stories on topic I follow'},
-    {id: 2, title: 'Featured stories on topics I follow'},
-    {id: 3, title: 'Top stories aggregated by Sojo news'},
-  ];
 
   const notificationFrequency = [
     {id: 1, title: 'Every morning at 8AM'},
@@ -65,7 +55,7 @@ const ProfileSettings = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
   const signOut = async () => {
@@ -77,12 +67,82 @@ const ProfileSettings = () => {
   };
   const darkMode = useSelector(state => state.darkMode.value);
 
-  // useEffect(() => {
-  //   const setDarkModeInitialVaue = async () => {
-  //     await AsyncStorage.setItem('darkmode', darkMode.toString());
-  //   };
-  //   setDarkModeInitialVaue();
-  // }, []);
+  useEffect(() => {
+    if (userTopics && checked) {
+      for (let x in userTopics) {
+        messaging()
+          .subscribeToTopic(userTopics[x])
+          .then(() => console.log(`Subscribed to ${userTopics[x]}!`))
+          .catch(console.log('error'));
+      }
+    } else if (userTopics && !checked) {
+      for (let x in userTopics) {
+        messaging()
+          .unsubscribeFromTopic(userTopics[x])
+          .then(() => console.log(`Unsubsribed to ${userTopics[x]}!`))
+          .catch(console.log('error'));
+      }
+    }
+  }, [checked, userTopics]);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const config = {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+
+        setConfig(config);
+      }
+    };
+    fetchToken();
+  }, []);
+
+  // fetch profile
+  const fetchProfile = async () => {
+    try {
+      const res = await Axios.get('/users/profile', config);
+      // res.data.data.topics.forEach(item => {});
+      if (!res.data.data.isComplete) {
+        return navigation.navigate('Auth', {screen: 'InfoScreen'});
+      }
+
+      const topics = res.data.data.topics;
+
+      const subscribeTopics = [];
+      for (let x in topics) {
+        subscribeTopics.push(topics[x].name.toLowerCase());
+      }
+      setUserTopics(subscribeTopics);
+    } catch (err) {
+      console.log(err);
+      if (err && err.response && err.response.status === 401) {
+        logout();
+        setUserTopics(null);
+        // return router.replace('/');
+      }
+    }
+  };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
+
+  useEffect(() => {
+    const getNotiStatusInitialValue = async () => {
+      const notiStatus = await AsyncStorage.getItem('notificationStatus');
+      if (notiStatus === 'true' || notiStatus === true) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    };
+    getNotiStatusInitialValue();
+  }, []);
 
   useEffect(() => {
     const setDarkModeInitialVaue = async () => {
@@ -104,6 +164,11 @@ const ProfileSettings = () => {
     };
     getDarkModeInitialValue();
   }, []);
+
+  const onNotiToggle = async value => {
+    setChecked(value);
+    await AsyncStorage.setItem('notificationStatus', value.toString());
+  };
 
   return (
     <>
@@ -141,33 +206,10 @@ const ProfileSettings = () => {
               onPress={() => {
                 navigation.goBack();
               }}>
-              <Icon
-                name="save"
-                size={18}
-                color="#26B160"
-                style={{marginTop: 2}}
-              />
+              <Icon name="save" size={16} color="#26B160" />
               <Text style={styles.title}>Save Changes</Text>
             </TouchableOpacity>
           </View>
-          {/* 
-        <TouchableOpacity style={styles.saveBtn}>
-          <View>
-            <Image
-              source={require('../assets/floppy-disk.png')}
-              style={{
-                tintColor: '#27B161',
-                width: 17,
-                height: 17,
-                resizeMode: 'contain',
-                marginRight: 5,
-              }}
-            />
-          </View>
-          <View style={{alignSelf: 'center'}}>
-            <Text style={styles.topBarText}>Save Changes</Text>
-          </View>
-        </TouchableOpacity> */}
         </View>
         <ScrollView>
           {/* Start of body/ content */}
@@ -260,7 +302,7 @@ const ProfileSettings = () => {
                 circleActiveColor={'white'}
                 circleInActiveColor={'white'}
                 value={checked}
-                onValueChange={value => setChecked(value)}
+                onValueChange={value => onNotiToggle(value)}
               />
             </View>
             <View
@@ -297,73 +339,6 @@ const ProfileSettings = () => {
                 }}
               />
             </View>
-            {/* <View>
-              <Text
-                style={{
-                  color: 'black',
-                  fontWeight: '500',
-                  fontSize: 12,
-                  marginTop: 10,
-                }}>
-                SEND ME NOTIFICATION FOR...
-              </Text>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  editable={false}
-                  value={notiForValue}></TextInput>
-
-                <TouchableOpacity
-                  onPress={() => setModalVisible(prev => !prev)}
-                  style={{
-                    position: 'absolute',
-                    right: 5,
-                    top: '25%',
-                    padding: 5,
-                  }}>
-                  <Image
-                    source={require('../assets/down.png')}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      resizeMode: 'contain',
-                      tintColor: 'black',
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View>
-              <Text style={{color: 'black', fontWeight: '500', fontSize: 12}}>
-                NOTIFICATION FREQUENCY
-              </Text>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  editable={false}
-                  value={notiFreqValue}></TextInput>
-
-                <TouchableOpacity
-                  onPress={() => setModalVisible(prev => !prev)}
-                  style={{
-                    position: 'absolute',
-                    right: 5,
-                    top: '25%',
-                    padding: 5,
-                  }}>
-                  <Image
-                    source={require('../assets/down.png')}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      resizeMode: 'contain',
-                      tintColor: 'black',
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View> */}
 
             <View
               style={{
@@ -373,28 +348,6 @@ const ProfileSettings = () => {
                 marginVertical: 20,
               }}></View>
 
-            {/* <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>
-              Password
-            </Text>
-
-            <Text style={{color: 'black', fontSize: 16, marginVertical: 15}}>
-              You changed your password 2 months ago
-            </Text>
-            <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnTxt}>Change Password</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnTxt}>Forgot Password</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: '100%',
-                backgroundColor: 'lightgrey',
-                height: 1,
-                marginVertical: 20,
-              }}></View> */}
             <Text
               style={{
                 color: darkMode ? 'white' : 'black',
@@ -409,7 +362,7 @@ const ProfileSettings = () => {
                 backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
                 padding: 8,
                 borderRadius: 8,
-                width: '50%',
+                width: '60%',
               }}>
               <Text
                 style={{
@@ -479,31 +432,28 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   container: {
-    paddingVertical: 6,
-    width: windowWidth * 0.35,
-    // paddingRight: 7,
-    paddingLeft: 13,
     backgroundColor: '#FEFEFF',
+    paddingVertical: 6,
+    paddingRight: 7,
+    paddingLeft: 13,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     borderRadius: 8,
-    // flex: 1,
   },
   titleWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-    width: windowWidth * 0.3,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   title: {
-    fontSize: 13,
     color: '#26B160',
+    fontSize: 14,
+    // marginRight: 3,
     fontWeight: 'bold',
-    flex: 3,
-    marginLeft: 10,
     textAlign: 'center',
+    alignSelf: 'center',
+    marginLeft: 5,
   },
 
   input: {
@@ -549,7 +499,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: PRIMARY_COLOR,
     padding: 15,
-    paddingVertical: 12,
+    paddingVertical: 17.3,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth,

@@ -85,7 +85,6 @@ const TopicsScreen = ({navigation, route}) => {
               // paddingLeft: 39,
               fontSize: 18,
               textAlign: 'left',
-              marginTop: 10,
               fontWeight: '500',
             }}>
             Choose your topics.
@@ -186,7 +185,7 @@ const TopicsScreen = ({navigation, route}) => {
             </>
           )}
         </TouchableOpacity>
-{/* 
+        {/* 
         <TouchableOpacity
           onPress={() => {
             return console.log('hello');
@@ -232,12 +231,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#26B160',
-    
   },
   loginText: {
     color: '#FFFFFF',
     fontSize: 16,
-    
   },
   link: {
     flexDirection: 'row',

@@ -314,12 +314,20 @@ const BlogScreen = ({route}) => {
                   style={{
                     tintColor: 'white',
                     resizeMode: 'contain',
-                    width: 20,
-                    height: 20,
-                    marginRight: 5,
+                    width: 18,
+                    height: 18,
+                    marginRight: 6,
+                    alignSelf: 'center',
                   }}
                 />
-                <Text style={{color: 'white'}}>Bookmark</Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    alignSelf: 'center',
+                    fontWeight: '500',
+                  }}>
+                  Add Bookmark
+                </Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
@@ -444,33 +452,10 @@ const BlogScreen = ({route}) => {
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   paddingVertical: 6,
-  //   // paddingRight: 7,
-  //   paddingLeft: 13,
-  //   backgroundColor: '#FEFEFF',
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'space-between',
-  //   borderRadius: 8,
-  //   flex: 1,
-  // },
-  // titleWrapper: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   flex: 1,
-  // },
-  // titleS: {
-  //   fontSize: 13,
-  //   color: '#26B160',
-  //   fontWeight: 'bold',
-  //   flex: 3,
-  //   marginLeft: 10,
-  // },
   topBar: {
     backgroundColor: PRIMARY_COLOR,
     padding: 15,
-    paddingVertical: 15,
+    paddingVertical: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth,
@@ -488,6 +473,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 30,
     marginTop: 8,
+
     alignItems: 'center',
   },
   date: {
@@ -501,10 +487,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#b3e0bd',
     color: '#237344',
     fontWeight: 'bold',
-    borderRadius: 40,
+    borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 4,
     textAlign: 'center',
+    overflow: 'hidden',
   },
   image: {
     height: 260,

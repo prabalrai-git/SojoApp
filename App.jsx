@@ -1,13 +1,9 @@
 import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
-import {
-  DarkTheme,
-  NavigationContainer,
-  useNavigation,
-} from '@react-navigation/native';
+import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import MainNavigation from './src/navigation/AppNavigation';
 import {store} from './src/redux/store';
-import {Provider, useSelector} from 'react-redux';
+import {Provider} from 'react-redux';
 
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -70,20 +66,25 @@ export default function App() {
     }
   }, [config]);
 
+  useEffect(() => {
+    const notificationFirstTime = async () => {
+      const value = await AsyncStorage.getItem('notFirstTime');
+      await AsyncStorage.setItem('notificationStatus', 'true');
+      if (userTopics && !value) {
+        for (let x in userTopics) {
+          messaging()
+            .subscribeToTopic(userTopics[x])
+            .then(() => console.log(`Subscribed to ${userTopics[x]}!`))
+            .catch(console.log('error'));
+        }
+      }
+    };
+    notificationFirstTime();
+  }, [userTopics]);
+
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
   });
-
-  useEffect(() => {
-    if (userTopics) {
-      for (let x in userTopics) {
-        messaging()
-          .subscribeToTopic(userTopics[x])
-          .then(() => console.log(`Subscribed to ${userTopics[x]}!`))
-          .catch(console.log('error'));
-      }
-    }
-  }, [userTopics]);
 
   /// notification
 

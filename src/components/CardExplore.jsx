@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     flex: 1.1,
+    overflow: 'hidden',
     paddingHorizontal: 5,
   },
   link: {

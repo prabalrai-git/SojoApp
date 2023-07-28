@@ -53,12 +53,25 @@ const HomeScreen = ({navigation}) => {
       console.log(error);
     }
   };
+  async function requestUserPermissionNotificationIOS() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
 
   useEffect(() => {
     if (Platform.OS === 'android') {
       PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       );
+    }
+    if (Platform.OS === 'ios') {
+      requestUserPermissionNotificationIOS();
     }
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('token');
