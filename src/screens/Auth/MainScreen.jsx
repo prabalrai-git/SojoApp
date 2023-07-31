@@ -47,7 +47,7 @@ const MainScreen = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
+        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
     });
   }, []);
 
@@ -160,6 +160,7 @@ const MainScreen = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const {idToken, user} = await GoogleSignin.signIn();
+
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(googleCredential);
       try {
@@ -167,7 +168,7 @@ const MainScreen = () => {
           username: user.name,
           email: user.email,
         });
-        // return console.log(response.data.data);
+        // return console.log(response);
 
         const {token, userAlereadyExits} = response.data.data;
         await AsyncStorage.setItem('token', token);
@@ -180,7 +181,7 @@ const MainScreen = () => {
           navigation.navigate('InfoScreen');
         }
       } catch (error) {
-        console.log(error);
+        setErrorMessage('Email already in use by other sign in method !');
         return signOut();
         console.error(error);
         if (error && error.response && error.response.data) {
@@ -195,6 +196,8 @@ const MainScreen = () => {
       }
     } catch (error) {
       signOut();
+      console.log(error);
+      // setErrorMessage(error.Error);
 
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -217,6 +220,13 @@ const MainScreen = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const signInWithoutCredentials = () => {
+    navigation.replace('AuthHome', {
+      screen: 'HomeTab',
+      params: {screen: 'Home'},
+    });
   };
 
   return (
@@ -263,32 +273,41 @@ const MainScreen = () => {
             backgroundColor: darkMode
               ? global.brandColorDark2
               : global.brandColor,
+            // position: 'relative',
           },
         ]}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            if (Platform.OS === 'android') {
-              return onAppleButtonPressAndroid();
-            } else if (Platform.OS === 'ios') {
-              return onAppleButtonPress();
-            }
-          }}>
-          <Image
-            source={require('../../assets/apple-logo.png')}
-            style={styles.signupIcon}
-          />
-          <Text style={[styles.buttonText, styles.midText]}>
-            Continue with Apple
+        {errorMessage && (
+          <Text
+            style={{
+              color: '#C94425',
+              fontWeight: '600',
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 20,
+              textAlign: 'center',
+            }}>
+            {errorMessage}
           </Text>
-        </TouchableOpacity>
+        )}
         <ScrollView>
-          {errorMessage && (
-            <Text style={{color: 'red', fontWeight: '600'}}>
-              {errorMessage}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              if (Platform.OS === 'android') {
+                return onAppleButtonPressAndroid();
+              } else if (Platform.OS === 'ios') {
+                return onAppleButtonPress();
+              }
+            }}>
+            <Image
+              source={require('../../assets/apple-logo.png')}
+              style={styles.signupIcon}
+            />
+            <Text style={[styles.buttonText, styles.midText]}>
+              Continue with Apple
             </Text>
-          )}
-
+          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => signIn()}>
             <Image
               source={require('../../assets/google.png')}
@@ -298,6 +317,25 @@ const MainScreen = () => {
               Continue with Google
             </Text>
           </TouchableOpacity>
+
+          {Platform.OS === 'android' && (
+            <TouchableOpacity
+              style={[styles.button, {height: 50}]}
+              onPress={() => signInWithoutCredentials()}>
+              <Image
+                source={require('../../assets/enter.png')}
+                style={styles.signupIcon}
+              />
+              <Text
+                style={[
+                  styles.buttonText,
+                  styles.midText,
+                  {marginRight: '23%'},
+                ]}>
+                Continue Without Signing In
+              </Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
       </View>
     </View>
@@ -323,10 +361,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#12ab51',
     borderTopEndRadius: 35,
     borderTopLeftRadius: 35,
-    paddingTop: 110,
+    paddingTop: 60,
     height: windowHeight * 0.35,
     position: 'absolute',
     bottom: 0,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   bottomContainer: {
     flexDirection: 'column',

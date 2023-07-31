@@ -116,7 +116,9 @@ export default function App() {
 
   return (
     <>
-      {updatedVersion && DeviceInfo.getVersion() !== updatedVersion
+      {updatedVersion &&
+      DeviceInfo.getVersion() !== updatedVersion &&
+      DeviceInfo.getVersion() < updatedVersion
         ? Alert.alert('', `New version ${updatedVersion} available!`, [
             {
               text: 'Update Now',

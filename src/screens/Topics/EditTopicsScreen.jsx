@@ -211,23 +211,23 @@ const Category = () => {
               />
             </View>
           </View>
-
-          <FlatList
-            data={filteredTopics}
-            renderItem={({item}) => {
-              return (
-                <TopicLoading
-                  item={item}
-                  selectedTopics={selectedTopics}
-                  config={config}
-                  fetchProfile={fetchProfile}
-                />
-              );
-            }}
-            keyExtractor={item => item.id}
-            showsVerticalScrollIndicator={false}
-          />
         </View>
+        <FlatList
+          data={filteredTopics}
+          renderItem={({item, index}) => {
+            return (
+              <TopicLoading
+                item={item}
+                index={index}
+                selectedTopics={selectedTopics}
+                config={config}
+                fetchProfile={fetchProfile}
+              />
+            );
+          }}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        />
       </SafeAreaView>
     </>
   );

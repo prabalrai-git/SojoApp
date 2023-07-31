@@ -14,7 +14,7 @@ import Axios from './../api/server';
 import messaging from '@react-native-firebase/messaging';
 import {useSelector} from 'react-redux';
 
-const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
+const TopicLoading = ({item, selectedTopics, config, fetchProfile, index}) => {
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
@@ -47,6 +47,7 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile}) => {
       style={[
         styles.link,
         {
+          marginBottom: selectedTopics.length === index ? 40 : null,
           backgroundColor: darkMode
             ? selectedTopics?.includes(item.id)
               ? global.inputColorDark

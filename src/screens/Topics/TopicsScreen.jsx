@@ -232,12 +232,14 @@ const Category = () => {
             </View>
             <FlatList
               data={filteredTopics}
-              renderItem={({item}) => {
+              renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity
                     style={[
                       styles.link,
                       {
+                        // marginBottom:
+                        //   filteredTopics.length === index ? null : null,
                         backgroundColor: darkMode
                           ? global.inputColorDark
                           : global.inputColor,
