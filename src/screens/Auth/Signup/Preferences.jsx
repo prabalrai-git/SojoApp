@@ -45,20 +45,58 @@ const Preferences = ({navigation, route}) => {
     {id: 4, title: 'Mental or psychological torture'},
     {id: 5, title: `Anything that's not safe for work (NSFW)`},
   ];
-  const {ageGroup, gender, occupation, state} = route.params.data;
 
   const completeProfile = async () => {
+    if (route.params.data) {
+      const {ageGroup, gender, occupation, state} = route.params.data;
+      const data = {
+        gender,
+        occupation,
+        ageGroup,
+        skipPolitical,
+        skipNSFW,
+        state,
+      };
+      try {
+        setLoading(true);
+        const res = await Axios.post('/users/profile/complete', data, config);
+        navigation.replace('TopicsScreenLogin', {
+          config: config,
+        });
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+        if (err && err.response && err.response.data) {
+          console.log(err.response.data);
+          console.log(err.response.data.err);
+        }
+      }
+    }
+  };
+
+  const skipProfile = async () => {
     const data = {
-      gender,
-      occupation,
-      ageGroup,
+      gender: route?.params?.data?.gender ? route.params.data.gender : null,
+      ageGroup: route?.params?.data?.ageGroup
+        ? route.params.data.ageGroup
+        : null,
+      occupation: route?.params?.data?.occupation
+        ? route?.params?.data?.occupation
+        : null,
       skipPolitical,
       skipNSFW,
-      state,
+      state: route?.params?.data?.state ? route?.params?.data?.state : null,
     };
+
     try {
       setLoading(true);
-      const res = await Axios.post('/users/profile/complete', data, config);
+      const res = await Axios.post(
+        '/users/profile/skipCompleteProfile',
+        data,
+        config,
+      );
+
       navigation.replace('TopicsScreenLogin', {
         config: config,
       });
@@ -66,10 +104,10 @@ const Preferences = ({navigation, route}) => {
     } catch (err) {
       setLoading(false);
       console.log(err);
-      if (err && err.response && err.response.data) {
-        console.log(err.response.data);
-        console.log(err.response.data.err);
-      }
+      // if (err && err.response && err.response.data) {
+      //   console.log(err.response.data);
+      //   console.log(err.response.data.err);
+      // }
     }
   };
 
@@ -95,7 +133,7 @@ const Preferences = ({navigation, route}) => {
           fontSize: 16,
           textAlign: 'left',
           marginTop: 10,
-          fontWeight: '500',
+          fontWeight: 'bold',
           marginBottom: 35,
         }}>
         Some users might want to avoid certain types of stories, and you can do
@@ -136,7 +174,7 @@ const Preferences = ({navigation, route}) => {
           return (
             <View key={item.id}>
               <Text
-                style={{color: 'black', fontWeight: '300', marginVertical: 3}}>
+                style={{color: 'black', fontWeight: '400', marginVertical: 3}}>
                 ● {item.title}
               </Text>
             </View>
@@ -145,7 +183,7 @@ const Preferences = ({navigation, route}) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          completeProfile();
+          skipProfile();
           // if (!loading) {
           //   handleFormSubmit();
           // }
@@ -166,12 +204,9 @@ const Preferences = ({navigation, route}) => {
         )}
       </TouchableOpacity>
 
-      {/* <TouchableOpacity
+      <TouchableOpacity
         onPress={() => {
-          return console.log('hi');
-          if (!loading) {
-            handleFormSubmit();
-          }
+          return skipProfile();
         }}
         style={[styles.loginButton, {backgroundColor: 'white'}]}>
         {loading ? (
@@ -189,7 +224,7 @@ const Preferences = ({navigation, route}) => {
             />
           </>
         )}
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -204,7 +239,7 @@ const styles = StyleSheet.create({
   loginButton: {
     borderRadius: 5,
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 0,
     paddingVertical: 12,
     paddingHorizontal: 20,
     width: windowWidth * 0.85,
@@ -243,6 +278,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     width: windowWidth * 0.6,
     marginHorizontal: 5,
-    fontWeight: '400',
+    fontWeight: '500',
   },
 });

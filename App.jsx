@@ -74,7 +74,7 @@ export default function App() {
         for (let x in userTopics) {
           messaging()
             .subscribeToTopic(userTopics[x])
-            .then(() => console.log(`Subscribed to ${userTopics[x]}!`))
+            .then(() => {})
             .catch(console.log('error'));
         }
       }

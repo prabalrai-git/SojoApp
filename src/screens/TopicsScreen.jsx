@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Keyboard,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -73,6 +74,7 @@ const TopicsScreen = ({navigation, route}) => {
       setFilteredTopics(filtered);
     }
   };
+
   return (
     <>
       <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
@@ -165,6 +167,9 @@ const TopicsScreen = ({navigation, route}) => {
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
+            if (userTopics.length < 3) {
+              return Alert.alert('', 'Please choose at least 3 topics.');
+            }
             navigation.replace('AuthHome');
             // if (!loading) {
             //   handleFormSubmit();

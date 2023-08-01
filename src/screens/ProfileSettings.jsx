@@ -25,17 +25,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../api/server';
 import messaging from '@react-native-firebase/messaging';
 
-const ProfileSettings = () => {
+const ProfileSettings = props => {
   const [checked, setChecked] = useState(null);
   const [darkModeChecked, setDarkModeChecked] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [notiFreqValue, setNotiFreqValue] = useState(null);
   const [config, setConfig] = useState();
   const [userTopics, setUserTopics] = useState([]);
 
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+
+  const {isGuestUser} = props?.route?.params;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -72,14 +72,14 @@ const ProfileSettings = () => {
       for (let x in userTopics) {
         messaging()
           .subscribeToTopic(userTopics[x])
-          .then(() => console.log(`Subscribed to ${userTopics[x]}!`))
+          .then(() => {})
           .catch(console.log('error'));
       }
     } else if (userTopics && !checked) {
       for (let x in userTopics) {
         messaging()
           .unsubscribeFromTopic(userTopics[x])
-          .then(() => console.log(`Unsubsribed to ${userTopics[x]}!`))
+          .then(() => {})
           .catch(console.log('error'));
       }
     }
@@ -256,7 +256,7 @@ const ProfileSettings = () => {
                   // navigation.navigate('MainScreen');
                 }}>
                 <Text style={{color: darkMode ? 'white' : '#082313'}}>
-                  Sign Out
+                  {isGuestUser ? 'Sign In' : 'Sign Out'}
                 </Text>
                 <Image
                   source={require('../assets/logout.png')}
@@ -347,35 +347,38 @@ const ProfileSettings = () => {
                 height: 1,
                 marginVertical: 20,
               }}></View>
-
-            <Text
-              style={{
-                color: darkMode ? 'white' : 'black',
-                fontWeight: 'bold',
-                fontSize: 18,
-                marginBottom: 20,
-              }}>
-              Account Settings
-            </Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
-                padding: 8,
-                borderRadius: 8,
-                width: '60%',
-              }}>
-              <Text
-                style={{
-                  color: darkMode ? 'white' : '#881337',
-                  fontWeight: '500',
-                  fontSize: 16,
-                  textAlign: 'center',
-                }}>
-                Deactivate Account
-              </Text>
-            </TouchableOpacity>
+            {!isGuestUser && (
+              <>
+                <Text
+                  style={{
+                    color: darkMode ? 'white' : 'black',
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    marginBottom: 20,
+                  }}>
+                  Account Settings
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
+                    padding: 8,
+                    borderRadius: 8,
+                    width: '60%',
+                  }}>
+                  <Text
+                    style={{
+                      color: darkMode ? 'white' : '#881337',
+                      fontWeight: '500',
+                      fontSize: 16,
+                      textAlign: 'center',
+                    }}>
+                    Deactivate Account
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
-          {/* modal */}
+          {/* modal
           <Modal
             isVisible={modalVisible}
             style={{
@@ -417,7 +420,7 @@ const ProfileSettings = () => {
                 );
               })}
             </View>
-          </Modal>
+          </Modal> */}
         </ScrollView>
       </SafeAreaView>
     </>
@@ -433,7 +436,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#FEFEFF',
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingRight: 7,
     paddingLeft: 13,
     flexDirection: 'row',
@@ -499,7 +502,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: PRIMARY_COLOR,
     padding: 15,
-    paddingVertical: 17.3,
+    paddingVertical: 15.7,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth,

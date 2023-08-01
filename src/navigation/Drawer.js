@@ -337,6 +337,7 @@ export const HomeDrawerNavigator = () => {
         drawerStyle: styles.drawerStyle,
         drawerPosition: 'right',
         swipeEnabled: false,
+        swipeEdgeWidth: 0,
       }}
       drawerContent={props => {
         return (
@@ -580,6 +581,7 @@ export const ExploreDrawerNavigator = () => {
         drawerStyle: styles.drawerStyle,
         drawerPosition: 'right',
         swipeEnabled: false,
+        swipeEdgeWidth: 0,
       }}
       drawerContent={props => {
         return (

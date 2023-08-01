@@ -222,11 +222,33 @@ const MainScreen = () => {
     }
   };
 
-  const signInWithoutCredentials = () => {
-    navigation.replace('AuthHome', {
-      screen: 'HomeTab',
-      params: {screen: 'Home'},
-    });
+  const signInWithoutCredentials = async () => {
+    try {
+      const response = await Axios.post('auth/guestLogin');
+
+      const {token} = response.data.data;
+      await AsyncStorage.setItem('token', token);
+
+      const config = {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      const topics = await Axios.get('/topics');
+
+      for (const item of topics.data.data) {
+        await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
+      }
+
+      navigation.replace('AuthHome', {
+        screen: 'HomeTab',
+        params: {screen: 'Home'},
+      });
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
   };
 
   return (

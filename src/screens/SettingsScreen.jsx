@@ -43,6 +43,10 @@ const SettingsScreen = () => {
     return unsubscribe;
   }, [navigation]);
 
+  console.log('====================================');
+  console.log(profile);
+  console.log('====================================');
+
   useEffect(() => {
     fetchToken();
   }, []);
@@ -189,7 +193,11 @@ const SettingsScreen = () => {
                   : global.brandColorLight,
               },
             ]}
-            onPress={() => navigation.navigate('ProfileSettings')}>
+            onPress={() =>
+              navigation.navigate('ProfileSettings', {
+                isGuestUser: profile?.isGuestUser ? profile.isGuestUser : false,
+              })
+            }>
             <Image
               source={require('../assets/settings.png')}
               style={{
@@ -245,24 +253,31 @@ const SettingsScreen = () => {
                   Choose Your Topics
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.btn,
-                  {
-                    backgroundColor: darkMode
-                      ? global.brandColorDark2
-                      : global.backgroundColor,
-                    borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
-                  },
-                ]}>
-                <Text
+              {!profile?.isGuestUser && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('EditProfile', {profile: profile})
+                  }
                   style={[
-                    styles.btnTxt,
-                    {color: darkMode ? 'white' : '#1d6e3f'},
+                    styles.btn,
+                    {
+                      backgroundColor: darkMode
+                        ? global.brandColorDark2
+                        : global.backgroundColor,
+                      borderColor: darkMode
+                        ? global.brandColorDark2
+                        : '#b3e0bd',
+                    },
                   ]}>
-                  Edit Profile
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={[
+                      styles.btnTxt,
+                      {color: darkMode ? 'white' : '#1d6e3f'},
+                    ]}>
+                    Edit Profile
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             <View
@@ -353,6 +368,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: '#b3e0bd',
     borderWidth: 2,
+    flex: 1,
   },
   btnContainer: {
     flexDirection: 'row',

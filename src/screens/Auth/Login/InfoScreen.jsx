@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   ScrollView,
+  Keyboard,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
@@ -19,25 +20,23 @@ import CreateProfileHeader from '../../../components/CreateProfileHeader';
 import {windowWidth} from '../../../helper/usefulConstants';
 import {Image} from 'react-native';
 import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/Feather';
 
 const InfoScreen = ({navigation}) => {
   const [profile, setProfile] = useState(null);
-
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [ageGroup, setAgeGroup] = useState(null);
   const [gender, setGender] = useState(null);
   const [occupation, setOccupation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-
   const [occupationOptions, setOccupationOptions] = useState();
   const [statesOptions, setStatesOptions] = useState();
   const [state, setState] = useState();
-
   const [modalSelectionValues, setModalSelectionValues] = useState();
-
   const [errorMsg, setErrorMsg] = useState(false);
+  const [searchTerm, setSearchTerm] = useState();
+  const [filteredState, setFilteredState] = useState();
 
   const genderOptions = [
     {id: 1, title: 'Male', type: 'gender'},
@@ -57,6 +56,21 @@ const InfoScreen = ({navigation}) => {
     getOccupation();
     getStates();
   }, []);
+
+  useEffect(() => {
+    if (errorMsg) {
+      setTimeout(() => {
+        setErrorMsg(false);
+      }, 5000);
+    }
+  }, [errorMsg]);
+
+  const searchTopic = () => {
+    const filtered = statesOptions.filter(state => {
+      return state.title.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredState(filtered);
+  };
 
   const getStates = async () => {
     const res = await Axios.get('/states/getAllStates');
@@ -161,6 +175,10 @@ const InfoScreen = ({navigation}) => {
     }
   };
 
+  const skipBtnPressed = () => {
+    return navigation.replace('Preferences');
+  };
+
   // handle error message display
   useEffect(() => {
     if (errorMessage) {
@@ -203,6 +221,13 @@ const InfoScreen = ({navigation}) => {
   //     fetchProfile();
   //   }
   // }, [config]);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredState();
+    }
+    setFilteredState();
+  }, [searchTerm, modalVisible]);
 
   return (
     <>
@@ -254,7 +279,7 @@ const InfoScreen = ({navigation}) => {
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 15,
+                  top: 12,
                   // backgroundColor: 'red',
                   padding: 10,
                 }}>
@@ -293,7 +318,7 @@ const InfoScreen = ({navigation}) => {
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 15,
+                  top: 12,
                   // backgroundColor: 'red',
                   padding: 10,
                 }}>
@@ -330,7 +355,7 @@ const InfoScreen = ({navigation}) => {
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 15,
+                  top: 12,
                   // backgroundColor: 'red',
                   padding: 10,
                 }}>
@@ -367,7 +392,7 @@ const InfoScreen = ({navigation}) => {
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 15,
+                  top: 12,
                   // backgroundColor: 'red',
                   padding: 10,
                 }}>
@@ -389,7 +414,7 @@ const InfoScreen = ({navigation}) => {
           {errorMsg && (
             <Text
               style={{color: 'red', fontWeight: '600', textAlign: 'center'}}>
-              Please select options for all fields.
+              Please select options for all fields to continue or skip.
             </Text>
           )}
           <View style={styles.eachInputContainer}>
@@ -412,11 +437,10 @@ const InfoScreen = ({navigation}) => {
                 </>
               )}
             </TouchableOpacity>
-            {/* 
+
             <TouchableOpacity
               onPress={() => {
-                return console.log('hello');
-                handleFormSubmit();
+                return skipBtnPressed();
               }}
               style={[styles.loginButton, {backgroundColor: 'white'}]}>
               {loading ? (
@@ -434,10 +458,14 @@ const InfoScreen = ({navigation}) => {
                   />
                 </>
               )}
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
           <Modal
             isVisible={modalVisible}
+            onBackdropPress={() => setModalVisible(false)}
+            animationOut="fadeOutDown"
+            backdropTransitionOutTiming={600}
+            animationOutTiming={400}
             style={{
               position: 'relative',
               margin: 0,
@@ -453,29 +481,98 @@ const InfoScreen = ({navigation}) => {
                 paddingTop: 25,
                 borderTopLeftRadius: 20,
               }}>
-              <ScrollView>
-                {modalSelectionValues?.map(item => {
-                  return (
-                    <TouchableOpacity
-                      key={item.id}
-                      style={{width: windowWidth}}
-                      onPress={() => {
-                        setInfoState(item);
-                      }}>
-                      <Text style={{color: 'black', marginHorizontal: 20}}>
-                        {item.title}
-                      </Text>
-                      <View
+              <View
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'row',
+                }}>
+                {modalSelectionValues &&
+                  modalSelectionValues[0].type === 'state' && (
+                    <>
+                      <TextInput
+                        placeholderTextColor={'grey'}
+                        placeholder="Search your state.."
+                        onChangeText={setSearchTerm}
+                        onSubmitEditing={searchTopic}
                         style={{
-                          height: 1,
-                          backgroundColor: 'lightgrey',
-                          marginVertical: 18,
+                          backgroundColor: '#f3f4f7',
+                          width: '95%',
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                          borderRadius: 5,
+                          marginBottom: 10,
+                          paddingLeft: 10,
+                          color: 'black',
+                        }}></TextInput>
+                      <TouchableOpacity
+                        onPress={() => {
+                          Keyboard.dismiss();
+                          searchTopic();
+                        }}>
+                        <Icon
+                          name="search"
+                          size={22}
+                          style={{
+                            position: 'absolute',
+                            right: 20,
+                            top: 8,
+                            padding: 5,
+                          }}
+                          color={'#A9A9A9'}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  )}
+              </View>
+              <ScrollView>
+                {filteredState
+                  ? filteredState?.map(item => {
+                      return (
+                        <TouchableOpacity
+                          key={item.id}
+                          style={{width: windowWidth}}
+                          onPress={() => {
+                            setInfoState(item);
+                          }}>
+                          <Text style={{color: 'black', marginHorizontal: 20}}>
+                            {item.title}
+                          </Text>
+                          {filteredState.length > 1 && (
+                            <View
+                              style={{
+                                height: 1,
+                                backgroundColor: 'lightgrey',
+                                marginVertical: 18,
 
-                          width: windowWidth,
-                        }}></View>
-                    </TouchableOpacity>
-                  );
-                })}
+                                width: windowWidth,
+                              }}></View>
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })
+                  : modalSelectionValues?.map(item => {
+                      return (
+                        <TouchableOpacity
+                          key={item.id}
+                          style={{width: windowWidth}}
+                          onPress={() => {
+                            setInfoState(item);
+                          }}>
+                          <Text style={{color: 'black', marginHorizontal: 20}}>
+                            {item.title}
+                          </Text>
+                          <View
+                            style={{
+                              height: 1,
+                              backgroundColor: 'lightgrey',
+                              marginVertical: 18,
+
+                              width: windowWidth,
+                            }}></View>
+                        </TouchableOpacity>
+                      );
+                    })}
               </ScrollView>
             </View>
           </Modal>
@@ -489,7 +586,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     width: '100%',
-    height: 55,
+    height: 50,
     borderRadius: 6,
     marginTop: 5,
     color: 'black',
@@ -582,7 +679,7 @@ const styles = StyleSheet.create({
   loginButton: {
     borderRadius: 5,
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 0,
     paddingVertical: 12,
     paddingHorizontal: 20,
     flexDirection: 'row',

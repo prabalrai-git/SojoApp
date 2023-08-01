@@ -173,6 +173,7 @@ import VerifyOtp from '../screens/Auth/Login/VerifyOtp';
 import ChangePassword from '../screens/Auth/Login/ChangePassword';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
+import EditProfile from '../screens/EditProfile';
 
 // import Category from './../screens/Category';
 
@@ -204,6 +205,11 @@ export const SettingStack = () => {
         <Stack.Screen
           name="Blog"
           component={BlogScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

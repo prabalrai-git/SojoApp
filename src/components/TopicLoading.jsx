@@ -47,7 +47,6 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile, index}) => {
       style={[
         styles.link,
         {
-          marginBottom: selectedTopics.length === index ? 40 : null,
           backgroundColor: darkMode
             ? selectedTopics?.includes(item.id)
               ? global.inputColorDark

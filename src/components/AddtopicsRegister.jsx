@@ -6,8 +6,6 @@ import Axios from './../api/server';
 const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
   const [loading, setLoading] = useState(false);
 
-  console.log(item);
-
   const filtered = userTopics?.filter(topic => topic.id === item.id);
   // console.log(filtered[0].id, 'mfmfmfmf');
 
