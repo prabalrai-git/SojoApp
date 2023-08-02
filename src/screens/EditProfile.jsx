@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  Keyboard,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -16,15 +17,156 @@ import {hideTabBar} from '../redux/features/HideTabBar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {windowWidth} from '../helper/usefulConstants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Modal from 'react-native-modal';
+import Axios from '../api/server';
 
 const EditProfile = props => {
   const [skipPolitical, setSkipPolitical] = useState(false);
   const [skipNSFW, setSkipNSFW] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalSelectionValues, setModalSelectionValues] = useState();
+  const [filteredState, setFilteredState] = useState();
+  const [occupationOptions, setOccupationOptions] = useState();
+  const [statesOptions, setStatesOptions] = useState();
+  const [searchTerm, setSearchTerm] = useState();
+  const [gender, setGender] = useState();
+  const [state, setState] = useState();
+  const [ageGroup, setAgeGroup] = useState();
+  const [occupation, setOccupation] = useState();
+
+  const genderOptions = [
+    {id: 1, title: 'Male', type: 'gender'},
+    {id: 2, title: 'Female', type: 'gender'},
+    {id: 3, title: 'Others', type: 'gender'},
+    {id: 4, title: 'Transgender', type: 'gender'},
+    {id: 5, title: 'Prefer not to say', type: 'gender'},
+  ];
+
+  const ageOptions = [
+    {id: 1, title: '14-20', type: 'age'},
+    {id: 2, title: '21-35', type: 'age'},
+    {id: 3, title: '36-50', type: 'age'},
+    {id: 4, title: '51 & above', type: 'age'},
+  ];
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const {profile} = props.route.params;
+  const {profile, config, setReloadProfileOnEdit} = props.route.params;
+
+  useEffect(() => {
+    setSkipNSFW(profile?.skipNSFW);
+    setSkipPolitical(profile?.skipPolitical);
+    setAgeGroup(profile?.ageGroup);
+    setGender(profile?.gender);
+    setOccupation(profile?.occupation?.name);
+    setState(setStateTitle(profile?.stateId));
+  }, [profile?.skipNSFW, profile?.skipPolitical]);
+
+  useEffect(() => {
+    getOccupation();
+    getStates();
+  }, []);
+  const getStates = async () => {
+    const res = await Axios.get('/states/getAllStates');
+    let data = res.data.data;
+    let newdata = [];
+    data.map(item => {
+      return newdata.push({id: item.id, title: item.name, type: 'state'});
+    });
+    setStatesOptions(newdata);
+  };
+
+  const getOccupation = async () => {
+    const res = await Axios.get('/occupations');
+    let data = res.data.data;
+    let newdata = [];
+    data.map(item => {
+      return newdata.push({id: item.id, title: item.name, type: 'occupation'});
+    });
+
+    setOccupationOptions(newdata);
+  };
+
+  const openRequiredModal = item => {
+    if (item === 'age') {
+      setModalSelectionValues(ageOptions);
+      setModalVisible(true);
+    }
+    if (item === 'gender') {
+      setModalSelectionValues(genderOptions);
+      setModalVisible(true);
+    }
+    if (item === 'occupation') {
+      setModalSelectionValues(occupationOptions);
+      setModalVisible(true);
+    }
+    if (item === 'state') {
+      setModalSelectionValues(statesOptions);
+      setModalVisible(true);
+    }
+  };
+  const searchTopic = () => {
+    const filtered = statesOptions.filter(state => {
+      return state.title.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredState(filtered);
+  };
+
+  const setInfoState = item => {
+    if (item.type === 'gender') {
+      setModalVisible(prev => !prev);
+      return setGender(item.title);
+    }
+    if (item.type === 'age') {
+      setModalVisible(prev => !prev);
+
+      return setAgeGroup(item.title);
+    }
+    if (item.type === 'occupation') {
+      setModalVisible(prev => !prev);
+
+      return setOccupation(item.title);
+    }
+    if (item.type == 'state') {
+      setModalVisible(prev => !prev);
+
+      return setState(item.title);
+    }
+  };
+
+  const setOccupationId = item => {
+    if (item === 'Student') {
+      return 1;
+    }
+    if (item === 'Employee') {
+      return 2;
+    }
+    if (item === 'Employer') {
+      return 3;
+    }
+    if (item === 'Business Owner') {
+      return 4;
+    }
+    if (item === 'Others') {
+      return 5;
+    }
+  };
+  const setStateId = state => {
+    if (statesOptions) {
+      const filteredstate = statesOptions.filter(item => item.title === state);
+
+      return filteredstate[0]?.id;
+    }
+  };
+
+  const setStateTitle = state => {
+    if (statesOptions) {
+      const filteredstate = statesOptions?.filter(item => item.id === state);
+
+      return filteredstate[0]?.title;
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -45,6 +187,27 @@ const EditProfile = props => {
     {id: 4, title: 'Mental or psychological torture'},
     {id: 5, title: `Anything that's not safe for work (NSFW)`},
   ];
+
+  useEffect(() => {}, [state]);
+
+  const onSubmitChanges = async () => {
+    const data = {
+      ageGroup,
+      gender,
+      occupation: setOccupationId(occupation),
+      state: !state ? profile?.stateId : setStateId(state),
+      skipNSFW,
+      skipPolitical,
+    };
+
+    try {
+      await Axios.patch('users/profile/details', data, config);
+      setReloadProfileOnEdit(prev => !prev);
+      onBackPress();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -91,7 +254,7 @@ const EditProfile = props => {
             <TouchableOpacity
               style={styles.titleWrapper}
               onPress={() => {
-                navigation.goBack();
+                onSubmitChanges();
               }}>
               <Icon name="save" size={16} color="#26B160" />
               <Text style={styles.title}>Save Changes</Text>
@@ -109,7 +272,12 @@ const EditProfile = props => {
               }}>
               Edit Profile
             </Text>
-            <Text style={{color: 'grey', marginBottom: 5}}>
+            <Text
+              style={{
+                color: 'grey',
+                marginBottom: 5,
+                textTransform: 'capitalize',
+              }}>
               {profile?.username !== 'user' || null
                 ? profile?.username
                 : profile?.email}
@@ -147,10 +315,13 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={item => {
+                  var title = 'age';
+                  openRequiredModal(title);
+                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
-                  value={profile?.ageGroup}
+                  value={ageGroup ? ageGroup : profile?.ageGroup}
                   editable={false}
                   style={[
                     styles.txtinput,
@@ -201,10 +372,13 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => {
+                  var title = 'gender';
+                  openRequiredModal(title);
+                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
-                  value={profile?.gender}
+                  value={gender ? gender : profile?.gender}
                   editable={false}
                   style={[
                     styles.txtinput,
@@ -255,10 +429,13 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => {
+                  var title = 'occupation';
+                  openRequiredModal(title);
+                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
-                  value={profile?.occupation?.name}
+                  value={occupation ? occupation : profile?.occupation?.name}
                   editable={false}
                   style={[
                     styles.txtinput,
@@ -309,10 +486,13 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => {
+                  var title = 'state';
+                  openRequiredModal(title);
+                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
-                  value={profile?.stateId?.toString()}
+                  value={state ? state : setStateTitle(profile?.stateId)}
                   editable={false}
                   style={[
                     styles.txtinput,
@@ -391,6 +571,133 @@ const EditProfile = props => {
             </View>
           </View>
         </ScrollView>
+        <Modal
+          isVisible={modalVisible}
+          backdropOpacity={0.4}
+          onBackdropPress={() => setModalVisible(false)}
+          animationOut="fadeOutDown"
+          backdropTransitionOutTiming={600}
+          animationOutTiming={400}
+          style={{
+            position: 'relative',
+            margin: 0,
+          }}>
+          <View
+            style={{
+              backgroundColor: darkMode ? global.backgroundColorDark : 'white',
+              position: 'absolute',
+              bottom: 0,
+              height: 250,
+              width: '100%',
+              borderTopRightRadius: 20,
+              paddingTop: 25,
+              borderTopLeftRadius: 20,
+            }}>
+            <View
+              style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'row',
+              }}>
+              {modalSelectionValues &&
+                modalSelectionValues[0].type === 'state' && (
+                  <>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      placeholder="Search your state.."
+                      onChangeText={setSearchTerm}
+                      onSubmitEditing={searchTopic}
+                      style={{
+                        backgroundColor: darkMode
+                          ? global.inputColorDark
+                          : '#f3f4f7',
+                        width: '95%',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        borderRadius: 5,
+                        marginBottom: 10,
+                        paddingLeft: 10,
+                        color: 'black',
+                      }}></TextInput>
+                    <TouchableOpacity
+                      onPress={() => {
+                        Keyboard.dismiss();
+                        searchTopic();
+                      }}>
+                      <Icon
+                        name="search"
+                        size={22}
+                        style={{
+                          position: 'absolute',
+                          right: 20,
+                          top: 8,
+                          padding: 5,
+                        }}
+                        color={'#A9A9A9'}
+                      />
+                    </TouchableOpacity>
+                  </>
+                )}
+            </View>
+            <ScrollView>
+              {filteredState
+                ? filteredState?.map(item => {
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        style={{width: windowWidth}}
+                        onPress={() => {
+                          setInfoState(item);
+                        }}>
+                        <Text
+                          style={{
+                            color: darkMode ? 'white' : 'black',
+                            marginHorizontal: 20,
+                          }}>
+                          {item.title}
+                        </Text>
+                        {filteredState.length > 1 && (
+                          <View
+                            style={{
+                              height: 1,
+                              backgroundColor: 'lightgrey',
+                              marginVertical: 18,
+
+                              width: windowWidth,
+                            }}></View>
+                        )}
+                      </TouchableOpacity>
+                    );
+                  })
+                : modalSelectionValues?.map(item => {
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        style={{width: windowWidth}}
+                        onPress={() => {
+                          setInfoState(item);
+                        }}>
+                        <Text
+                          style={{
+                            color: darkMode ? 'white' : 'black',
+                            marginHorizontal: 20,
+                          }}>
+                          {item.title}
+                        </Text>
+                        <View
+                          style={{
+                            height: 1.2,
+                            backgroundColor: darkMode ? '#545760' : 'lightgrey',
+                            marginVertical: 18,
+
+                            width: windowWidth,
+                          }}></View>
+                      </TouchableOpacity>
+                    );
+                  })}
+            </ScrollView>
+          </View>
+        </Modal>
       </SafeAreaView>
     </>
   );

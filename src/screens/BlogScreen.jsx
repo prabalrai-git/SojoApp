@@ -208,7 +208,7 @@ const BlogScreen = ({route}) => {
       fontSize: 16,
       lineHeight: 24,
       color: darkMode ? '#9B9EA5' : '#3F424A',
-      textAlign: 'justify',
+      textAlign: 'left',
     },
     strong: {
       fontWeight: 'bold',
@@ -506,7 +506,7 @@ const styles = StyleSheet.create({
   },
   previewText: {
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 0,
     lineHeight: 24,
     color: '#3F424A',
     textAlign: 'justify',

@@ -30,6 +30,7 @@ const SettingsScreen = () => {
   const [hasMore, setHasMore] = useState(false);
   const [profile, setProfile] = useState();
   const [renderBookmarked, setRenderBookmarked] = useState(false);
+  const [reloadProfileOnEdit, setReloadProfileOnEdit] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const reload = useSelector(state => state.reloadNews.value);
@@ -42,10 +43,6 @@ const SettingsScreen = () => {
 
     return unsubscribe;
   }, [navigation]);
-
-  console.log('====================================');
-  console.log(profile);
-  console.log('====================================');
 
   useEffect(() => {
     fetchToken();
@@ -89,7 +86,7 @@ const SettingsScreen = () => {
     if (config) {
       fetchProfile();
     }
-  }, [config]);
+  }, [config, reloadProfileOnEdit]);
 
   const fetchNews = async () => {
     try {
@@ -214,8 +211,7 @@ const SettingsScreen = () => {
         {/* start of content/ body */}
 
         <ScrollView>
-          <View
-            style={{paddingHorizontal: 15, marginTop: 10, marginBottom: -15}}>
+          <View style={{paddingHorizontal: 15, marginTop: 10}}>
             <Text
               style={{
                 fontWeight: 'bold',
@@ -256,7 +252,11 @@ const SettingsScreen = () => {
               {!profile?.isGuestUser && (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('EditProfile', {profile: profile})
+                    navigation.navigate('EditProfile', {
+                      profile: profile,
+                      config: config,
+                      setReloadProfileOnEdit: setReloadProfileOnEdit,
+                    })
                   }
                   style={[
                     styles.btn,
@@ -287,7 +287,7 @@ const SettingsScreen = () => {
                 height: 1,
                 marginBottom: 20,
               }}></View>
-            {news && (
+            {news?.length > 0 && (
               <Text
                 style={{
                   color: darkMode ? 'white' : 'black',
@@ -299,7 +299,7 @@ const SettingsScreen = () => {
             )}
           </View>
 
-          {news ? (
+          {news?.length > 0 ? (
             news?.map(item => {
               return (
                 <>
@@ -312,7 +312,7 @@ const SettingsScreen = () => {
               );
             })
           ) : (
-            <View>
+            <View style={{flex: 1}}>
               <Text
                 style={{
                   color: darkMode ? 'white' : 'black',

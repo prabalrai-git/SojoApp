@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   value: false,
+  reloadProfile: false,
 };
 
 export const hideTabBarSlice = createSlice({
@@ -18,6 +19,9 @@ export const hideTabBarSlice = createSlice({
     showTabBar: state => {
       state.value = false;
     },
+    // reloadProfile: state => {
+    //   state.reloadProfile = !state.reloadProfile;
+    // },
   },
 });
 
