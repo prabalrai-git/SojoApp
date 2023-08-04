@@ -45,17 +45,10 @@ const ProfileSettings = props => {
     return unsubscribe;
   }, [navigation]);
 
-  const notificationFrequency = [
-    {id: 1, title: 'Every morning at 8AM'},
-    {id: 2, title: 'Every evening at 6PM'},
-    {id: 3, title: 'Every two days'},
-    {id: 4, title: 'Once a week'},
-  ];
-
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
   const signOut = async () => {

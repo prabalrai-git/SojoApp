@@ -47,7 +47,7 @@ const MainScreen = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
 
@@ -69,13 +69,12 @@ const MainScreen = () => {
       state,
     });
 
-    const response = await appleAuthAndroid.signIn();
-
-    const credentials = jwt_decode(response.id_token);
-
-    const {email} = credentials;
-
     try {
+      const res = await appleAuthAndroid.signIn();
+
+      const credentials = jwt_decode(res.id_token);
+
+      const {email} = credentials;
       const response = await Axios.post('/auth/applePhoneLogin', {
         username: 'user',
         email: email,
@@ -340,24 +339,18 @@ const MainScreen = () => {
             </Text>
           </TouchableOpacity>
 
-          {Platform.OS === 'android' && (
-            <TouchableOpacity
-              style={[styles.button, {height: 50}]}
-              onPress={() => signInWithoutCredentials()}>
-              <Image
-                source={require('../../assets/enter.png')}
-                style={styles.signupIcon}
-              />
-              <Text
-                style={[
-                  styles.buttonText,
-                  styles.midText,
-                  {marginRight: '23%'},
-                ]}>
-                Continue Without Signing In
-              </Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            style={[styles.button, {height: 50}]}
+            onPress={() => signInWithoutCredentials()}>
+            <Image
+              source={require('../../assets/enter.png')}
+              style={styles.signupIcon}
+            />
+            <Text
+              style={[styles.buttonText, styles.midText, {marginRight: '23%'}]}>
+              Continue Without Signing In
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </View>

@@ -106,12 +106,16 @@ export default function App() {
     }, 2000);
   }, []);
   const getVersionFromFirebase = async () => {
-    const version = await firestore()
-      .collection('sojoNewsAppVersion')
-      .doc('FdH5CyUSU9pZAvjYx89l')
-      .get();
+    try {
+      const version = await firestore()
+        .collection('sojoNewsAppVersion')
+        .doc('FdH5CyUSU9pZAvjYx89l')
+        .get();
 
-    setUpdatedVersion(version._data.version);
+      setUpdatedVersion(version._data.version);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

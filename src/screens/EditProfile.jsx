@@ -617,7 +617,8 @@ const EditProfile = props => {
                         borderRadius: 5,
                         marginBottom: 10,
                         paddingLeft: 10,
-                        color: 'black',
+                        color: darkMode ? 'white' : 'black',
+                        height: 45,
                       }}></TextInput>
                     <TouchableOpacity
                       onPress={() => {

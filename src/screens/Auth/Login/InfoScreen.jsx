@@ -504,6 +504,7 @@ const InfoScreen = ({navigation}) => {
                           marginBottom: 10,
                           paddingLeft: 10,
                           color: 'black',
+                          height: 45,
                         }}></TextInput>
                       <TouchableOpacity
                         onPress={() => {
