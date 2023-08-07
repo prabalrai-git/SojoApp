@@ -13,6 +13,7 @@ import {Image} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from './../../../api/server';
+import {useSelector} from 'react-redux';
 
 const Preferences = ({navigation, route}) => {
   // const [rememberMe, setRememberMe] = useState(false);
@@ -60,7 +61,7 @@ const Preferences = ({navigation, route}) => {
       try {
         setLoading(true);
         const res = await Axios.post('/users/profile/complete', data, config);
-        navigation.replace('TopicsScreenLogin', {
+        navigation.navigate('TopicsScreenLogin', {
           config: config,
         });
         setLoading(false);
@@ -97,7 +98,7 @@ const Preferences = ({navigation, route}) => {
         config,
       );
 
-      navigation.replace('TopicsScreenLogin', {
+      navigation.navigate('TopicsScreenLogin', {
         config: config,
       });
       setLoading(false);
@@ -110,13 +111,20 @@ const Preferences = ({navigation, route}) => {
       // }
     }
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: darkMode
+          ? global.backgroundColorDark
+          : global.backgroundColor,
+      }}>
       <CreateProfileHeader />
       <Text
         style={{
-          color: 'black',
+          color: darkMode ? 'white' : 'black',
           paddingHorizontal: 20,
           paddingLeft: 39,
           fontSize: 18,
@@ -127,7 +135,7 @@ const Preferences = ({navigation, route}) => {
       </Text>
       <Text
         style={{
-          color: 'black',
+          color: darkMode ? 'white' : 'black',
           paddingHorizontal: 20,
           paddingLeft: 39,
           fontSize: 16,
@@ -144,13 +152,13 @@ const Preferences = ({navigation, route}) => {
           source={require('../../../assets/alert.png')}
           style={[styles.img]}
         />
-        <Text style={styles.txt}>
+        <Text style={[styles.txt, {color: darkMode ? 'white' : 'black'}]}>
           Skip and avoid political news and anything political
         </Text>
         <MaterialIcons
           name={skipPolitical ? 'check-box' : 'check-box-outline-blank'}
           size={30}
-          color="#000000"
+          color={darkMode ? 'white' : 'black'}
           onPress={() => setSkipPolitical(!skipPolitical)}
         />
       </View>
@@ -159,13 +167,13 @@ const Preferences = ({navigation, route}) => {
           source={require('../../../assets/alert1.png')}
           style={[styles.img]}
         />
-        <Text style={styles.txt}>
+        <Text style={[styles.txt, {color: darkMode ? 'white' : 'black'}]}>
           Skip and avoid any stories that have the following:
         </Text>
         <MaterialIcons
           name={skipNSFW ? 'check-box' : 'check-box-outline-blank'}
           size={30}
-          color="#000000"
+          color={darkMode ? 'white' : 'black'}
           onPress={() => setSkipNSFW(!skipNSFW)}
         />
       </View>
@@ -174,7 +182,11 @@ const Preferences = ({navigation, route}) => {
           return (
             <View key={item.id}>
               <Text
-                style={{color: 'black', fontWeight: '400', marginVertical: 3}}>
+                style={{
+                  color: darkMode ? 'white' : 'black',
+                  fontWeight: '400',
+                  marginVertical: 3,
+                }}>
                 ● {item.title}
               </Text>
             </View>
@@ -188,7 +200,10 @@ const Preferences = ({navigation, route}) => {
           //   handleFormSubmit();
           // }
         }}
-        style={styles.loginButton}>
+        style={[
+          styles.loginButton,
+          {backgroundColor: darkMode ? '#286146' : global.brandColor},
+        ]}>
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
@@ -208,7 +223,14 @@ const Preferences = ({navigation, route}) => {
         onPress={() => {
           return skipProfile();
         }}
-        style={[styles.loginButton, {backgroundColor: 'white'}]}>
+        style={[
+          styles.loginButton,
+          {
+            backgroundColor: darkMode
+              ? global.inputColorDark
+              : global.inputColor,
+          },
+        ]}>
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (

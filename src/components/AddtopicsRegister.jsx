@@ -2,6 +2,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import Axios from './../api/server';
+import {useSelector} from 'react-redux';
 
 const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
   const [loading, setLoading] = useState(false);
@@ -9,15 +10,33 @@ const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
   const filtered = userTopics?.filter(topic => topic.id === item.id);
   // console.log(filtered[0].id, 'mfmfmfmf');
 
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
-    <TouchableOpacity style={styles.link} key={item.id}>
-      <Text style={styles.linkTitle}>{item.name}</Text>
+    <TouchableOpacity
+      style={[
+        styles.link,
+        {
+          backgroundColor: darkMode ? global.inputColorDark : global.inputColor,
+        },
+      ]}
+      key={item.id}>
+      <Text style={[styles.linkTitle, {color: darkMode ? 'white' : '#4B4D54'}]}>
+        {item.name}
+      </Text>
       {filtered && filtered[0]?.id ? (
         <Icon
           name={loading ? 'loader' : 'check'}
           size={26}
           color="#6B6F76"
-          style={[styles.linkIcon, {backgroundColor: '#27B060', color: '#fff'}]}
+          style={[
+            styles.linkIcon,
+            {
+              backgroundColor: darkMode ? '#356E53' : global.brandColor,
+              color: '#fff',
+              borderLeftColor: darkMode ? global.inputColorDark : '#DEE1E5',
+            },
+          ]}
           onPress={async () => {
             setLoading(true);
             try {
@@ -33,8 +52,11 @@ const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
         <Icon
           name={loading ? 'loader' : 'plus'}
           size={26}
-          color="#6B6F76"
-          style={styles.linkIcon}
+          color={darkMode ? 'white' : '#6B6F76'}
+          style={[
+            styles.linkIcon,
+            {borderLeftColor: darkMode ? global.inputColorDark : '#DEE1E5'},
+          ]}
           onPress={async () => {
             setLoading(true);
             try {

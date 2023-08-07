@@ -109,7 +109,7 @@ export default function App() {
     try {
       const version = await firestore()
         .collection('sojoNewsAppVersion')
-        .doc('FdH5CyUSU9pZAvjYx89l')
+        .doc('6dPXxZWyJCFqQjgJ5GoZ')
         .get();
 
       setUpdatedVersion(version._data.version);

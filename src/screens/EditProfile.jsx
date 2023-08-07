@@ -38,8 +38,8 @@ const EditProfile = props => {
     {id: 1, title: 'Male', type: 'gender'},
     {id: 2, title: 'Female', type: 'gender'},
     {id: 3, title: 'Others', type: 'gender'},
-    {id: 4, title: 'Transgender', type: 'gender'},
-    {id: 5, title: 'Prefer not to say', type: 'gender'},
+    // {id: 4, title: 'Transgender', type: 'gender'},
+    // {id: 5, title: 'Prefer not to say', type: 'gender'},
   ];
 
   const ageOptions = [
@@ -107,8 +107,8 @@ const EditProfile = props => {
     }
   };
   const searchTopic = () => {
-    const filtered = statesOptions.filter(state => {
-      return state.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = statesOptions?.filter(state => {
+      return state?.title?.toLowerCase().includes(searchTerm.toLowerCase());
     });
     setFilteredState(filtered);
   };
@@ -154,7 +154,7 @@ const EditProfile = props => {
   };
   const setStateId = state => {
     if (statesOptions) {
-      const filteredstate = statesOptions.filter(item => item.title === state);
+      const filteredstate = statesOptions?.filter(item => item.title === state);
 
       return filteredstate[0]?.id;
     }
@@ -188,7 +188,9 @@ const EditProfile = props => {
     {id: 5, title: `Anything that's not safe for work (NSFW)`},
   ];
 
-  useEffect(() => {}, [state]);
+  useEffect(() => {
+    statesOptions && searchTopic();
+  }, [searchTerm]);
 
   const onSubmitChanges = async () => {
     const data = {
@@ -315,11 +317,10 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={item => {
-                  var title = 'age';
-                  openRequiredModal(title);
-                }}
-                style={{flexDirection: 'row', position: 'relative'}}>
+                style={{
+                  flexDirection: 'row',
+                  // position: 'relative',
+                }}>
                 <TextInput
                   value={ageGroup ? ageGroup : profile?.ageGroup}
                   editable={false}
@@ -333,12 +334,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'age';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -355,7 +361,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View
@@ -390,12 +396,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'gender';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -412,7 +423,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View
@@ -429,10 +440,6 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {
-                  var title = 'occupation';
-                  openRequiredModal(title);
-                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
                   value={occupation ? occupation : profile?.occupation?.name}
@@ -447,12 +454,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'occupation';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -469,7 +481,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View
@@ -486,10 +498,6 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {
-                  var title = 'state';
-                  openRequiredModal(title);
-                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
                   value={state ? state : setStateTitle(profile?.stateId)}
@@ -504,12 +512,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'state';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -526,7 +539,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View style={[styles.containers, {marginBottom: 35}]}>

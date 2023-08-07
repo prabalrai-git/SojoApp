@@ -37,6 +37,15 @@ const Category = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      // do something
+      setTerm('');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(showTabBar());
     });
@@ -121,6 +130,10 @@ const Category = () => {
       fetchProfile();
     }
   }, [config]);
+
+  useEffect(() => {
+    searchTopic();
+  }, [term]);
 
   const searchTopic = () => {
     if (term === '') {

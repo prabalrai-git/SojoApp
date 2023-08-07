@@ -31,9 +31,6 @@ const HomeScreen = ({navigation}) => {
 
   const dispatch = useDispatch();
 
-  // console.log('====================================');
-  // console.log(Platform.OS, updatedVersion);
-  // console.log('====================================');
 
   // after deploying new updates in stores please update firestore in firebase for triggering user prompts to update the app
 

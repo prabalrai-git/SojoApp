@@ -391,14 +391,34 @@ const BlogScreen = ({route}) => {
                 {data.title}
               </Text>
               <View style={styles.categories}>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                  <Image
+                    source={require('../assets/Sn.png')}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      resizeMode: 'contain',
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <View style={{display: 'flex', flexDirection: 'column'}}>
+                    <Text
+                      style={[
+                        styles.date,
+                        {color: darkMode ? 'white' : 'black', fontSize: 12},
+                      ]}>
+                      SN
+                    </Text>
+                    <Text
+                      style={[
+                        styles.date,
+                        {color: darkMode ? '#9B9EA5' : '#3F424A'},
+                      ]}>
+                      {moment(data.createdAt).format('DD MMM YYYY')}
+                    </Text>
+                  </View>
+                </View>
                 <Text style={styles.topic}>{data.topics[0].name}</Text>
-                <Text
-                  style={[
-                    styles.date,
-                    {color: darkMode ? '#9B9EA5' : '#3F424A'},
-                  ]}>
-                  Posted on {moment(data.createdAt).format('DD MMM YYYY')}
-                </Text>
               </View>
               {/* <Image source={{uri: data.image}} style={styles.image} /> */}
               <FastImage
@@ -470,9 +490,10 @@ const styles = StyleSheet.create({
   },
   categories: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 20,
     marginBottom: 30,
     marginTop: 8,
+    justifyContent: 'space-between',
 
     alignItems: 'center',
   },
@@ -480,10 +501,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 2,
     color: '#3F424A',
-    fontSize: 15,
+    fontSize: 12,
   },
   topic: {
-    flex: 1,
+    flex: 0.5,
     backgroundColor: '#b3e0bd',
     color: '#237344',
     fontWeight: 'bold',

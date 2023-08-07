@@ -9,33 +9,46 @@ import {
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {windowWidth} from '../helper/usefulConstants';
-const CreateProfileHeader = () => {
+import {useSelector} from 'react-redux';
+const CreateProfileHeader = ({chooseTopics}) => {
   const navigation = useNavigation();
+  const darkMode = useSelector(state => state.darkMode.value);
+
   return (
-    <SafeAreaView style={styles.header}>
-      <TouchableOpacity
-        onPress={() => navigation.popToTop()}
-        style={{
-          padding: 10,
-          alignSelf: 'center',
-        }}>
-        <Image
-          source={require('../assets/arrow-left.png')}
+    <SafeAreaView
+      style={[
+        styles.header,
+        {
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        },
+      ]}>
+      {!chooseTopics && (
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
           style={{
-            tintColor: 'black',
-            width: 25,
-            height: 25,
-            resizeMode: 'contain',
-          }}
-        />
-      </TouchableOpacity>
+            padding: 10,
+            alignSelf: 'center',
+          }}>
+          <Image
+            source={require('../assets/arrow-left.png')}
+            style={{
+              tintColor: darkMode ? 'white' : 'black',
+              width: 25,
+              height: 25,
+              resizeMode: 'contain',
+            }}
+          />
+        </TouchableOpacity>
+      )}
       <View style={{alignSelf: 'flex-start'}}>
         <Image
           source={require('../assets/logoLogin.png')}
           style={{
             width: 160,
             height: 120,
-            marginRight: '25%',
+            marginRight: chooseTopics ? '26%' : '25%',
             resizeMode: 'contain',
           }}
         />

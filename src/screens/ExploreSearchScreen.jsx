@@ -6,6 +6,8 @@ import {
   ActivityIndicator,
   StatusBar,
   SafeAreaView,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -146,7 +148,17 @@ const SearchScreen = ({navigation, route}) => {
             : global.backgroundColor,
         }}>
         <View style={styles.topBar}>
-          <Text style={[styles.title]}>Explore</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              source={require('../assets/arrow-left.png')}
+              style={{
+                tintColor: darkMode ? 'white' : 'black',
+                width: 25,
+                height: 25,
+                resizeMode: 'contain',
+              }}
+            />
+          </TouchableOpacity>
           <GlobalHeader isShown={false} />
         </View>
         <SearchBar />

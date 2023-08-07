@@ -5,6 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -15,6 +16,7 @@ import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
+import {Image} from 'react-native';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
@@ -87,7 +89,17 @@ const SearchScreen = ({navigation, route}) => {
             : global.backgroundColor,
         }}>
         <View style={styles.topBar}>
-          <Text style={styles.title}>My Feed</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              source={require('../assets/arrow-left.png')}
+              style={{
+                tintColor: darkMode ? 'white' : 'black',
+                width: 25,
+                height: 25,
+                resizeMode: 'contain',
+              }}
+            />
+          </TouchableOpacity>
           <HomeHeader isShown={false} />
         </View>
         <SearchBar />
