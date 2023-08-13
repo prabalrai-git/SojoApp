@@ -91,7 +91,7 @@ export default function App() {
   const openGoogleORAppStore = () => {
     if (Platform.OS === 'ios') {
       return Linking.openURL(
-        'https://play.google.com/store/apps/details?id=com.sojonewsapp',
+        'https://apps.apple.com/us/app/sojo-news/id6454899280',
       );
     }
     if (Platform.OS === 'android') {

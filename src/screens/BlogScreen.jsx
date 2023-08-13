@@ -407,7 +407,7 @@ const BlogScreen = ({route}) => {
                         styles.date,
                         {color: darkMode ? 'white' : 'black', fontSize: 12},
                       ]}>
-                      SN
+                      Sojo News Team
                     </Text>
                     <Text
                       style={[
