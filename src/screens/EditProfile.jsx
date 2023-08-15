@@ -108,7 +108,7 @@ const EditProfile = props => {
   };
   const searchTopic = () => {
     const filtered = statesOptions?.filter(state => {
-      return state?.title?.toLowerCase().includes(searchTerm.toLowerCase());
+      return state?.title?.toLowerCase().includes(searchTerm?.toLowerCase());
     });
     setFilteredState(filtered);
   };
@@ -249,7 +249,11 @@ const EditProfile = props => {
             }}>
             <Image
               source={require('../assets/arrow-left.png')}
-              style={{tintColor: 'white', width: 20, height: 20}}
+              style={{
+                tintColor: 'white',
+                width: 20,
+                height: 20,
+              }}
             />
           </TouchableOpacity>
           <View style={styles.container}>
@@ -542,7 +546,11 @@ const EditProfile = props => {
                 </TouchableOpacity>
               </TouchableOpacity>
             </View>
-            <View style={[styles.containers, {marginBottom: 35}]}>
+            <View
+              style={[
+                styles.containers,
+                {marginBottom: 35, width: windowWidth * 0.92},
+              ]}>
               <MaterialIcons
                 name={skipPolitical ? 'check-box' : 'check-box-outline-blank'}
                 size={30}
@@ -554,7 +562,11 @@ const EditProfile = props => {
                 Skip and avoid political news and anything political
               </Text>
             </View>
-            <View style={styles.containers}>
+            <View
+              style={[
+                styles.containers,
+                {marginBottom: 5, width: windowWidth * 0.92},
+              ]}>
               <MaterialIcons
                 name={skipNSFW ? 'check-box' : 'check-box-outline-blank'}
                 size={30}
@@ -729,7 +741,7 @@ const styles = StyleSheet.create({
   txts: {
     color: 'black',
     // textTransform: 'uppercase',
-    width: windowWidth * 0.8,
+    width: windowWidth * 0.7,
     alignSelf: 'center',
     marginHorizontal: 5,
     fontWeight: '500',
@@ -741,7 +753,9 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   containers: {
-    width: windowWidth,
+    width: windowWidth * 0.95,
+    marginLeft: 'auto',
+    marginRight: 'auto',
     paddingLeft: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',

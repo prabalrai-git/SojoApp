@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
+import DeviceInfo from 'react-native-device-info';
+import {windowWidth} from '../helper/usefulConstants';
 
 const ExploreCard = ({item, navigation, profile}) => {
   const [image, setImage] = useState('');
@@ -80,7 +82,10 @@ const ExploreCard = ({item, navigation, profile}) => {
     image && (
       <TouchableOpacity
         key={item?.id}
-        style={{marginTop: 30}}
+        style={{
+          marginTop: 30,
+          width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
+        }}
         onPress={() => {
           return navigation.navigate('Blog', {
             id: item?.id,
@@ -125,7 +130,7 @@ const ExploreCard = ({item, navigation, profile}) => {
             </View>
             <Text
               style={[styles.cardTitle, {color: darkMode ? 'white' : 'black'}]}
-              numberOfLines={2}
+              numberOfLines={DeviceInfo.isTablet() ? 1 : 2}
               ellipsizeMode="tail">
               {item?.title}
             </Text>
@@ -135,7 +140,7 @@ const ExploreCard = ({item, navigation, profile}) => {
                 styles.cardText,
                 {color: darkMode ? '#9B9EA5' : '#3F424A'},
               ]}
-              numberOfLines={4}
+              numberOfLines={2}
               ellipsizeMode="tail">
               {item?.previewText}
             </Text>

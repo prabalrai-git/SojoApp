@@ -126,7 +126,9 @@ const Preferences = ({navigation, route}) => {
         style={{
           color: darkMode ? 'white' : 'black',
           paddingHorizontal: 20,
-          paddingLeft: 39,
+          width: windowWidth * 0.96,
+          marginLeft: 'auto',
+          marginRight: 'auto',
           fontSize: 18,
           textAlign: 'left',
           fontWeight: 'bold',
@@ -137,11 +139,14 @@ const Preferences = ({navigation, route}) => {
         style={{
           color: darkMode ? 'white' : 'black',
           paddingHorizontal: 20,
-          paddingLeft: 39,
           fontSize: 16,
           textAlign: 'left',
+          width: windowWidth * 0.96,
+          marginLeft: 'auto',
+          marginRight: 'auto',
           marginTop: 10,
           fontWeight: 'bold',
+
           marginBottom: 35,
         }}>
         Some users might want to avoid certain types of stories, and you can do
@@ -264,7 +269,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    width: windowWidth * 0.85,
+    width: windowWidth * 0.9,
     marginLeft: 'auto',
     marginRight: 'auto',
     flexDirection: 'row',
@@ -294,6 +299,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginRight: 4,
+    alignSelf: 'center',
   },
   txt: {
     color: 'black',
@@ -301,5 +307,6 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.6,
     marginHorizontal: 5,
     fontWeight: '500',
+    alignSelf: 'center',
   },
 });

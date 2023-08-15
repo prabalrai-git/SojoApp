@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BlogCard from '../components/Card';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
+import DeviceInfo from 'react-native-device-info';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
@@ -210,25 +211,53 @@ const SettingsScreen = () => {
 
         {/* start of content/ body */}
 
-        <ScrollView>
-          <View style={{paddingHorizontal: 15, marginTop: 10}}>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                color: darkMode ? 'white' : 'black',
-                fontSize: 22,
-                textTransform: 'capitalize',
-              }}>
-              {profile?.username !== 'user' || null
-                ? profile?.username
-                : profile?.email}
-            </Text>
-            <Text style={{color: 'grey', marginBottom: 15}}>
-              {profile?.occupation?.name}
-            </Text>
+        <View style={{paddingHorizontal: 15, marginTop: 10}}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: darkMode ? 'white' : 'black',
+              fontSize: 22,
+              textTransform: 'capitalize',
+            }}>
+            {profile?.username !== 'user' || null
+              ? profile?.username
+              : profile?.email}
+          </Text>
+          <Text style={{color: 'grey', marginBottom: 15}}>
+            {profile?.occupation?.name}
+          </Text>
 
-            <View style={styles.btnContainer}>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={[
+                styles.btn,
+                {
+                  backgroundColor: darkMode
+                    ? global.brandColorDark2
+                    : global.backgroundColor,
+                  borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
+                },
+              ]}
+              onPress={() =>
+                navigation.navigate('Topics', {screen: 'EditTopicsScreen'})
+              }>
+              <Text
+                style={[
+                  styles.btnTxt,
+                  {color: darkMode ? 'white' : '#1d6e3f'},
+                ]}>
+                Choose Your Topics
+              </Text>
+            </TouchableOpacity>
+            {!profile?.isGuestUser && (
               <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('EditProfile', {
+                    profile: profile,
+                    config: config,
+                    setReloadProfileOnEdit: setReloadProfileOnEdit,
+                  })
+                }
                 style={[
                   styles.btn,
                   {
@@ -237,80 +266,58 @@ const SettingsScreen = () => {
                       : global.backgroundColor,
                     borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
                   },
-                ]}
-                onPress={() =>
-                  navigation.navigate('Topics', {screen: 'EditTopicsScreen'})
-                }>
+                ]}>
                 <Text
                   style={[
                     styles.btnTxt,
                     {color: darkMode ? 'white' : '#1d6e3f'},
                   ]}>
-                  Choose Your Topics
+                  Edit Profile
                 </Text>
               </TouchableOpacity>
-              {!profile?.isGuestUser && (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('EditProfile', {
-                      profile: profile,
-                      config: config,
-                      setReloadProfileOnEdit: setReloadProfileOnEdit,
-                    })
-                  }
-                  style={[
-                    styles.btn,
-                    {
-                      backgroundColor: darkMode
-                        ? global.brandColorDark2
-                        : global.backgroundColor,
-                      borderColor: darkMode
-                        ? global.brandColorDark2
-                        : '#b3e0bd',
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      styles.btnTxt,
-                      {color: darkMode ? 'white' : '#1d6e3f'},
-                    ]}>
-                    Edit Profile
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-
-            <View
-              style={{
-                width: '100%',
-                backgroundColor: darkMode ? '#3F424A' : 'lightgrey',
-                height: 1,
-                marginBottom: 20,
-              }}></View>
-            {news?.length > 0 && (
-              <Text
-                style={{
-                  color: darkMode ? 'white' : 'black',
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                }}>
-                Saved stories
-              </Text>
             )}
           </View>
 
+          <View
+            style={{
+              width: '100%',
+              backgroundColor: darkMode ? '#3F424A' : 'lightgrey',
+              height: 1,
+              marginBottom: 20,
+            }}></View>
+          {news?.length > 0 && (
+            <Text
+              style={{
+                color: darkMode ? 'white' : 'black',
+                fontWeight: 'bold',
+                fontSize: 16,
+                marginBottom: 10,
+              }}>
+              Saved stories
+            </Text>
+          )}
+        </View>
+        <ScrollView>
           {news?.length > 0 ? (
-            news?.map(item => {
-              return (
-                <>
-                  <BlogItem
-                    key={item?.id}
-                    item={item}
-                    navigation={navigation}
-                  />
-                </>
-              );
-            })
+            <View
+              style={{
+                flex: 1,
+                marginBottom: 35,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}>
+              {news?.map(item => {
+                return (
+                  <>
+                    <BlogItem
+                      key={item?.id}
+                      item={item}
+                      navigation={navigation}
+                    />
+                  </>
+                );
+              })}
+            </View>
           ) : (
             <View style={{flex: 1}}>
               <Text
@@ -324,21 +331,6 @@ const SettingsScreen = () => {
               </Text>
             </View>
           )}
-          {/* <FlatList
-          data={news}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          ListFooterComponent={renderFooter}
-          onEndReachedThreshold={0.5}
-          showsHorizontalScrollIndicator={false}
-          onEndReached={handleLoadMore}
-          refreshing={page === 1 && loading}
-          onRefresh={() => {
-            setPage(1);
-            setNews([]);
-            navigation.replace('Curated');
-          }}
-        /> */}
         </ScrollView>
       </SafeAreaView>
     </>

@@ -19,6 +19,7 @@ import HomeHeader from '../components/HomeHeader';
 import ExploreCard from '../components/CardExplore';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
+import DeviceInfo from 'react-native-device-info';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
@@ -152,7 +153,7 @@ const SearchScreen = ({navigation, route}) => {
             <Image
               source={require('../assets/arrow-left.png')}
               style={{
-                tintColor: darkMode ? 'white' : 'black',
+                tintColor: 'white',
                 width: 25,
                 height: 25,
                 resizeMode: 'contain',
@@ -183,6 +184,7 @@ const SearchScreen = ({navigation, route}) => {
           renderItem={renderItem}
           keyExtractor={item => item.id}
           ListFooterComponent={renderFooter}
+          numColumns={DeviceInfo.isTablet() ? 2 : 1}
           // onEndReachedThreshold={0.5}
           showsVerticalScrollIndicator={false}
           // onEndReached={handleLoadMore}
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: '#27B060',
     padding: 20,
-    paddingVertical: 15,
+    paddingVertical: 20.75,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

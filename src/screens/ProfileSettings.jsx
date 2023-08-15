@@ -189,7 +189,11 @@ const ProfileSettings = props => {
             onPress={() => navigation.pop()}>
             <Image
               source={require('../assets/arrow-left.png')}
-              style={{tintColor: 'white', width: 20, height: 20}}
+              style={{
+                tintColor: darkMode ? 'white' : 'black',
+                width: 20,
+                height: 20,
+              }}
             />
           </TouchableOpacity>
 

@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 35,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    width: windowWidth * 0.9,
+    width: windowWidth * 0.95,
     marginLeft: 'auto',
     marginRight: 'auto',
     flexDirection: 'row',

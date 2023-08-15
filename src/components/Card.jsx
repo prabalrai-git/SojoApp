@@ -18,6 +18,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import {useNavigation} from '@react-navigation/native';
 import '../../globalThemColor';
+import {windowHeight, windowWidth} from '../helper/usefulConstants';
+import DeviceInfo from 'react-native-device-info';
 
 const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
   const [image, setImage] = useState('');
@@ -110,7 +112,11 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
     image && (
       <TouchableOpacity
         key={item?.id}
-        style={{marginTop: 30}}
+        style={{
+          marginTop: 30,
+          height: 440,
+          width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
+        }}
         onPress={() => {
           navigation.navigate('Blog', {
             fromBookmarks: fromBookmarks,
@@ -155,7 +161,7 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
             </View>
             <Text
               style={[styles.cardTitle, {color: darkMode ? 'white' : 'black'}]}
-              numberOfLines={2}
+              numberOfLines={DeviceInfo.isTablet() ? 1 : 2}
               ellipsizeMode="tail">
               {item?.title}
             </Text>
@@ -165,7 +171,7 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
                 styles.cardText,
                 {color: darkMode ? '#9B9EA5' : '#3F424A'},
               ]}
-              numberOfLines={4}
+              numberOfLines={2}
               ellipsizeMode="tail">
               {item?.previewText}
             </Text>

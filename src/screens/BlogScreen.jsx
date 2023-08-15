@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
+  FlatList,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -23,6 +24,7 @@ import Share from 'react-native-share';
 import {useDispatch, useSelector} from 'react-redux';
 import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
 import {useNavigation} from '@react-navigation/native';
+import DeviceInfo from 'react-native-device-info';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
@@ -245,6 +247,8 @@ const BlogScreen = ({route}) => {
     },
   };
 
+  ///
+
   return (
     <>
       <SafeAreaView
@@ -280,7 +284,11 @@ const BlogScreen = ({route}) => {
             }}>
             <Image
               source={require('../assets/arrow-left.png')}
-              style={{tintColor: 'white', width: 20, height: 20}}
+              style={{
+                tintColor: 'white',
+                width: 20,
+                height: 20,
+              }}
             />
           </TouchableOpacity>
 
@@ -418,12 +426,21 @@ const BlogScreen = ({route}) => {
                     </Text>
                   </View>
                 </View>
-                <Text style={styles.topic}>{data.topics[0].name}</Text>
+                <Text
+                  style={[
+                    styles.topic,
+                    {flex: DeviceInfo.isTablet() ? 0.3 : 0.5},
+                  ]}>
+                  {data.topics[0].name}
+                </Text>
               </View>
               {/* <Image source={{uri: data.image}} style={styles.image} /> */}
               <FastImage
                 source={{uri: data.image}}
-                style={styles.image}
+                style={[
+                  styles.image,
+                  {height: DeviceInfo.isTablet() ? 450 : 260},
+                ]}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <Text
@@ -455,10 +472,31 @@ const BlogScreen = ({route}) => {
                 Similar News
               </Text>
             </View>
-            <View style={{flex: 1, marginBottom: 35}}>
+            <View
+              style={{
+                flex: 1,
+                marginBottom: 35,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}>
               {similarBlogs.map(item => {
                 return <Card key={item.id} item={item} />;
               })}
+              {/* <FlatList
+            data={news}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            ListFooterComponent={renderFooter}
+            onEndReachedThreshold={0.5}
+            showsHorizontalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            refreshing={page === 1 && loading}
+            onRefresh={() => {
+              setPage(1);
+              setNews([]);
+              navigation.replace('Curated');
+            }}
+          /> */}
             </View>
           </ScrollView>
         ) : (

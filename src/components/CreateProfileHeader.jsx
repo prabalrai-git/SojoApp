@@ -30,6 +30,8 @@ const CreateProfileHeader = ({chooseTopics}) => {
           style={{
             padding: 10,
             alignSelf: 'center',
+            position: 'absolute',
+            left: 10,
           }}>
           <Image
             source={require('../assets/arrow-left.png')}
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 6,
     paddingHorizontal: 14,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginBottom: 1,
     // alignItems: 'flex-start',
     // backgroundColor: 'red',

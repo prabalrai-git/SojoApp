@@ -283,6 +283,8 @@ const MainScreen = () => {
               width: 250,
               height: 150,
               resizeMode: 'contain',
+              position: 'relative',
+              left: 0,
             },
           ]}
         />
@@ -346,8 +348,7 @@ const MainScreen = () => {
               source={require('../../assets/enter.png')}
               style={styles.signupIcon}
             />
-            <Text
-              style={[styles.buttonText, styles.midText, {marginRight: '23%'}]}>
+            <Text style={[styles.buttonText, styles.midText]}>
               Continue Without Signing In
             </Text>
           </TouchableOpacity>
@@ -361,11 +362,13 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   midText: {
-    marginRight: '30%',
+    // marginRight: '30%',
   },
   signupIcon: {
     width: 25,
     height: 25,
+    position: 'absolute',
+    left: 10,
   },
   top: {
     flex: 0.1,
@@ -394,11 +397,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
     alignSelf: 'center',
-    padding: 9,
+    padding: 10,
     backgroundColor: '#E7E7E8',
     borderRadius: 8,
     marginBottom: 20,

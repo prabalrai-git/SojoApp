@@ -250,9 +250,12 @@ const InfoScreen = ({navigation}) => {
             style={{
               color: darkMode ? 'white' : 'black',
               paddingHorizontal: 10,
-              paddingLeft: 20,
+              // paddingLeft: 20,
               fontSize: 18,
               textAlign: 'left',
+              width: windowWidth * 0.94,
+              marginLeft: 'auto',
+              marginRight: 'auto',
               marginTop: 0,
               fontWeight: '500',
             }}>
@@ -262,8 +265,11 @@ const InfoScreen = ({navigation}) => {
             style={{
               color: darkMode ? 'white' : 'black',
               paddingHorizontal: 10,
-              paddingLeft: 20,
+              // paddingLeft: 20,
               fontSize: 16,
+              width: windowWidth * 0.94,
+              marginLeft: 'auto',
+              marginRight: 'auto',
               textAlign: 'left',
               marginTop: 10,
               fontWeight: '500',

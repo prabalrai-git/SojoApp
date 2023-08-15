@@ -6,6 +6,8 @@ import {
   FlatList,
   StatusBar,
   SafeAreaView,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Axios from './../api/server';
@@ -16,6 +18,7 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
+import DeviceInfo from 'react-native-device-info';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -142,6 +145,18 @@ const Category = () => {
     }
   };
   const darkMode = useSelector(state => state.darkMode.value);
+  const scrollRef = React.createRef();
+
+  const onFabPress = () => {
+    // scrollRef.current?.scrollTo({
+    //   y: 0,
+    //   animated: true,
+    // });
+    // return console.log(scrollRef.current, 'yo');
+    // return startAnimation();
+
+    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+  };
 
   return topic ? (
     <>
@@ -175,12 +190,39 @@ const Category = () => {
           )}
         </View>
         <SearchBar />
+        <TouchableOpacity
+          onPress={() => {
+            onFabPress();
+          }}
+          style={{
+            elevation: 0,
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+            zIndex: 100,
+            // shadowColor: '#000',
+            // shadowOffset: {width: 0, height: 0},
+            // shadowOpacity: 0.1,
+            // shadowRadius: 1,
+          }}>
+          <View style={{}}>
+            <Image
+              source={require('../assets/up.png')}
+              style={{
+                width: 45,
+                height: 45,
+              }}
+            />
+          </View>
+        </TouchableOpacity>
         <FlatList
           data={data}
+          ref={scrollRef}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           ListFooterComponent={renderFooter}
           onEndReachedThreshold={0.5}
+          numColumns={DeviceInfo.isTablet() ? 2 : 1}
           showsVerticalScrollIndicator={false}
           onEndReached={handleLoadMore}
           refreshing={page === 1 && loading}
