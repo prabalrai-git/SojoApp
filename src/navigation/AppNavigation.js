@@ -6,6 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, TabAndAuthStack} from './Stacks';
 import TabNavigator from './Tab';
 import {useSelector} from 'react-redux';
+import {createStackNavigator} from '@react-navigation/stack';
 
 export default function MainNavigator() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);

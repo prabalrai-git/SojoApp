@@ -9,6 +9,7 @@ import {
   StatusBar,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
@@ -161,6 +162,24 @@ const ProfileSettings = props => {
   const onNotiToggle = async value => {
     setChecked(value);
     await AsyncStorage.setItem('notificationStatus', value.toString());
+  };
+
+  const onDeactivateAccount = async () => {
+    try {
+      const res = await Axios.delete(
+        '/users/profile/deactivateAccount',
+        config,
+      );
+
+      if (res) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'MainScreen'}],
+        });
+      }
+    } catch (error) {
+      console.log(error, 'something went wrong');
+    }
   };
 
   return (
@@ -356,6 +375,20 @@ const ProfileSettings = props => {
                   Account Settings
                 </Text>
                 <TouchableOpacity
+                  onPress={() =>
+                    Alert.alert(
+                      'Deactivate Account',
+                      'Are you sure you want to deactivate your account?',
+                      [
+                        {
+                          text: 'Cancel',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                        {text: 'Yes', onPress: () => onDeactivateAccount()},
+                      ],
+                    )
+                  }
                   style={{
                     backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
                     padding: 8,
