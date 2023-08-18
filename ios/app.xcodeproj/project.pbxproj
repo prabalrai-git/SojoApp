@@ -516,7 +516,7 @@
 				CODE_SIGN_ENTITLEMENTS = app/appDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = MQAJPUUB2Y;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = app/Info.plist;
@@ -555,7 +555,7 @@
 				CODE_SIGN_ENTITLEMENTS = app/appRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = MQAJPUUB2Y;
 				INFOPLIST_FILE = app/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Sojo News";

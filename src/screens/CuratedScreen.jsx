@@ -29,8 +29,8 @@ import DeviceInfo from 'react-native-device-info';
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [page, setPage] = useState(1);
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);

@@ -209,7 +209,7 @@ const ProfileSettings = props => {
             <Image
               source={require('../assets/arrow-left.png')}
               style={{
-                tintColor: darkMode ? 'white' : 'black',
+                tintColor: 'white',
                 width: 20,
                 height: 20,
               }}
@@ -378,7 +378,7 @@ const ProfileSettings = props => {
                   onPress={() =>
                     Alert.alert(
                       'Deactivate Account',
-                      'Are you sure you want to deactivate your account?',
+                      'Are you sure you want to deactivate your account? When you deactivate your account, your personal data will be promptly and completely removed from our resources.Your privacy is our priority.',
                       [
                         {
                           text: 'Cancel',

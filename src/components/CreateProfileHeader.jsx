@@ -22,6 +22,7 @@ const CreateProfileHeader = ({chooseTopics}) => {
           backgroundColor: darkMode
             ? global.backgroundColorDark
             : global.backgroundColor,
+          // backgroundColor: 'red',
         },
       ]}>
       {!chooseTopics && (
@@ -46,11 +47,11 @@ const CreateProfileHeader = ({chooseTopics}) => {
       )}
       <View style={{alignSelf: 'flex-start'}}>
         <Image
-          source={require('../assets/logoLogin.png')}
+          source={require('../assets/logoline.png')}
           style={{
             width: 160,
             height: 120,
-            marginRight: chooseTopics ? '26%' : '25%',
+            // marginRight: chooseTopics ? '26%' : '25%',
             resizeMode: 'contain',
           }}
         />

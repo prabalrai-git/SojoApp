@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -33,6 +33,10 @@ const BlogScreen = ({route}) => {
   const [similarBlogs, setSimilarBlogs] = useState([]);
   const [config, setConfig] = useState();
   const [refetch, setRefetch] = useState(false);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+  const [image, setImage] = useState();
 
   const [profile, setProfile] = useState();
 
@@ -41,6 +45,17 @@ const BlogScreen = ({route}) => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (data?.image) {
+      const w = Math.floor(width - 5 / 100);
+      const resizedImageUrl = data?.image?.replace(
+        '/upload/',
+        `/upload/w_${w.toString()},h_250,c_fill,q_auto/`,
+      );
+      setImage(resizedImageUrl);
+    }
+  }, [data]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -70,16 +85,33 @@ const BlogScreen = ({route}) => {
     try {
       const res = await Axios.get(`/news/${id}?userId=${profile?.id}`);
       setData(res.data.data);
-      scrollRef.current.scrollTo({y: 0, animated: true});
+      scrollToTop();
     } catch (err) {
       console.log(err);
+    }
+  };
+  const scrollToTop = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollToOffset({offset: 0, animated: true});
     }
   };
 
   const fetchSimilarBlogs = async () => {
     try {
-      const res = await Axios.get(`/news/similar/${data.id}`);
-      setSimilarBlogs(res.data.data);
+      const res = await Axios.get(`/news/similar/${data.id}?page=${page}`);
+      // setSimilarBlogs(res.data.data);
+      const newData = res.data.data;
+      similarBlogs.length > 0
+        ? setSimilarBlogs(prevData => {
+            const filteredData = prevData.filter(item => {
+              return !newData.some(newItem => newItem.id === item.id);
+            });
+            //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
+            return [...filteredData, ...newData];
+          })
+        : setSimilarBlogs(res.data.data);
+      setLoading(false);
+      setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
       console.log(err);
     }
@@ -91,7 +123,7 @@ const BlogScreen = ({route}) => {
 
   useEffect(() => {
     data && fetchSimilarBlogs();
-  }, [data]);
+  }, [data, page]);
 
   // if (!data) {
   //   return <ActivityIndicator />;
@@ -248,6 +280,42 @@ const BlogScreen = ({route}) => {
   };
 
   ///
+  const handleLoadMore = () => {
+    if (hasMore) {
+      setPage(prevPage => prevPage + 1);
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  };
+  const renderFooter = () => {
+    if (!loading) return null;
+    return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
+  };
+  const BlogItem = React.memo(({item, navigation}) => {
+    return <Card item={item} key={item.id} profile={profile} />;
+  });
+
+  const renderItem = ({item}) => {
+    return <BlogItem item={item} navigation={navigation} />;
+  };
+
+  const MemoizedRenderHtml = React.memo(HTML);
+
+  // const WebDisplay = React.memo(function WebDisplay() {
+  //   return (
+  //     <HTML
+  //       source={{html: data.news}}
+  //       contentWidth={width}
+  //       tagsStyles={markdownStyles}
+  //     />
+  //   );
+  // });
+  // const scrollToTop = () => {
+  //   if (scrollRef.current) {
+  //     scrollRef.current.scrollToOffset({offset: 0, animated: true});
+  //   }
+  // };
 
   return (
     <>
@@ -381,129 +449,145 @@ const BlogScreen = ({route}) => {
           </View>
         </TouchableOpacity> */}
         </View>
-        {data ? (
-          <ScrollView
-            ref={scrollRef}
-            contentContainerStyle={[
-              styles.container,
-              {
-                backgroundColor: darkMode
-                  ? global.backgroundColorDark
-                  : global.backgroundColor,
-              },
-            ]}
-            showsVerticalScrollIndicator={false}>
-            <View style={styles.blog}>
-              <Text
-                style={[styles.title, {color: darkMode ? 'white' : 'black'}]}>
-                {data.title}
-              </Text>
-              <View style={styles.categories}>
-                <View style={{display: 'flex', flexDirection: 'row'}}>
-                  <Image
-                    source={require('../assets/Sn.png')}
-                    style={{
-                      width: 28,
-                      height: 28,
-                      resizeMode: 'contain',
-                      alignSelf: 'center',
-                    }}
-                  />
-                  <View style={{display: 'flex', flexDirection: 'column'}}>
+        <FlatList
+          ref={scrollRef}
+          data={[null]}
+          renderItem={() => {
+            return data ? (
+              <View style={{flex: 1}}>
+                <View
+                  // scrollEnabled={false}
+                  style={[
+                    styles.container,
+                    {
+                      backgroundColor: darkMode
+                        ? global.backgroundColorDark
+                        : global.backgroundColor,
+                    },
+                  ]}
+                  showsVerticalScrollIndicator={false}>
+                  <View style={styles.blog}>
                     <Text
                       style={[
-                        styles.date,
-                        {color: darkMode ? 'white' : 'black', fontSize: 12},
+                        styles.title,
+                        {color: darkMode ? 'white' : 'black'},
                       ]}>
-                      Sojo News Team
+                      {data.title}
                     </Text>
+                    <View style={styles.categories}>
+                      <View style={{display: 'flex', flexDirection: 'row'}}>
+                        <Image
+                          source={require('../assets/Sn.png')}
+                          style={{
+                            width: 28,
+                            height: 28,
+                            resizeMode: 'contain',
+                            alignSelf: 'center',
+                          }}
+                        />
+                        <View
+                          style={{display: 'flex', flexDirection: 'column'}}>
+                          <Text
+                            style={[
+                              styles.date,
+                              {
+                                color: darkMode ? 'white' : 'black',
+                                fontSize: 12,
+                              },
+                            ]}>
+                            Sojo News Team
+                          </Text>
+                          <Text
+                            style={[
+                              styles.date,
+                              {color: darkMode ? '#9B9EA5' : '#3F424A'},
+                            ]}>
+                            {moment(data.createdAt).format('DD MMM YYYY')}
+                          </Text>
+                        </View>
+                      </View>
+                      <Text
+                        style={[
+                          styles.topic,
+                          {flex: DeviceInfo.isTablet() ? 0.3 : 0.5},
+                        ]}>
+                        {data.topics[0].name}
+                      </Text>
+                    </View>
+                    {/* <Image source={{uri: data.image}} style={styles.image} /> */}
+                    <FastImage
+                      source={{uri: image ? image : null}}
+                      style={[
+                        styles.image,
+                        {height: DeviceInfo.isTablet() ? 450 : 260},
+                      ]}
+                      resizeMode={FastImage.resizeMode.cover}
+                      priority={FastImage.priority.high}
+                    />
                     <Text
                       style={[
-                        styles.date,
+                        styles.previewText,
                         {color: darkMode ? '#9B9EA5' : '#3F424A'},
                       ]}>
-                      {moment(data.createdAt).format('DD MMM YYYY')}
+                      {data.previewText}
+                    </Text>
+
+                    <MemoizedRenderHtml
+                      source={{html: data.news}}
+                      contentWidth={width}
+                      tagsStyles={markdownStyles}
+                    />
+
+                    {/* <View style={styles.shareWrapper}>
+           <Text style={styles.shareTitle}>Share this story</Text>
+         </View> */}
+
+                    <Text
+                      style={{
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        marginTop: 15,
+                        marginBottom: 15,
+                        color: darkMode ? 'white' : '#3F424A',
+                      }}>
+                      Similar News
                     </Text>
                   </View>
+                  {/* <View
+               style={{
+                 flex: 1,
+                 marginBottom: 35,
+                 flexDirection: 'row',
+                 flexWrap: 'wrap',
+               }}> */}
+                  {/* {similarBlogs.map(item => {
+                 return <Card key={item.id} item={item} />;
+               })} */}
+                  {/* </View> */}
+                  <FlatList
+                    data={similarBlogs}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    ListFooterComponent={renderFooter}
+                    onEndReachedThreshold={0.5}
+                    showsHorizontalScrollIndicator={false}
+                    onEndReached={handleLoadMore}
+                    numColumns={DeviceInfo.isTablet() ? 2 : 1}
+                    refreshing={page === 1 && loading}
+                    onRefresh={() => {
+                      setPage(1);
+                      setSimilarBlogs([]);
+                    }}
+                  />
                 </View>
-                <Text
-                  style={[
-                    styles.topic,
-                    {flex: DeviceInfo.isTablet() ? 0.3 : 0.5},
-                  ]}>
-                  {data.topics[0].name}
-                </Text>
               </View>
-              {/* <Image source={{uri: data.image}} style={styles.image} /> */}
-              <FastImage
-                source={{uri: data.image}}
-                style={[
-                  styles.image,
-                  {height: DeviceInfo.isTablet() ? 450 : 260},
-                ]}
-                resizeMode={FastImage.resizeMode.cover}
-              />
-              <Text
-                style={[
-                  styles.previewText,
-                  {color: darkMode ? '#9B9EA5' : '#3F424A'},
-                ]}>
-                {data.previewText}
-              </Text>
-
-              <HTML
-                source={{html: data.news}}
-                contentWidth={width}
-                tagsStyles={markdownStyles}
-              />
-
-              {/* <View style={styles.shareWrapper}>
-          <Text style={styles.shareTitle}>Share this story</Text>
-        </View> */}
-
-              <Text
-                style={{
-                  fontSize: 25,
-                  fontWeight: 'bold',
-                  marginTop: 15,
-                  marginBottom: 15,
-                  color: darkMode ? 'white' : '#3F424A',
-                }}>
-                Similar News
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                marginBottom: 35,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}>
-              {similarBlogs.map(item => {
-                return <Card key={item.id} item={item} />;
-              })}
-              {/* <FlatList
-            data={news}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            ListFooterComponent={renderFooter}
-            onEndReachedThreshold={0.5}
-            showsHorizontalScrollIndicator={false}
-            onEndReached={handleLoadMore}
-            refreshing={page === 1 && loading}
-            onRefresh={() => {
-              setPage(1);
-              setNews([]);
-              navigation.replace('Curated');
-            }}
-          /> */}
-            </View>
-          </ScrollView>
-        ) : (
-          <View style={{marginTop: 50}}>
-            <ActivityIndicator size="large" />
-          </View>
-        )}
+            ) : (
+              <View style={{marginTop: 50}}>
+                <ActivityIndicator size="large" />
+              </View>
+            );
+          }}
+        />
       </SafeAreaView>
     </>
   );

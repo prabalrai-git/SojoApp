@@ -21,7 +21,7 @@ import '../../globalThemColor';
 import {windowHeight, windowWidth} from '../helper/usefulConstants';
 import DeviceInfo from 'react-native-device-info';
 
-const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
+const BlogCard = ({item, fromBookmarks, setRenderBookmarked, scrollRef}) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
@@ -39,7 +39,7 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
     const w = Math.floor(width - 5 / 100);
     const resizedImageUrl = item?.image?.replace(
       '/upload/',
-      `/upload/w_${w.toString()},h_250,c_fill/`,
+      `/upload/w_${w.toString()},h_250,c_fill,q_auto/`,
     );
     setImage(resizedImageUrl);
   }, [item?.image]);
@@ -123,6 +123,8 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
             id: item?.id,
             isBookmarked: item?.isBookmarkedByUser,
           });
+          if (scrollRef)
+            scrollRef.current?.scrollToOffset({animated: true, y: 0});
         }}>
         <View
           style={[
@@ -139,7 +141,8 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked}) => {
               <FastImage
                 source={{uri: image}}
                 style={[styles.cardImage, {position: 'relative'}]}
-                resizeMode={FastImage.resizeMode.cover}>
+                resizeMode={FastImage.resizeMode.cover}
+                priority={FastImage.priority.high}>
                 <Pressable onPress={() => bookmarkPressed()}>
                   <Image
                     source={

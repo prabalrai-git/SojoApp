@@ -276,12 +276,12 @@ const MainScreen = () => {
           },
         ]}>
         <Image
-          source={require('../../assets/logoLogin.png')}
+          source={require('../../assets/logoline.png')}
           style={[
             styles.signupIcon,
             {
               width: 250,
-              height: 150,
+              height: 200,
               resizeMode: 'contain',
               position: 'relative',
               left: 0,
