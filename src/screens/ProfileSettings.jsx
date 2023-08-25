@@ -9,6 +9,7 @@ import {
   StatusBar,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
@@ -45,17 +46,10 @@ const ProfileSettings = props => {
     return unsubscribe;
   }, [navigation]);
 
-  const notificationFrequency = [
-    {id: 1, title: 'Every morning at 8AM'},
-    {id: 2, title: 'Every evening at 6PM'},
-    {id: 3, title: 'Every two days'},
-    {id: 4, title: 'Once a week'},
-  ];
-
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com',
+        '550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com',
     });
   }, []);
   const signOut = async () => {
@@ -170,6 +164,24 @@ const ProfileSettings = props => {
     await AsyncStorage.setItem('notificationStatus', value.toString());
   };
 
+  const onDeactivateAccount = async () => {
+    try {
+      const res = await Axios.delete(
+        '/users/profile/deactivateAccount',
+        config,
+      );
+
+      if (res) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'MainScreen'}],
+        });
+      }
+    } catch (error) {
+      console.log(error, 'something went wrong');
+    }
+  };
+
   return (
     <>
       <SafeAreaView
@@ -196,7 +208,11 @@ const ProfileSettings = props => {
             onPress={() => navigation.pop()}>
             <Image
               source={require('../assets/arrow-left.png')}
-              style={{tintColor: 'white', width: 20, height: 20}}
+              style={{
+                tintColor: 'white',
+                width: 20,
+                height: 20,
+              }}
             />
           </TouchableOpacity>
 
@@ -359,6 +375,20 @@ const ProfileSettings = props => {
                   Account Settings
                 </Text>
                 <TouchableOpacity
+                  onPress={() =>
+                    Alert.alert(
+                      'Delete Account',
+                      'Are you sure you want to delete your account? When you delete your account, your personal data will be promptly and completely removed from our resources.Your privacy is our priority.',
+                      [
+                        {
+                          text: 'Cancel',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                        {text: 'Yes', onPress: () => onDeactivateAccount()},
+                      ],
+                    )
+                  }
                   style={{
                     backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
                     padding: 8,
@@ -372,7 +402,7 @@ const ProfileSettings = props => {
                       fontSize: 16,
                       textAlign: 'center',
                     }}>
-                    Deactivate Account
+                    Delete Account
                   </Text>
                 </TouchableOpacity>
               </>

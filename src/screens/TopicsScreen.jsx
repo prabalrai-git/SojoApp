@@ -19,7 +19,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AddtopicsRegister from '../components/AddtopicsRegister';
 import Icon from 'react-native-vector-icons/Feather';
 import {showTabBar} from '../redux/features/HideTabBar';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const TopicsScreen = ({navigation, route}) => {
   const [data, setData] = useState([]);
@@ -74,15 +74,22 @@ const TopicsScreen = ({navigation, route}) => {
       setFilteredTopics(filtered);
     }
   };
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     <>
-      <View style={{flex: 1, backgroundColor: '#f3f4f7'}}>
-        <CreateProfileHeader />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
+        <CreateProfileHeader chooseTopics={true} />
         <ScrollView stickyHeaderIndices={[2]}>
           <Text
             style={{
-              color: 'black',
+              color: darkMode ? 'white' : 'black',
               paddingHorizontal: 20,
               // paddingLeft: 39,
               fontSize: 18,
@@ -93,7 +100,7 @@ const TopicsScreen = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              color: 'black',
+              color: darkMode ? 'white' : 'black',
               paddingHorizontal: 20,
               // paddingLeft: 39,
               fontSize: 16,
@@ -106,10 +113,32 @@ const TopicsScreen = ({navigation, route}) => {
             want to follow.
           </Text>
           {/* <SearchBar /> */}
-          <View style={{backgroundColor: '#F3F4F7'}}>
-            <View style={styles.container}>
+          <View
+            style={{
+              backgroundColor: darkMode
+                ? global.backgroundColorDark
+                : global.backgroundColor,
+            }}>
+            <View
+              style={[
+                styles.container,
+                {
+                  backgroundColor: darkMode
+                    ? global.inputColorDark
+                    : global.inputColor,
+                },
+              ]}>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  {
+                    color: darkMode ? 'white' : 'black',
+
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}
                 placeholder="Search for a topic..."
                 placeholderTextColor="#A9A9A9"
                 value={term}
@@ -119,7 +148,7 @@ const TopicsScreen = ({navigation, route}) => {
               <Icon
                 name="search"
                 size={20}
-                color="#000"
+                color={darkMode ? 'white' : '#000'}
                 onPress={() => {
                   Keyboard.dismiss();
                   if (term.trim().length > 0) {
@@ -175,7 +204,13 @@ const TopicsScreen = ({navigation, route}) => {
             //   handleFormSubmit();
             // }
           }}
-          style={[styles.loginButton, {marginBottom: 35}]}>
+          style={[
+            styles.loginButton,
+            {
+              marginBottom: 35,
+              backgroundColor: darkMode ? '#286146' : global.brandColor,
+            },
+          ]}>
           {loading1 ? (
             <ActivityIndicator color="#fff" />
           ) : (
@@ -229,7 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 35,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    width: windowWidth * 0.9,
+    width: windowWidth * 0.95,
     marginLeft: 'auto',
     marginRight: 'auto',
     flexDirection: 'row',

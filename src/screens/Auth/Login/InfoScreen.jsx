@@ -21,6 +21,7 @@ import {windowWidth} from '../../../helper/usefulConstants';
 import {Image} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
+import {useSelector} from 'react-redux';
 
 const InfoScreen = ({navigation}) => {
   const [profile, setProfile] = useState(null);
@@ -42,8 +43,8 @@ const InfoScreen = ({navigation}) => {
     {id: 1, title: 'Male', type: 'gender'},
     {id: 2, title: 'Female', type: 'gender'},
     {id: 3, title: 'Others', type: 'gender'},
-    {id: 4, title: 'Transgender', type: 'gender'},
-    {id: 5, title: 'Prefer not to say', type: 'gender'},
+    // {id: 4, title: 'Transgender', type: 'gender'},
+    // {id: 5, title: 'Prefer not to say', type: 'gender'},
   ];
 
   const ageOptions = [
@@ -66,7 +67,7 @@ const InfoScreen = ({navigation}) => {
   }, [errorMsg]);
 
   const searchTopic = () => {
-    const filtered = statesOptions.filter(state => {
+    const filtered = statesOptions?.filter(state => {
       return state.title.toLowerCase().includes(searchTerm.toLowerCase());
     });
     setFilteredState(filtered);
@@ -153,7 +154,7 @@ const InfoScreen = ({navigation}) => {
   };
 
   const setStateId = state => {
-    const filteredstate = statesOptions.filter(item => item.title === state);
+    const filteredstate = statesOptions?.filter(item => item.title === state);
     return filteredstate[0].id;
   };
 
@@ -171,12 +172,12 @@ const InfoScreen = ({navigation}) => {
         state: setStateId(state),
       };
       // return console.log(data);
-      return navigation.replace('Preferences', {data});
+      return navigation.navigate('Preferences', {data});
     }
   };
 
   const skipBtnPressed = () => {
-    return navigation.replace('Preferences');
+    return navigation.navigate('Preferences');
   };
 
   // handle error message display
@@ -222,25 +223,39 @@ const InfoScreen = ({navigation}) => {
   //   }
   // }, [config]);
 
+  // useEffect(() => {
+  //   searchTopic();
+  // }, [searchTerm]);
+
   useEffect(() => {
     if (!searchTerm) {
       setFilteredState();
     }
     setFilteredState();
   }, [searchTerm, modalVisible]);
+  const darkMode = useSelector(state => state.darkMode.value);
 
   return (
     <>
-      <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f7'}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: darkMode
+            ? global.backgroundColorDark
+            : global.backgroundColor,
+        }}>
         <ScrollView>
           <CreateProfileHeader />
           <Text
             style={{
-              color: 'black',
+              color: darkMode ? 'white' : 'black',
               paddingHorizontal: 10,
-              paddingLeft: 20,
+              // paddingLeft: 20,
               fontSize: 18,
               textAlign: 'left',
+              width: windowWidth * 0.94,
+              marginLeft: 'auto',
+              marginRight: 'auto',
               marginTop: 0,
               fontWeight: '500',
             }}>
@@ -248,10 +263,13 @@ const InfoScreen = ({navigation}) => {
           </Text>
           <Text
             style={{
-              color: 'black',
+              color: darkMode ? 'white' : 'black',
               paddingHorizontal: 10,
-              paddingLeft: 20,
+              // paddingLeft: 20,
               fontSize: 16,
+              width: windowWidth * 0.94,
+              marginLeft: 'auto',
+              marginRight: 'auto',
               textAlign: 'left',
               marginTop: 10,
               fontWeight: '500',
@@ -261,26 +279,44 @@ const InfoScreen = ({navigation}) => {
             relevant to you.
           </Text>
 
-          <View style={styles.eachInputContainer}>
-            <Text style={styles.txt}>what age group do you belong to?</Text>
+          <View
+            style={[
+              styles.eachInputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              },
+            ]}>
+            <Text style={[styles.txt, {color: darkMode ? 'white' : 'black'}]}>
+              what age group do you belong to?
+            </Text>
 
             <TouchableOpacity
-              onPress={() => {
-                var title = 'age';
-                openRequiredModal(title);
-              }}
               style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={ageGroup}
                 editable={false}
-                style={styles.txtinput}></TextInput>
-
-              <View
+                style={[
+                  styles.txtinput,
+                  {
+                    color: darkMode ? 'white' : 'black',
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}></TextInput>
+              <TouchableOpacity
+                onPress={item => {
+                  var title = 'age';
+                  openRequiredModal(title);
+                }}
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 12,
+                  top: 10,
                   // backgroundColor: 'red',
+                  paddingLeft: 290,
                   padding: 10,
                 }}>
                 <Image
@@ -289,7 +325,7 @@ const InfoScreen = ({navigation}) => {
                     width: 18,
                     height: 18,
                     resizeMode: 'contain',
-                    tintColor: 'black',
+                    tintColor: darkMode ? 'white' : 'black',
                     alignSelf: 'flex-end',
                     paddingLeft: 50,
                     paddingVertical: 10,
@@ -297,29 +333,49 @@ const InfoScreen = ({navigation}) => {
                     // paddingRight: 0,
                   }}
                 />
-              </View>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
-          <View style={styles.eachInputContainer}>
-            <Text style={styles.txt}>what is your gender?</Text>
+          <View
+            style={[
+              styles.eachInputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              },
+            ]}>
+            <Text style={[styles.txt, {color: darkMode ? 'white' : 'black'}]}>
+              what is your gender?
+            </Text>
 
             <TouchableOpacity
-              onPress={() => {
-                var title = 'gender';
-                openRequiredModal(title);
-              }}
               style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={gender}
                 editable={false}
-                style={styles.txtinput}></TextInput>
+                style={[
+                  styles.txtinput,
+                  {
+                    color: darkMode ? 'white' : 'black',
 
-              <View
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}></TextInput>
+
+              <TouchableOpacity
+                onPress={item => {
+                  var title = 'gender';
+                  openRequiredModal(title);
+                }}
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 12,
+                  top: 10,
                   // backgroundColor: 'red',
+                  paddingLeft: 290,
                   padding: 10,
                 }}>
                 <Image
@@ -328,35 +384,55 @@ const InfoScreen = ({navigation}) => {
                     width: 18,
                     height: 18,
                     resizeMode: 'contain',
-                    tintColor: 'black',
+                    tintColor: darkMode ? 'white' : 'black',
                     alignSelf: 'flex-end',
                     paddingLeft: 50,
                     paddingVertical: 10,
                   }}
                 />
-              </View>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
-          <View style={styles.eachInputContainer}>
-            <Text style={styles.txt}>what occupation are you in?</Text>
+          <View
+            style={[
+              styles.eachInputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              },
+            ]}>
+            <Text style={[styles.txt, {color: darkMode ? 'white' : 'black'}]}>
+              what occupation are you in?
+            </Text>
 
             <TouchableOpacity
-              onPress={item => {
-                var title = 'occupation';
-                openRequiredModal(title);
-              }}
               style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={occupation}
                 editable={false}
-                style={styles.txtinput}></TextInput>
+                style={[
+                  styles.txtinput,
+                  {
+                    color: darkMode ? 'white' : 'black',
 
-              <View
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}></TextInput>
+
+              <TouchableOpacity
+                onPress={item => {
+                  var title = 'occupation';
+                  openRequiredModal(title);
+                }}
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 12,
+                  top: 10,
                   // backgroundColor: 'red',
+                  paddingLeft: 290,
                   padding: 10,
                 }}>
                 <Image
@@ -365,35 +441,55 @@ const InfoScreen = ({navigation}) => {
                     width: 18,
                     height: 18,
                     resizeMode: 'contain',
-                    tintColor: 'black',
+                    tintColor: darkMode ? 'white' : 'black',
                     alignSelf: 'flex-end',
                     paddingLeft: 50,
                     paddingVertical: 10,
                   }}
                 />
-              </View>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
-          <View style={styles.eachInputContainer}>
-            <Text style={styles.txt}>Which state do you live in?</Text>
+          <View
+            style={[
+              styles.eachInputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              },
+            ]}>
+            <Text style={[styles.txt, {color: darkMode ? 'white' : 'black'}]}>
+              Which state do you live in?
+            </Text>
 
             <TouchableOpacity
-              onPress={item => {
-                var title = 'state';
-                openRequiredModal(title);
-              }}
               style={{flexDirection: 'row', position: 'relative'}}>
               <TextInput
                 value={state}
                 editable={false}
-                style={styles.txtinput}></TextInput>
+                style={[
+                  styles.txtinput,
+                  {
+                    color: darkMode ? 'white' : 'black',
 
-              <View
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                  },
+                ]}></TextInput>
+
+              <TouchableOpacity
+                onPress={item => {
+                  var title = 'state';
+                  openRequiredModal(title);
+                }}
                 style={{
                   position: 'absolute',
                   right: 5,
-                  top: 12,
+                  top: 10,
                   // backgroundColor: 'red',
+                  paddingLeft: 290,
                   padding: 10,
                 }}>
                 <Image
@@ -402,27 +498,43 @@ const InfoScreen = ({navigation}) => {
                     width: 18,
                     height: 18,
                     resizeMode: 'contain',
-                    tintColor: 'black',
+                    tintColor: darkMode ? 'white' : 'black',
                     alignSelf: 'flex-end',
                     paddingLeft: 50,
                     paddingVertical: 10,
                   }}
                 />
-              </View>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
           {errorMsg && (
             <Text
-              style={{color: 'red', fontWeight: '600', textAlign: 'center'}}>
+              style={{
+                color: 'red',
+                fontWeight: '600',
+                textAlign: 'center',
+                paddingHorizontal: 25,
+              }}>
               Please select options for all fields to continue or skip.
             </Text>
           )}
-          <View style={styles.eachInputContainer}>
+          <View
+            style={[
+              styles.eachInputContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+              },
+            ]}>
             <TouchableOpacity
               onPress={() => {
                 handleFormSubmit();
               }}
-              style={styles.loginButton}>
+              style={[
+                styles.loginButton,
+                {backgroundColor: darkMode ? '#286146' : global.brandColor},
+              ]}>
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
@@ -442,7 +554,14 @@ const InfoScreen = ({navigation}) => {
               onPress={() => {
                 return skipBtnPressed();
               }}
-              style={[styles.loginButton, {backgroundColor: 'white'}]}>
+              style={[
+                styles.loginButton,
+                {
+                  backgroundColor: darkMode
+                    ? global.inputColorDark
+                    : global.inputColor,
+                },
+              ]}>
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
@@ -464,15 +583,17 @@ const InfoScreen = ({navigation}) => {
             isVisible={modalVisible}
             onBackdropPress={() => setModalVisible(false)}
             animationOut="fadeOutDown"
-            backdropTransitionOutTiming={600}
-            animationOutTiming={400}
+            backdropTransitionOutTiming={700}
+            animationOutTiming={500}
             style={{
               position: 'relative',
               margin: 0,
             }}>
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
                 position: 'absolute',
                 bottom: 0,
                 height: 250,
@@ -496,14 +617,17 @@ const InfoScreen = ({navigation}) => {
                         onChangeText={setSearchTerm}
                         onSubmitEditing={searchTopic}
                         style={{
-                          backgroundColor: '#f3f4f7',
+                          backgroundColor: darkMode
+                            ? global.inputColorDark
+                            : global.inputColor,
                           width: '95%',
                           marginLeft: 'auto',
                           marginRight: 'auto',
                           borderRadius: 5,
                           marginBottom: 10,
                           paddingLeft: 10,
-                          color: 'black',
+                          color: darkMode ? 'white' : 'black',
+                          height: 45,
                         }}></TextInput>
                       <TouchableOpacity
                         onPress={() => {
@@ -535,7 +659,11 @@ const InfoScreen = ({navigation}) => {
                           onPress={() => {
                             setInfoState(item);
                           }}>
-                          <Text style={{color: 'black', marginHorizontal: 20}}>
+                          <Text
+                            style={{
+                              color: darkMode ? 'white' : 'black',
+                              marginHorizontal: 20,
+                            }}>
                             {item.title}
                           </Text>
                           {filteredState.length > 1 && (
@@ -559,7 +687,11 @@ const InfoScreen = ({navigation}) => {
                           onPress={() => {
                             setInfoState(item);
                           }}>
-                          <Text style={{color: 'black', marginHorizontal: 20}}>
+                          <Text
+                            style={{
+                              color: darkMode ? 'white' : 'black',
+                              marginHorizontal: 20,
+                            }}>
                             {item.title}
                           </Text>
                           <View

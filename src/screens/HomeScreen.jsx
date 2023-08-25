@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   FlatList,
@@ -7,6 +7,9 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
+  Animated,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -16,6 +19,7 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import GlobalHeader from '../components/GlobalHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
+import DeviceInfo from 'react-native-device-info';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -23,6 +27,8 @@ const HomeScreen = ({navigation}) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
+  const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
+  const [scrollToTopShown, setScrolToTopShown] = useState(false);
 
   const [profile, setProfile] = useState();
 
@@ -128,6 +134,35 @@ const HomeScreen = ({navigation}) => {
     return <BlogItem key={item.id} item={item} navigation={navigation} />;
   };
   const darkMode = useSelector(state => state.darkMode.value);
+  const scrollRef = React.createRef();
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const startAnimation = () => {
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onFabPress = () => {
+    // scrollRef.current?.scrollTo({
+    //   y: 0,
+    //   animated: true,
+    // });
+    // return console.log(scrollRef.current, 'yo');
+    // return startAnimation();
+
+    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+    startAnimation();
+  };
+  const CONTENT_OFFSET_THRESHOLD = 300;
+
+  // useEffect(() => {
+  //   if (contentVerticalOffset > CONTENT_OFFSET_THRESHOLD) {
+  //     startAnimation();
+  //   }
+  // }, [contentVerticalOffset]);
 
   return (
     <>
@@ -145,6 +180,65 @@ const HomeScreen = ({navigation}) => {
             : global.backgroundColor,
         }}>
         <StatusBar backgroundColor={'#27B161'} />
+        {/* {contentVerticalOffset > CONTENT_OFFSET_THRESHOLD && (
+        )} */}
+        <TouchableOpacity
+          onPress={() => {
+            onFabPress();
+            setScrolToTopShown(prev => !prev);
+          }}
+          style={{
+            elevation: 0,
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+            zIndex: 100,
+            // shadowColor: '#000',
+            // shadowOffset: {width: 0, height: 0},
+            // shadowOpacity: 0.1,
+            // shadowRadius: 1,
+          }}>
+          <Animated.View
+            style={{
+              transform: [
+                // {
+                //   translateY: animation.interpolate({
+                //     inputRange: [0, 1],
+                //     outputRange: [0, -100],
+                //   }),
+                // },
+                // {
+                //   rotate: animation.interpolate({
+                //     inputRange: [0, 1],
+                //     outputRange: ['0deg', '360deg'],
+                //   }),
+                // },
+                // {
+                //   translateX: animation.interpolate({
+                //     inputRange: [0, 1],
+                //     outputRange: [0, -100],
+                //   }),
+                // },
+                // {
+                //   scale: animation.interpolate({
+                //     inputRange: [0, 1],
+                //     outputRange:
+                //       contentVerticalOffset > CONTENT_OFFSET_THRESHOLD
+                //         ? [0, 1]
+                //         : [1, 0],
+                //   }),
+                // },
+              ],
+            }}>
+            <Image
+              source={require('../assets/up.png')}
+              style={{
+                width: 45,
+                height: 45,
+              }}
+            />
+          </Animated.View>
+        </TouchableOpacity>
         <View>
           <View style={styles.topBar}>
             <Text style={styles.title}>Explore</Text>
@@ -153,7 +247,9 @@ const HomeScreen = ({navigation}) => {
           <SearchBar />
           <View style={{marginBottom: 288}}>
             <FlatList
+              ref={scrollRef}
               data={blogs}
+              numColumns={DeviceInfo.isTablet() ? 2 : 1}
               renderItem={renderItem}
               keyExtractor={item => item.id}
               ListFooterComponent={renderFooter}
@@ -161,6 +257,9 @@ const HomeScreen = ({navigation}) => {
               showsVerticalScrollIndicator={false}
               onEndReached={handleLoadMore}
               refreshing={page === 1 && loading}
+              // onScroll={event => {
+              //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
+              // }}
               onRefresh={() => {
                 setPage(1);
                 setBlogs([]);

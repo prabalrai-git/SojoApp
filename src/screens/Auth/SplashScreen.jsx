@@ -78,8 +78,6 @@ const SplashScreen = () => {
     });
   }, []);
 
-  
-
   useEffect(() => {});
 
   useEffect(() => {
@@ -88,7 +86,7 @@ const SplashScreen = () => {
 
       if (!value && isconnectedToInternet) {
         setTimeout(() => {
-          return navigation.replace('WelcomeSignup');
+          return navigation.replace('MainScreen');
         }, 500);
       } else if (isconnectedToInternet) {
         setTimeout(() => {

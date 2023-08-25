@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   FlatList,
@@ -8,6 +8,9 @@ import {
   StatusBar,
   SafeAreaView,
   Platform,
+  Image,
+  TouchableOpacity,
+  Animated,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -20,20 +23,20 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import messaging from '@react-native-firebase/messaging';
 import '../../globalThemColor';
 import {PermissionsAndroid} from 'react-native';
+import _ from 'lodash';
+import DeviceInfo from 'react-native-device-info';
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [page, setPage] = useState(1);
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
+  const [scrollToTopShown, setScrolToTopShown] = useState(false);
 
   const dispatch = useDispatch();
-
-  // console.log('====================================');
-  // console.log(Platform.OS, updatedVersion);
-  // console.log('====================================');
 
   // after deploying new updates in stores please update firestore in firebase for triggering user prompts to update the app
 
@@ -185,6 +188,38 @@ const HomeScreen = ({navigation}) => {
   // }
 
   const darkMode = useSelector(state => state.darkMode.value);
+  const scrollRef = React.createRef();
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const startAnimation = () => {
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onFabPress = () => {
+    // scrollRef.current?.scrollTo({
+    //   y: 0,
+    //   animated: true,
+    // });
+    // return console.log(scrollRef.current, 'yo');
+    // return startAnimation();
+
+    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+  };
+  const CONTENT_OFFSET_THRESHOLD = 300;
+
+  // useEffect(() => {
+  //   if (contentVerticalOffset > CONTENT_OFFSET_THRESHOLD) {
+  //     startAnimation();
+  //   }
+  // }, [contentVerticalOffset]);
+
+  const onScrollEvent = e => {
+    setContentVerticalOffset(e.nativeEvent?.contentOffset?.y);
+  };
 
   return (
     <>
@@ -194,6 +229,7 @@ const HomeScreen = ({navigation}) => {
           backgroundColor: darkMode ? global.brandColorDark : global.brandColor,
         }}
       />
+
       <SafeAreaView
         style={{
           flex: 1,
@@ -220,8 +256,38 @@ const HomeScreen = ({navigation}) => {
         </View>
 
         <SearchBar />
+
+        <TouchableOpacity
+          onPress={() => {
+            onFabPress();
+          }}
+          style={{
+            elevation: 0,
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+            zIndex: 100,
+            // shadowColor: '#000',
+            // shadowOffset: {width: 0, height: 0},
+            // shadowOpacity: 0.1,
+            // shadowRadius: 1,
+          }}>
+          <View style={{}}>
+            <Image
+              source={require('../assets/up.png')}
+              style={{
+                width: 48,
+                height: 48,
+                resizeMode: 'contain',
+                borderRadius: 50,
+              }}
+            />
+          </View>
+        </TouchableOpacity>
         <FlatList
+          ref={scrollRef}
           data={news}
+          numColumns={DeviceInfo.isTablet() ? 2 : 1}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           ListFooterComponent={renderFooter}
@@ -229,6 +295,7 @@ const HomeScreen = ({navigation}) => {
           showsHorizontalScrollIndicator={false}
           onEndReached={handleLoadMore}
           refreshing={page === 1 && loading}
+          // onScroll={e => onScrollEvent(e)}
           onRefresh={() => {
             setPage(1);
             setNews([]);

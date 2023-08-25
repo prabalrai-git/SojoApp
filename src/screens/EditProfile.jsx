@@ -38,8 +38,8 @@ const EditProfile = props => {
     {id: 1, title: 'Male', type: 'gender'},
     {id: 2, title: 'Female', type: 'gender'},
     {id: 3, title: 'Others', type: 'gender'},
-    {id: 4, title: 'Transgender', type: 'gender'},
-    {id: 5, title: 'Prefer not to say', type: 'gender'},
+    // {id: 4, title: 'Transgender', type: 'gender'},
+    // {id: 5, title: 'Prefer not to say', type: 'gender'},
   ];
 
   const ageOptions = [
@@ -107,8 +107,8 @@ const EditProfile = props => {
     }
   };
   const searchTopic = () => {
-    const filtered = statesOptions.filter(state => {
-      return state.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = statesOptions?.filter(state => {
+      return state?.title?.toLowerCase().includes(searchTerm?.toLowerCase());
     });
     setFilteredState(filtered);
   };
@@ -154,7 +154,7 @@ const EditProfile = props => {
   };
   const setStateId = state => {
     if (statesOptions) {
-      const filteredstate = statesOptions.filter(item => item.title === state);
+      const filteredstate = statesOptions?.filter(item => item.title === state);
 
       return filteredstate[0]?.id;
     }
@@ -188,7 +188,9 @@ const EditProfile = props => {
     {id: 5, title: `Anything that's not safe for work (NSFW)`},
   ];
 
-  useEffect(() => {}, [state]);
+  useEffect(() => {
+    statesOptions && searchTopic();
+  }, [searchTerm]);
 
   const onSubmitChanges = async () => {
     const data = {
@@ -247,7 +249,11 @@ const EditProfile = props => {
             }}>
             <Image
               source={require('../assets/arrow-left.png')}
-              style={{tintColor: 'white', width: 20, height: 20}}
+              style={{
+                tintColor: 'white',
+                width: 20,
+                height: 20,
+              }}
             />
           </TouchableOpacity>
           <View style={styles.container}>
@@ -315,11 +321,10 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={item => {
-                  var title = 'age';
-                  openRequiredModal(title);
-                }}
-                style={{flexDirection: 'row', position: 'relative'}}>
+                style={{
+                  flexDirection: 'row',
+                  // position: 'relative',
+                }}>
                 <TextInput
                   value={ageGroup ? ageGroup : profile?.ageGroup}
                   editable={false}
@@ -333,12 +338,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'age';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -355,7 +365,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View
@@ -390,12 +400,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'gender';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -412,7 +427,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View
@@ -429,10 +444,6 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {
-                  var title = 'occupation';
-                  openRequiredModal(title);
-                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
                   value={occupation ? occupation : profile?.occupation?.name}
@@ -447,12 +458,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'occupation';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -469,7 +485,7 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
             <View
@@ -486,10 +502,6 @@ const EditProfile = props => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => {
-                  var title = 'state';
-                  openRequiredModal(title);
-                }}
                 style={{flexDirection: 'row', position: 'relative'}}>
                 <TextInput
                   value={state ? state : setStateTitle(profile?.stateId)}
@@ -504,12 +516,17 @@ const EditProfile = props => {
                     },
                   ]}></TextInput>
 
-                <View
+                <TouchableOpacity
+                  onPress={item => {
+                    var title = 'state';
+                    openRequiredModal(title);
+                  }}
                   style={{
                     position: 'absolute',
                     right: 5,
                     top: 10,
                     // backgroundColor: 'red',
+                    paddingLeft: 290,
                     padding: 10,
                   }}>
                   <Image
@@ -526,10 +543,14 @@ const EditProfile = props => {
                       // paddingRight: 0,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </TouchableOpacity>
             </View>
-            <View style={[styles.containers, {marginBottom: 35}]}>
+            <View
+              style={[
+                styles.containers,
+                {marginBottom: 35, width: windowWidth * 0.92},
+              ]}>
               <MaterialIcons
                 name={skipPolitical ? 'check-box' : 'check-box-outline-blank'}
                 size={30}
@@ -541,7 +562,11 @@ const EditProfile = props => {
                 Skip and avoid political news and anything political
               </Text>
             </View>
-            <View style={styles.containers}>
+            <View
+              style={[
+                styles.containers,
+                {marginBottom: 5, width: windowWidth * 0.92},
+              ]}>
               <MaterialIcons
                 name={skipNSFW ? 'check-box' : 'check-box-outline-blank'}
                 size={30}
@@ -617,7 +642,8 @@ const EditProfile = props => {
                         borderRadius: 5,
                         marginBottom: 10,
                         paddingLeft: 10,
-                        color: 'black',
+                        color: darkMode ? 'white' : 'black',
+                        height: 45,
                       }}></TextInput>
                     <TouchableOpacity
                       onPress={() => {
@@ -715,7 +741,7 @@ const styles = StyleSheet.create({
   txts: {
     color: 'black',
     // textTransform: 'uppercase',
-    width: windowWidth * 0.8,
+    width: windowWidth * 0.7,
     alignSelf: 'center',
     marginHorizontal: 5,
     fontWeight: '500',
@@ -727,7 +753,9 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   containers: {
-    width: windowWidth,
+    width: windowWidth * 0.95,
+    marginLeft: 'auto',
+    marginRight: 'auto',
     paddingLeft: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',

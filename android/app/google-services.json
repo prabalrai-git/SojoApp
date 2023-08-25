@@ -1,48 +1,56 @@
 {
   "project_info": {
-    "project_number": "142214910872",
-    "project_id": "sojonewsdebug",
-    "storage_bucket": "sojonewsdebug.appspot.com"
+    "project_number": "550042982411",
+    "project_id": "sojonewsapp-251bd",
+    "storage_bucket": "sojonewsapp-251bd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:142214910872:android:5222028f3aadc9525d51ed",
+        "mobilesdk_app_id": "1:550042982411:android:7037177227c5da65ac4f0e",
         "android_client_info": {
           "package_name": "com.sojonewsapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "142214910872-e0r2kooua6uigh95441rdad11fsr8hvc.apps.googleusercontent.com",
+          "client_id": "550042982411-buuojv7vd6tpqdgl4ttu6l15q9upi78m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sojonewsapp",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "56ca1a23a466120489989d00985e3985850e00ec"
           }
         },
         {
-          "client_id": "142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com",
+          "client_id": "550042982411-nj3gfd7kb0c0bs2e4hku3i0pttvgudn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sojonewsapp",
+            "certificate_hash": "3fdca25b2c60360b3ac63bbd26461ac8a1636e54"
+          }
+        },
+        {
+          "client_id": "550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBtXUDz4oMvCamqIOZTRqe4OW1cOHhYnc0"
+          "current_key": "AIzaSyAJYYEkf0aOiGDRsX2hbDb_Eljfk91d-VA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "142214910872-ood34gsap8s56mvs9q7ookv3kn626382.apps.googleusercontent.com",
+              "client_id": "550042982411-7dedsj7l7oe7v7kut8vopdn284sgnjh6.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "142214910872-qgs7bksp5g2v13gfq4goeitg72c88e7o.apps.googleusercontent.com",
+              "client_id": "550042982411-6eagbaj9e4per5k32ga830qoddlfsjkl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sojonewsapp"
+                "bundle_id": "org.reactjs.native.example.app"
               }
             }
           ]
