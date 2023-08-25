@@ -27,9 +27,12 @@ import {
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 import jwt_decode from 'jwt-decode';
+import {ActivityIndicator} from 'react-native';
 
 const MainScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [indicatorLoading, setIndicatorLoading] = useState(false);
+  const [serviceIsRunning, setServiceIsRunning] = useState(false);
 
   const navigation = useNavigation();
 
@@ -223,6 +226,8 @@ const MainScreen = () => {
 
   const signInWithoutCredentials = async () => {
     try {
+      setIndicatorLoading(true);
+      setServiceIsRunning(true);
       const response = await Axios.post('auth/guestLogin');
 
       const {token} = response.data.data;
@@ -238,7 +243,8 @@ const MainScreen = () => {
       for (const item of topics.data.data) {
         await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
       }
-
+      setIndicatorLoading(false);
+      setServiceIsRunning(false);
       navigation.replace('AuthHome', {
         screen: 'HomeTab',
         params: {screen: 'Home'},
@@ -247,6 +253,8 @@ const MainScreen = () => {
       console.log('====================================');
       console.log(error);
       console.log('====================================');
+      setIndicatorLoading(false);
+      setServiceIsRunning(false);
     }
   };
 
@@ -254,6 +262,7 @@ const MainScreen = () => {
     <View
       style={[
         styles.bottomContainer,
+
         {
           backgroundColor: darkMode
             ? global.backgroundColorDark
@@ -289,6 +298,11 @@ const MainScreen = () => {
           ]}
         />
       </View>
+
+      {indicatorLoading && (
+        <ActivityIndicator size="large" color={darkMode ? 'white' : 'black'} />
+      )}
+
       <View
         style={[
           styles.bottom,
@@ -342,6 +356,7 @@ const MainScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            disabled={serviceIsRunning}
             style={[styles.button, {height: 50}]}
             onPress={() => signInWithoutCredentials()}>
             <Image
@@ -363,6 +378,12 @@ export default MainScreen;
 const styles = StyleSheet.create({
   midText: {
     // marginRight: '30%',
+  },
+  indicatorStyle: {
+    color: global.brandColor,
+  },
+  spinnerTextStyle: {
+    color: '#FFF',
   },
   signupIcon: {
     width: 25,

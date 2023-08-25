@@ -377,8 +377,8 @@ const ProfileSettings = props => {
                 <TouchableOpacity
                   onPress={() =>
                     Alert.alert(
-                      'Deactivate Account',
-                      'Are you sure you want to deactivate your account? When you deactivate your account, your personal data will be promptly and completely removed from our resources.Your privacy is our priority.',
+                      'Delete Account',
+                      'Are you sure you want to delete your account? When you delete your account, your personal data will be promptly and completely removed from our resources.Your privacy is our priority.',
                       [
                         {
                           text: 'Cancel',
@@ -402,7 +402,7 @@ const ProfileSettings = props => {
                       fontSize: 16,
                       textAlign: 'center',
                     }}>
-                    Deactivate Account
+                    Delete Account
                   </Text>
                 </TouchableOpacity>
               </>

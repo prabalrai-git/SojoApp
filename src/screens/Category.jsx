@@ -205,7 +205,7 @@ const Category = () => {
             // shadowOpacity: 0.1,
             // shadowRadius: 1,
           }}>
-          <View style={{}}>
+          <View>
             <Image
               source={require('../assets/up.png')}
               style={{

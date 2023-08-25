@@ -401,6 +401,7 @@ const BlogScreen = ({route}) => {
                     color: 'white',
                     alignSelf: 'center',
                     fontWeight: '500',
+                    fontSize: 12,
                   }}>
                   Add Bookmark
                 </Text>
@@ -509,7 +510,7 @@ const BlogScreen = ({route}) => {
                       <Text
                         style={[
                           styles.topic,
-                          {flex: DeviceInfo.isTablet() ? 0.3 : 0.5},
+                          {flex: DeviceInfo.isTablet() ? 0.3 : 0.6},
                         ]}>
                         {data.topics[0].name}
                       </Text>

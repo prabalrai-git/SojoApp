@@ -276,8 +276,10 @@ const HomeScreen = ({navigation}) => {
             <Image
               source={require('../assets/up.png')}
               style={{
-                width: 45,
-                height: 45,
+                width: 48,
+                height: 48,
+                resizeMode: 'contain',
+                borderRadius: 50,
               }}
             />
           </View>

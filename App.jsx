@@ -118,12 +118,33 @@ export default function App() {
     }
   };
 
+  function compareVersions(version1, version2) {
+    const v1Components = version1.split('.').map(Number);
+    const v2Components = version2.split('.').map(Number);
+
+    const maxLength = Math.max(v1Components.length, v2Components.length);
+
+    for (let i = 0; i < maxLength; i++) {
+      const v1Component = i < v1Components.length ? v1Components[i] : 0;
+      const v2Component = i < v2Components.length ? v2Components[i] : 0;
+
+      if (v1Component > v2Component) {
+        return 1; // version1 is greater
+      } else if (v1Component < v2Component) {
+        return -1; // version2 is greater
+      }
+    }
+
+    return 0; // versions are equal
+  }
+
   return (
     <>
       {updatedVersion &&
-      DeviceInfo.getVersion() !== updatedVersion &&
-      DeviceInfo.getVersion() < updatedVersion
-        ? Alert.alert('', `New version ${updatedVersion} available!`, [
+      // DeviceInfo.getVersion() !== updatedVersion &&
+      // DeviceInfo.getVersion() < updatedVersion
+      compareVersions(updatedVersion, DeviceInfo.getVersion()) === 1
+        ? Alert.alert('', `New version available!`, [
             {
               text: 'Update Now',
               onPress: () => openGoogleORAppStore(),
