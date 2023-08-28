@@ -176,7 +176,7 @@ const Category = () => {
             },
           ]}>
           <Text style={styles.title}>My Topics</Text>
-          <TopicsHeader />
+          <TopicsHeader isGuest={profile?.isGuestUser} />
         </View>
         {/* <View style={{backgroundColor: '#E6E6E8'}}>
           <View style={styles.container}>

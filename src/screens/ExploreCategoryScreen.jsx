@@ -28,6 +28,8 @@ const Category = () => {
   const navigation = useNavigation();
   const [profile, setProfile] = useState();
   const [config, setConfig] = useState();
+  const [isGuest, setIsGuest] = useState(false);
+
   const route = useRoute();
 
   const dispatch = useDispatch();
@@ -39,6 +41,16 @@ const Category = () => {
 
     return unsubscribe;
   }, [navigation]);
+  useEffect(() => {
+    getUserType();
+  }, []);
+
+  const getUserType = async () => {
+    await AsyncStorage.getItem('guestUser').then(value => {
+      const data = JSON.parse(value);
+      setIsGuest(Boolean(data));
+    });
+  };
 
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener('focus', () => {
@@ -141,7 +153,7 @@ const Category = () => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} key={item.id} />;
+    return <Card item={item} key={item.id} isGuest={isGuest} />;
   });
 
   const renderItem = ({item}) => {

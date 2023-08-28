@@ -123,6 +123,7 @@ const SearchScreen = ({navigation, route}) => {
         navigation={navigation}
         key={item.id}
         profile={profile}
+        isGuest={route.params.profile.isGuestUser}
       />
     );
   });

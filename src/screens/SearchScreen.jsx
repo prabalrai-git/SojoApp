@@ -60,13 +60,20 @@ const SearchScreen = ({navigation, route}) => {
     route.params.term && fetchBlogs();
   }, [route.params.term]);
 
+  console.log(route.params.profile.isGuestUser, 'mero bata');
   const renderFooter = () => {
     if (!loading) return null;
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
   const BlogItem = React.memo(({item}) => {
-    return <Card item={item} key={item.id} />;
+    return (
+      <Card
+        item={item}
+        key={item.id}
+        isGuest={route.params.profile.isGuestUser}
+      />
+    );
   });
 
   const renderItem = ({item}) => {

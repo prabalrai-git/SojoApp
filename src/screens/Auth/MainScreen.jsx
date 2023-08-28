@@ -228,21 +228,25 @@ const MainScreen = () => {
     try {
       setIndicatorLoading(true);
       setServiceIsRunning(true);
-      const response = await Axios.post('auth/guestLogin');
+      const response = await Axios.post('auth/guestLoginSingle');
 
-      const {token} = response.data.data;
+      const {token, guestUser} = response.data.data;
+
+      const guestUserString = guestUser.toString();
+
       await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('guestUser', guestUserString);
 
       const config = {
         headers: {
           authorization: `Bearer ${token}`,
         },
       };
-      const topics = await Axios.get('/topics');
+      // const topics = await Axios.get('/topics');
 
-      for (const item of topics.data.data) {
-        await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
-      }
+      // for (const item of topics.data.data) {
+      //   await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
+      // }
       setIndicatorLoading(false);
       setServiceIsRunning(false);
       navigation.replace('AuthHome', {
@@ -364,7 +368,7 @@ const MainScreen = () => {
               style={styles.signupIcon}
             />
             <Text style={[styles.buttonText, styles.midText]}>
-              Continue Without Signing In
+              Continue without Signing In
             </Text>
           </TouchableOpacity>
         </ScrollView>

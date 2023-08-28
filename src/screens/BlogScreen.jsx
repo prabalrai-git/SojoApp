@@ -28,7 +28,7 @@ import DeviceInfo from 'react-native-device-info';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
-  const {id, fromBookmarks} = route.params;
+  const {id, fromBookmarks, isGuest} = route.params;
   const [data, setData] = useState(null);
   const [similarBlogs, setSimilarBlogs] = useState([]);
   const [config, setConfig] = useState();
@@ -293,7 +293,9 @@ const BlogScreen = ({route}) => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} key={item.id} profile={profile} />;
+    return (
+      <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
+    );
   });
 
   const renderItem = ({item}) => {
@@ -359,23 +361,58 @@ const BlogScreen = ({route}) => {
               }}
             />
           </TouchableOpacity>
-
-          <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-            {data?.isBookmarkedByUser ? (
-              <TouchableOpacity onPress={() => toggleBookmark()}>
-                <Image
-                  source={require('../assets/whitemarking.png')}
+          {!isGuest && (
+            <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+              {data?.isBookmarkedByUser ? (
+                <TouchableOpacity onPress={() => toggleBookmark()}>
+                  <Image
+                    source={require('../assets/whitemarking.png')}
+                    style={{
+                      resizeMode: 'contain',
+                      width: 116,
+                      height: 35,
+                      // marginRight: 5,
+                    }}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
                   style={{
-                    resizeMode: 'contain',
-                    width: 116,
-                    height: 35,
-                    // marginRight: 5,
+                    backgroundColor: darkMode
+                      ? global.brandColorLightDark
+                      : global.brandColorLight,
+                    padding: 6,
+                    borderRadius: 5,
+                    paddingHorizontal: 10,
+                    flexDirection: 'row',
                   }}
-                />
-              </TouchableOpacity>
-            ) : (
+                  onPress={() => toggleBookmark()}>
+                  <Image
+                    source={require('../assets/saved.png')}
+                    style={{
+                      tintColor: 'white',
+                      resizeMode: 'contain',
+                      width: 18,
+                      height: 18,
+                      marginRight: 6,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      alignSelf: 'center',
+                      fontWeight: '500',
+                      fontSize: 12,
+                    }}>
+                    Add Bookmark
+                  </Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
+                onPress={() => onClickShare()}
                 style={{
+                  marginLeft: 10,
                   backgroundColor: darkMode
                     ? global.brandColorLightDark
                     : global.brandColorLight,
@@ -383,53 +420,19 @@ const BlogScreen = ({route}) => {
                   borderRadius: 5,
                   paddingHorizontal: 10,
                   flexDirection: 'row',
-                }}
-                onPress={() => toggleBookmark()}>
+                }}>
                 <Image
-                  source={require('../assets/saved.png')}
+                  source={require('../assets/share.png')}
                   style={{
                     tintColor: 'white',
                     resizeMode: 'contain',
-                    width: 18,
-                    height: 18,
-                    marginRight: 6,
-                    alignSelf: 'center',
+                    width: 23,
+                    height: 23,
                   }}
                 />
-                <Text
-                  style={{
-                    color: 'white',
-                    alignSelf: 'center',
-                    fontWeight: '500',
-                    fontSize: 12,
-                  }}>
-                  Add Bookmark
-                </Text>
               </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              onPress={() => onClickShare()}
-              style={{
-                marginLeft: 10,
-                backgroundColor: darkMode
-                  ? global.brandColorLightDark
-                  : global.brandColorLight,
-                padding: 6,
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                flexDirection: 'row',
-              }}>
-              <Image
-                source={require('../assets/share.png')}
-                style={{
-                  tintColor: 'white',
-                  resizeMode: 'contain',
-                  width: 23,
-                  height: 23,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+            </View>
+          )}
 
           {/* 
         <TouchableOpacity style={styles.saveBtn}>

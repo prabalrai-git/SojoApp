@@ -182,6 +182,10 @@ const ProfileSettings = props => {
     }
   };
 
+  const removeGuestUser = async () => {
+    await AsyncStorage.removeItem('guestUser');
+  };
+
   return (
     <>
       <SafeAreaView
@@ -265,6 +269,7 @@ const ProfileSettings = props => {
                   // });
                   logoutUser();
                   signOut();
+                  removeGuestUser();
                   navigation.reset({
                     index: 0,
                     routes: [{name: 'MainScreen'}],

@@ -21,7 +21,13 @@ import '../../globalThemColor';
 import {windowHeight, windowWidth} from '../helper/usefulConstants';
 import DeviceInfo from 'react-native-device-info';
 
-const BlogCard = ({item, fromBookmarks, setRenderBookmarked, scrollRef}) => {
+const BlogCard = ({
+  item,
+  fromBookmarks,
+  setRenderBookmarked,
+  scrollRef,
+  isGuest,
+}) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
@@ -122,6 +128,7 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked, scrollRef}) => {
             fromBookmarks: fromBookmarks,
             id: item?.id,
             isBookmarked: item?.isBookmarkedByUser,
+            isGuest: isGuest,
           });
           if (scrollRef)
             scrollRef.current?.scrollToOffset({animated: true, y: 0});
@@ -143,23 +150,25 @@ const BlogCard = ({item, fromBookmarks, setRenderBookmarked, scrollRef}) => {
                 style={[styles.cardImage, {position: 'relative'}]}
                 resizeMode={FastImage.resizeMode.cover}
                 priority={FastImage.priority.high}>
-                <Pressable onPress={() => bookmarkPressed()}>
-                  <Image
-                    source={
-                      toggled
-                        ? require('../assets/marking.png')
-                        : require('../assets/inmarking.png')
-                    }
-                    style={{
-                      width: toggled ? 120 : 150,
-                      height: 55,
-                      resizeMode: 'contain',
-                      position: 'absolute',
-                      top: 190,
-                      left: 10,
-                    }}
-                  />
-                </Pressable>
+                {!isGuest && (
+                  <Pressable onPress={() => bookmarkPressed()}>
+                    <Image
+                      source={
+                        toggled
+                          ? require('../assets/marking.png')
+                          : require('../assets/inmarking.png')
+                      }
+                      style={{
+                        width: toggled ? 120 : 150,
+                        height: 55,
+                        resizeMode: 'contain',
+                        position: 'absolute',
+                        top: 190,
+                        left: 10,
+                      }}
+                    />
+                  </Pressable>
+                )}
               </FastImage>
             </View>
             <Text

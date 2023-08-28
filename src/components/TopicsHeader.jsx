@@ -11,10 +11,11 @@ import {useNavigation} from '@react-navigation/native';
 import {windowWidth} from '../helper/usefulConstants';
 import {useSelector} from 'react-redux';
 
-const HomeHeader = () => {
+const HomeHeader = ({isGuest}) => {
   const navigation = useNavigation();
 
   const darkMode = useSelector(state => state.darkMode.value);
+
   return (
     <View
       style={[
@@ -35,7 +36,9 @@ const HomeHeader = () => {
           },
         ]}
         onPress={() => {
-          navigation.navigate('EditTopicsScreen');
+          isGuest
+            ? navigation.navigate('SettingsScreen')
+            : navigation.navigate('EditTopicsScreen');
         }}>
         <Icon
           name="edit"

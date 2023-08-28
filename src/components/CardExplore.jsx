@@ -20,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import DeviceInfo from 'react-native-device-info';
 import {windowWidth} from '../helper/usefulConstants';
 
-const ExploreCard = ({item, navigation, profile}) => {
+const ExploreCard = ({item, navigation, profile, isGuest}) => {
   const [image, setImage] = useState('');
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
@@ -109,23 +109,25 @@ const ExploreCard = ({item, navigation, profile}) => {
                 source={{uri: image}}
                 style={[styles.cardImage, {position: 'relative'}]}
                 resizeMode={FastImage.resizeMode.cover}>
-                <Pressable onPress={() => bookmarkPressed()}>
-                  <Image
-                    source={
-                      toggled
-                        ? require('../assets/marking.png')
-                        : require('../assets/inmarking.png')
-                    }
-                    style={{
-                      width: toggled ? 120 : 150,
-                      height: 55,
-                      resizeMode: 'contain',
-                      position: 'absolute',
-                      top: 190,
-                      left: 10,
-                    }}
-                  />
-                </Pressable>
+                {!isGuest && (
+                  <Pressable onPress={() => bookmarkPressed()}>
+                    <Image
+                      source={
+                        toggled
+                          ? require('../assets/marking.png')
+                          : require('../assets/inmarking.png')
+                      }
+                      style={{
+                        width: toggled ? 120 : 150,
+                        height: 55,
+                        resizeMode: 'contain',
+                        position: 'absolute',
+                        top: 190,
+                        left: 10,
+                      }}
+                    />
+                  </Pressable>
+                )}
               </FastImage>
             </View>
             <Text

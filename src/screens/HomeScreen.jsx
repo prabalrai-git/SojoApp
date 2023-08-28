@@ -29,6 +29,7 @@ const HomeScreen = ({navigation}) => {
   const [config, setConfig] = useState(null);
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
   const [scrollToTopShown, setScrolToTopShown] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
 
   const [profile, setProfile] = useState();
 
@@ -40,6 +41,16 @@ const HomeScreen = ({navigation}) => {
 
     return unsubscribe;
   }, [navigation]);
+  useEffect(() => {
+    getUserType();
+  }, []);
+
+  const getUserType = async () => {
+    await AsyncStorage.getItem('guestUser').then(value => {
+      const data = JSON.parse(value);
+      setIsGuest(Boolean(data));
+    });
+  };
 
   useEffect(() => {
     if (config) {
@@ -127,7 +138,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} key={item.id} />;
+    return <Card item={item} key={item.id} isGuest={isGuest} />;
   });
 
   const renderItem = ({item}) => {

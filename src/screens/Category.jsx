@@ -28,6 +28,8 @@ const Category = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -41,6 +43,16 @@ const Category = () => {
     return unsubscribe;
   }, [navigation]);
 
+  useEffect(() => {
+    getUserType();
+  }, []);
+
+  const getUserType = async () => {
+    await AsyncStorage.getItem('guestUser').then(value => {
+      const data = JSON.parse(value);
+      setIsGuest(Boolean(data));
+    });
+  };
   const fetchData = async page => {
     try {
       const res = await Axios.get(
@@ -131,7 +143,7 @@ const Category = () => {
   };
 
   const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} key={item.id} />;
+    return <Card item={item} key={item.id} isGuest={isGuest} />;
   });
 
   const renderItem = ({item}) => {

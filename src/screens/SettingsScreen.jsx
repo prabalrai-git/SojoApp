@@ -32,6 +32,7 @@ const SettingsScreen = () => {
   const [profile, setProfile] = useState();
   const [renderBookmarked, setRenderBookmarked] = useState(false);
   const [reloadProfileOnEdit, setReloadProfileOnEdit] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const reload = useSelector(state => state.reloadNews.value);
@@ -44,6 +45,17 @@ const SettingsScreen = () => {
 
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    getUserType();
+  }, []);
+
+  const getUserType = async () => {
+    await AsyncStorage.getItem('guestUser').then(value => {
+      const data = JSON.parse(value);
+      setIsGuest(Boolean(data));
+    });
+  };
 
   useEffect(() => {
     fetchToken();
@@ -228,27 +240,29 @@ const SettingsScreen = () => {
           </Text>
 
           <View style={styles.btnContainer}>
-            <TouchableOpacity
-              style={[
-                styles.btn,
-                {
-                  backgroundColor: darkMode
-                    ? global.brandColorDark2
-                    : global.backgroundColor,
-                  borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
-                },
-              ]}
-              onPress={() =>
-                navigation.navigate('Topics', {screen: 'EditTopicsScreen'})
-              }>
-              <Text
+            {!isGuest && (
+              <TouchableOpacity
                 style={[
-                  styles.btnTxt,
-                  {color: darkMode ? 'white' : '#1d6e3f'},
-                ]}>
-                Choose Your Topics
-              </Text>
-            </TouchableOpacity>
+                  styles.btn,
+                  {
+                    backgroundColor: darkMode
+                      ? global.brandColorDark2
+                      : global.backgroundColor,
+                    borderColor: darkMode ? global.brandColorDark2 : '#b3e0bd',
+                  },
+                ]}
+                onPress={() =>
+                  navigation.navigate('Topics', {screen: 'EditTopicsScreen'})
+                }>
+                <Text
+                  style={[
+                    styles.btnTxt,
+                    {color: darkMode ? 'white' : '#1d6e3f'},
+                  ]}>
+                  Choose Your Topics
+                </Text>
+              </TouchableOpacity>
+            )}
             {!profile?.isGuestUser && (
               <TouchableOpacity
                 onPress={() =>
@@ -285,53 +299,87 @@ const SettingsScreen = () => {
               height: 1,
               marginBottom: 20,
             }}></View>
-          {news?.length > 0 && (
+        </View>
+        {isGuest ? (
+          <>
+            <Image
+              source={require('../assets/sign.png')}
+              style={{
+                width: 180,
+                height: 180,
+                resizeMode: 'contain',
+                alignSelf: 'center',
+                marginTop: 40,
+              }}
+            />
             <Text
               style={{
-                color: darkMode ? 'white' : 'black',
-                fontWeight: 'bold',
+                color: darkMode ? global.iconColorDark : global.inputColorDark,
+                fontWeight: '500',
+                textAlign: 'center',
+                marginTop: 40,
+                marginHorizontal: 20,
+                textTransform: 'capitalize',
                 fontSize: 16,
-                marginBottom: 10,
+                lineHeight: 24,
               }}>
-              Saved stories
+              Please Sign in for other features like: bookmarks, curated news
+              topics, and much more !
             </Text>
-          )}
-        </View>
-        <ScrollView>
-          {news?.length > 0 ? (
-            <View
-              style={{
-                flex: 1,
-                marginBottom: 35,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}>
-              {news?.map(item => {
-                return (
-                  <>
-                    <BlogItem
-                      key={item?.id}
-                      item={item}
-                      navigation={navigation}
-                    />
-                  </>
-                );
-              })}
-            </View>
-          ) : (
-            <View style={{flex: 1}}>
+          </>
+        ) : (
+          <>
+            {news?.length > 0 && (
               <Text
                 style={{
                   color: darkMode ? 'white' : 'black',
-                  fontWeight: '600',
-                  textAlign: 'center',
-                  marginTop: 40,
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  marginBottom: 10,
+                  marginLeft: 15,
                 }}>
-                No Any Bookmarks!!
+                Saved stories
               </Text>
-            </View>
-          )}
-        </ScrollView>
+            )}
+            <ScrollView>
+              {news?.length > 0 ? (
+                <View
+                  style={{
+                    flex: 1,
+                    marginBottom: 35,
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                  }}>
+                  {news?.map(item => {
+                    return (
+                      <>
+                        <BlogItem
+                          key={item?.id}
+                          item={item}
+                          navigation={navigation}
+                        />
+                      </>
+                    );
+                  })}
+                </View>
+              ) : (
+                <View style={{flex: 1}}>
+                  <Text
+                    style={{
+                      color: darkMode
+                        ? global.iconColorDark
+                        : global.inputColorDark,
+                      fontWeight: '600',
+                      textAlign: 'center',
+                      marginTop: 40,
+                    }}>
+                    No Any Bookmarks!!
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
+          </>
+        )}
       </SafeAreaView>
     </>
   );
