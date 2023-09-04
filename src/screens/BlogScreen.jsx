@@ -85,7 +85,6 @@ const BlogScreen = ({route}) => {
     try {
       const res = await Axios.get(`/news/${id}?userId=${profile?.id}`);
       setData(res.data.data);
-      scrollToTop();
     } catch (err) {
       console.log(err);
     }
@@ -95,6 +94,16 @@ const BlogScreen = ({route}) => {
       scrollRef.current.scrollToOffset({offset: 0, animated: true});
     }
   };
+
+  console.log(id, 'this id');
+
+  useEffect(() => {
+    // single blog featured removed from the similar blogs array
+
+    scrollToTop();
+    const filteredArray = similarBlogs?.filter(item => item.id !== id);
+    setSimilarBlogs(filteredArray);
+  }, [data]);
 
   const fetchSimilarBlogs = async () => {
     try {
