@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import '../../../globalThemColor';
 import {toggleDarkMode} from '../../redux/features/DarkMode';
 import NetInfo from '@react-native-community/netinfo';
+import MobileAds from 'react-native-google-mobile-ads';
 
 const SplashScreen = () => {
   const [config, setConfig] = useState(null);
@@ -18,6 +19,12 @@ const SplashScreen = () => {
   const darkMode = useSelector(state => state.darkMode.value);
 
   const dispatch = useDispatch();
+
+  MobileAds()
+    .initialize()
+    .then(adapterStatuses => {
+      // Initialization complete!
+    });
 
   const fetchProfile = async () => {
     try {

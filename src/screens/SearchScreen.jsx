@@ -12,20 +12,37 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import Card from './../components/Card';
 import Axios from './../api/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import GlobalHeader from '../components/GlobalHeader';
 import HomeHeader from '../components/HomeHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import {Image} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import firestore from '@react-native-firebase/firestore';
+import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [adMobIds, setAdMobIds] = useState();
+
+  // const [page, setPage] = useState(1);
+  // const [hasMore, setHasMore] = useState(false);
+
+  const getAdMobIdsFromFireStore = async () => {
+    try {
+      const ApIds = await firestore().collection('adMobIds').get();
+
+      setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    getAdMobIdsFromFireStore();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -66,18 +83,41 @@ const SearchScreen = ({navigation, route}) => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
-  const BlogItem = React.memo(({item}) => {
-    return (
-      <Card
-        item={item}
-        key={item.id}
-        isGuest={route.params.profile.isGuestUser}
-      />
-    );
+  const BlogItem = React.memo(({item, index}) => {
+    if ((index + 1) % 2 === 0 && adMobIds) {
+      const adIndex = (index + 1) / 2;
+      const adItem = adMobIds[adIndex - 1];
+      return (
+        <>
+          <Card
+            item={item}
+            key={item.id}
+            isGuest={route.params.profile.isGuestUser}
+          />
+          {adItem && (
+            <BannerAd
+              unitId={adItem._data.adId}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          )}
+        </>
+      );
+    } else {
+      return (
+        <Card
+          item={item}
+          key={item.id}
+          isGuest={route.params.profile.isGuestUser}
+        />
+      );
+    }
   });
 
-  const renderItem = ({item}) => {
-    return <BlogItem item={item} navigation={navigation} />;
+  const renderItem = ({item, index}) => {
+    return <BlogItem item={item} navigation={navigation} index={index} />;
   };
   const darkMode = useSelector(state => state.darkMode.value);
 

@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   Platform,
   FlatList,
+  Pressable,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -25,6 +26,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
 import {useNavigation} from '@react-navigation/native';
 import DeviceInfo from 'react-native-device-info';
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+  InterstitialAd,
+  AdEventType,
+} from 'react-native-google-mobile-ads';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
@@ -37,6 +45,7 @@ const BlogScreen = ({route}) => {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
   const [image, setImage] = useState();
+  const [loaded, setLoaded] = useState(false);
 
   const [profile, setProfile] = useState();
 
@@ -45,6 +54,11 @@ const BlogScreen = ({route}) => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+
+  const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
+    requestNonPersonalizedAdsOnly: true,
+    keywords: ['fashion', 'clothing'],
+  });
 
   useEffect(() => {
     if (data?.image) {
@@ -81,6 +95,31 @@ const BlogScreen = ({route}) => {
     fetchToken();
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        interstitial.show();
+      },
+    );
+
+    // Start loading the interstitial straight away
+    interstitial.load();
+
+    // Unsubscribe from events on unmount
+    return unsubscribe;
+  }, []);
+
+  // Start loading the interstitial straight away
+
+  // Unsubscribe from events on unmount
+
+  // useEffect(() => {
+  //   if (loaded) {
+  //     interstitial.show();
+  //   }
+  // }, [loaded]);
+
   const fetchData = async () => {
     try {
       const res = await Axios.get(`/news/${id}?userId=${profile?.id}`);
@@ -94,8 +133,6 @@ const BlogScreen = ({route}) => {
       scrollRef.current.scrollToOffset({offset: 0, animated: true});
     }
   };
-
-  console.log(id, 'this id');
 
   useEffect(() => {
     // single blog featured removed from the similar blogs array
@@ -125,6 +162,8 @@ const BlogScreen = ({route}) => {
       console.log(err);
     }
   };
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     id && profile && fetchData();
@@ -479,6 +518,14 @@ const BlogScreen = ({route}) => {
                     },
                   ]}
                   showsVerticalScrollIndicator={false}>
+                  <BannerAd
+                    unitId={TestIds.BANNER}
+                    size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                    requestOptions={{
+                      requestNonPersonalizedAdsOnly: true,
+                    }}
+                  />
+
                   <View style={styles.blog}>
                     <Text
                       style={[
@@ -554,7 +601,15 @@ const BlogScreen = ({route}) => {
                     {/* <View style={styles.shareWrapper}>
            <Text style={styles.shareTitle}>Share this story</Text>
          </View> */}
-
+                    <View style={{marginLeft: -13}}>
+                      <BannerAd
+                        unitId={TestIds.BANNER}
+                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                        requestOptions={{
+                          requestNonPersonalizedAdsOnly: true,
+                        }}
+                      />
+                    </View>
                     <Text
                       style={{
                         fontSize: 25,

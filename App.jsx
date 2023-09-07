@@ -11,6 +11,7 @@ import Axios from './src/api/server';
 import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import {Alert, Linking, Platform} from 'react-native';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 export default function App() {
   // to subscribe the users to topics based on their selection of news topic using FCM notification service
@@ -19,6 +20,14 @@ export default function App() {
   const [config, setConfig] = useState();
   const [updatedVersion, setUpdatedVersion] = useState();
 
+  const AdPermission = async () => {
+    const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+    if (result === RESULTS.DENIED) {
+      // The permission has not been requested, so request it.
+      await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+    }
+    const adapterStatuses = await mobileAds().initialize();
+  };
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('token');
@@ -33,6 +42,7 @@ export default function App() {
       }
     };
     fetchToken();
+    AdPermission();
   }, []);
 
   // fetch profile

@@ -21,6 +21,8 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
+	<key>NSUserTrackingUsageDescription</key>
+  	<string>YOUR TEXT</string>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>

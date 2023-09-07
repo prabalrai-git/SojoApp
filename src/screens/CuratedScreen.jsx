@@ -10,7 +10,6 @@ import {
   Platform,
   Image,
   TouchableOpacity,
-  Animated,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -25,6 +24,8 @@ import '../../globalThemColor';
 import {PermissionsAndroid} from 'react-native';
 import _ from 'lodash';
 import DeviceInfo from 'react-native-device-info';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import firestore from '@react-native-firebase/firestore';
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
@@ -33,9 +34,8 @@ const HomeScreen = ({navigation}) => {
   const [page, setPage] = useState(1);
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
-  const [scrollToTopShown, setScrolToTopShown] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
+  const [adMobIds, setAdMobIds] = useState();
 
   const dispatch = useDispatch();
 
@@ -92,7 +92,18 @@ const HomeScreen = ({navigation}) => {
     };
     fetchToken();
     setFirstTime();
+    getAdMobIdsFromFireStore();
   }, []);
+
+  const getAdMobIdsFromFireStore = async () => {
+    try {
+      const ApIds = await firestore().collection('adMobIds').get();
+
+      setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     // AsyncStorage.removeItem('token');
@@ -178,61 +189,40 @@ const HomeScreen = ({navigation}) => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
-  const BlogItem = React.memo(({item, navigation}) => {
-    return (
-      <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
-    );
+  const BlogItem = React.memo(({item, index, navigation}) => {
+    if ((index + 1) % 3 === 0 && adMobIds) {
+      const adIndex = (index + 1) / 3;
+      const adItem = adMobIds[adIndex - 1];
+      return (
+        <>
+          <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
+          {adItem && (
+            <BannerAd
+              unitId={adItem._data.adId}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          )}
+        </>
+      );
+    } else {
+      return (
+        <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
+      );
+    }
   });
 
-  const renderItem = ({item}) => {
-    return <BlogItem item={item} navigation={navigation} />;
+  const renderItem = ({item, index}) => {
+    return <BlogItem item={item} navigation={navigation} index={index} />;
   };
-
-  // function App() {
-  //   useEffect(() => {
-  //     const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //       Alert.alert(
-  //         'A new FCM message arrived!',
-  //         JSON.stringify(remoteMessage),
-  //       );
-  //     });
-
-  //     return unsubscribe;
-  //   }, []);
-  // }
 
   const darkMode = useSelector(state => state.darkMode.value);
   const scrollRef = React.createRef();
-  const animation = useRef(new Animated.Value(0)).current;
-
-  const startAnimation = () => {
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 100,
-      useNativeDriver: true,
-    }).start();
-  };
 
   const onFabPress = () => {
-    // scrollRef.current?.scrollTo({
-    //   y: 0,
-    //   animated: true,
-    // });
-    // return console.log(scrollRef.current, 'yo');
-    // return startAnimation();
-
     scrollRef.current?.scrollToOffset({animated: true, offset: 0});
-  };
-  const CONTENT_OFFSET_THRESHOLD = 300;
-
-  // useEffect(() => {
-  //   if (contentVerticalOffset > CONTENT_OFFSET_THRESHOLD) {
-  //     startAnimation();
-  //   }
-  // }, [contentVerticalOffset]);
-
-  const onScrollEvent = e => {
-    setContentVerticalOffset(e.nativeEvent?.contentOffset?.y);
   };
 
   return (
@@ -281,10 +271,6 @@ const HomeScreen = ({navigation}) => {
             bottom: 20,
             right: 20,
             zIndex: 100,
-            // shadowColor: '#000',
-            // shadowOffset: {width: 0, height: 0},
-            // shadowOpacity: 0.1,
-            // shadowRadius: 1,
           }}>
           <View style={{}}>
             <Image

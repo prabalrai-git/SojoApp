@@ -20,6 +20,8 @@ import GlobalHeader from '../components/GlobalHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
+import firestore from '@react-native-firebase/firestore';
+import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -27,13 +29,24 @@ const HomeScreen = ({navigation}) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [config, setConfig] = useState(null);
-  const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
   const [scrollToTopShown, setScrolToTopShown] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
 
   const [profile, setProfile] = useState();
+  const [adMobIds, setAdMobIds] = useState();
 
   const dispatch = useDispatch();
+
+  const getAdMobIdsFromFireStore = async () => {
+    try {
+      const ApIds = await firestore().collection('adMobIds').get();
+
+      setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(showTabBar());
@@ -43,6 +56,7 @@ const HomeScreen = ({navigation}) => {
   }, [navigation]);
   useEffect(() => {
     getUserType();
+    getAdMobIdsFromFireStore();
   }, []);
 
   const getUserType = async () => {
@@ -137,12 +151,38 @@ const HomeScreen = ({navigation}) => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
-  const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} key={item.id} isGuest={isGuest} />;
+  const BlogItem = React.memo(({item, navigation, index}) => {
+    if ((index + 1) % 3 === 0 && adMobIds) {
+      const adIndex = (index + 1) / 3;
+      const adItem = adMobIds[adIndex - 1];
+      return (
+        <>
+          <Card item={item} key={item.id} isGuest={isGuest} />
+          {adItem && (
+            <BannerAd
+              unitId={adItem._data.adId}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          )}
+        </>
+      );
+    } else {
+      return <Card item={item} key={item.id} isGuest={isGuest} />;
+    }
   });
 
-  const renderItem = ({item}) => {
-    return <BlogItem key={item.id} item={item} navigation={navigation} />;
+  const renderItem = ({item, index}) => {
+    return (
+      <BlogItem
+        key={item.id}
+        item={item}
+        navigation={navigation}
+        index={index}
+      />
+    );
   };
   const darkMode = useSelector(state => state.darkMode.value);
   const scrollRef = React.createRef();
@@ -157,23 +197,9 @@ const HomeScreen = ({navigation}) => {
   };
 
   const onFabPress = () => {
-    // scrollRef.current?.scrollTo({
-    //   y: 0,
-    //   animated: true,
-    // });
-    // return console.log(scrollRef.current, 'yo');
-    // return startAnimation();
-
     scrollRef.current?.scrollToOffset({animated: true, offset: 0});
     startAnimation();
   };
-  const CONTENT_OFFSET_THRESHOLD = 300;
-
-  // useEffect(() => {
-  //   if (contentVerticalOffset > CONTENT_OFFSET_THRESHOLD) {
-  //     startAnimation();
-  //   }
-  // }, [contentVerticalOffset]);
 
   return (
     <>
@@ -204,43 +230,8 @@ const HomeScreen = ({navigation}) => {
             bottom: 20,
             right: 20,
             zIndex: 100,
-            // shadowColor: '#000',
-            // shadowOffset: {width: 0, height: 0},
-            // shadowOpacity: 0.1,
-            // shadowRadius: 1,
           }}>
-          <Animated.View
-            style={{
-              transform: [
-                // {
-                //   translateY: animation.interpolate({
-                //     inputRange: [0, 1],
-                //     outputRange: [0, -100],
-                //   }),
-                // },
-                // {
-                //   rotate: animation.interpolate({
-                //     inputRange: [0, 1],
-                //     outputRange: ['0deg', '360deg'],
-                //   }),
-                // },
-                // {
-                //   translateX: animation.interpolate({
-                //     inputRange: [0, 1],
-                //     outputRange: [0, -100],
-                //   }),
-                // },
-                // {
-                //   scale: animation.interpolate({
-                //     inputRange: [0, 1],
-                //     outputRange:
-                //       contentVerticalOffset > CONTENT_OFFSET_THRESHOLD
-                //         ? [0, 1]
-                //         : [1, 0],
-                //   }),
-                // },
-              ],
-            }}>
+          <Animated.View>
             <Image
               source={require('../assets/up.png')}
               style={{

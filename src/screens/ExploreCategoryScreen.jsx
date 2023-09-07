@@ -18,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
+import firestore from '@react-native-firebase/firestore';
+import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -29,6 +31,7 @@ const Category = () => {
   const [profile, setProfile] = useState();
   const [config, setConfig] = useState();
   const [isGuest, setIsGuest] = useState(false);
+  const [adMobIds, setAdMobIds] = useState();
 
   const route = useRoute();
 
@@ -43,6 +46,7 @@ const Category = () => {
   }, [navigation]);
   useEffect(() => {
     getUserType();
+    getAdMobIdsFromFireStore();
   }, []);
 
   const getUserType = async () => {
@@ -50,6 +54,15 @@ const Category = () => {
       const data = JSON.parse(value);
       setIsGuest(Boolean(data));
     });
+  };
+  const getAdMobIdsFromFireStore = async () => {
+    try {
+      const ApIds = await firestore().collection('adMobIds').get();
+
+      setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // useEffect(() => {
@@ -152,12 +165,31 @@ const Category = () => {
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
   };
 
-  const BlogItem = React.memo(({item, navigation}) => {
-    return <Card item={item} key={item.id} isGuest={isGuest} />;
+  const BlogItem = React.memo(({item, navigation, index}) => {
+    if ((index + 1) % 3 === 0 && adMobIds) {
+      const adIndex = (index + 1) / 3;
+      const adItem = adMobIds[adIndex - 1];
+      return (
+        <>
+          <Card item={item} key={item.id} isGuest={isGuest} />
+          {adItem && (
+            <BannerAd
+              unitId={adItem._data.adId}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          )}
+        </>
+      );
+    } else {
+      return <Card item={item} key={item.id} isGuest={isGuest} />;
+    }
   });
 
-  const renderItem = ({item}) => {
-    return <BlogItem item={item} navigation={navigation} />;
+  const renderItem = ({item, index}) => {
+    return <BlogItem item={item} navigation={navigation} index={index} />;
   };
 
   const handleLoadMore = () => {
