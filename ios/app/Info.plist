@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSUserTrackingUsageDescription</key>
+    <string>This app uses device identifiers to track marketing attribution and app usage.  Your data is kept confidential and is not shared with any 3rd parties or advertising partners.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -21,8 +23,6 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-	<key>NSUserTrackingUsageDescription</key>
-  	<string>YOUR TEXT</string>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -48,6 +48,8 @@
 		<key>NSExceptionDomains</key>
 		<dict/>
 	</dict>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIAppFonts</key>
