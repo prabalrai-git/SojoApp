@@ -18,6 +18,8 @@ import TopicsHeader from '../../components/TopicsHeader';
 import Icon from 'react-native-vector-icons/Feather';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../../redux/features/HideTabBar';
+import firestore from '@react-native-firebase/firestore';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -26,6 +28,33 @@ const Category = () => {
   const navigation = useNavigation();
   const [term, setTerm] = useState('');
   const [filteredTopics, setFilteredTopics] = useState(data);
+  const [adMobIds, setAdMobIds] = useState();
+  const [adInterval, setAdInterval] = useState();
+
+  const getAdMobIdsFromFireStore = async () => {
+    try {
+      const ApIds = await firestore().collection('adMobIds').get();
+
+      setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getBannerAdsIntervalFromFireStore = async () => {
+    try {
+      const interval = await firestore().collection('bannerAdsInterval').get();
+
+      setAdInterval(interval.docs[0]._data.Interval);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAdMobIdsFromFireStore();
+    getBannerAdsIntervalFromFireStore();
+  }, []);
 
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
@@ -246,6 +275,164 @@ const Category = () => {
             <FlatList
               data={filteredTopics}
               renderItem={({item, index}) => {
+                if (adInterval && (index + 1) % adInterval === 0 && adMobIds) {
+                  const adIndex = (index + 1) / adInterval;
+                  const adItem = adMobIds[adIndex - 1];
+                  return (
+                    <>
+                      <TouchableOpacity
+                        style={[
+                          styles.link,
+                          {
+                            // marginBottom:
+                            //   filteredTopics.length === index ? null : null,
+                            backgroundColor: darkMode
+                              ? global.inputColorDark
+                              : global.inputColor,
+                            borderColor: darkMode
+                              ? global.inputColorDark
+                              : '#D6D7DA',
+                          },
+                        ]}
+                        onPress={() => {
+                          return navigation.navigate('CategoryScreen', {
+                            id: item.id,
+                          });
+                          let found = false;
+
+                          profile.topics.forEach(topic => {
+                            if (topic.id === item.id) {
+                              found = true;
+                              navigation.push('HomeScreen', {
+                                screen: 'CategoryScreen',
+                                params: {
+                                  id: item.id,
+                                },
+                              });
+                              return false;
+                            }
+                          });
+
+                          if (!found) {
+                            navigation.push('ExploreScreen', {
+                              screen: 'ExploreCategory',
+                              params: {
+                                id: item.id,
+                              },
+                            });
+                          }
+                        }}>
+                        <Text
+                          style={[
+                            styles.linkTitle,
+                            {color: darkMode ? 'white' : '#3F424A'},
+                          ]}>
+                          {item.name}
+                        </Text>
+                        <Icon
+                          name="arrow-right"
+                          size={22}
+                          color="#6B6F76"
+                          style={[
+                            styles.linkIcon,
+                            {
+                              backgroundColor: darkMode
+                                ? global.inputColorDark
+                                : global.inputColor,
+                            },
+                          ]}
+                        />
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginVertical: 10,
+                          height: 25,
+                        }}>
+                        {adItem && (
+                          <BannerAd
+                            unitId={adItem._data.adId}
+                            size="360x45"
+                            requestOptions={{
+                              requestNonPersonalizedAdsOnly: true,
+                            }}
+                          />
+                        )}
+                      </View>
+                    </>
+                  );
+                } else {
+                  return (
+                    <>
+                      <TouchableOpacity
+                        style={[
+                          styles.link,
+                          {
+                            // marginBottom:
+                            //   filteredTopics.length === index ? null : null,
+                            backgroundColor: darkMode
+                              ? global.inputColorDark
+                              : global.inputColor,
+                            borderColor: darkMode
+                              ? global.inputColorDark
+                              : '#D6D7DA',
+                          },
+                        ]}
+                        onPress={() => {
+                          return navigation.navigate('CategoryScreen', {
+                            id: item.id,
+                          });
+                          let found = false;
+
+                          profile.topics.forEach(topic => {
+                            if (topic.id === item.id) {
+                              found = true;
+                              navigation.push('HomeScreen', {
+                                screen: 'CategoryScreen',
+                                params: {
+                                  id: item.id,
+                                },
+                              });
+                              return false;
+                            }
+                          });
+
+                          if (!found) {
+                            navigation.push('ExploreScreen', {
+                              screen: 'ExploreCategory',
+                              params: {
+                                id: item.id,
+                              },
+                            });
+                          }
+                        }}>
+                        <Text
+                          style={[
+                            styles.linkTitle,
+                            {color: darkMode ? 'white' : '#3F424A'},
+                          ]}>
+                          {item.name}
+                        </Text>
+                        <Icon
+                          name="arrow-right"
+                          size={22}
+                          color="#6B6F76"
+                          style={[
+                            styles.linkIcon,
+                            {
+                              backgroundColor: darkMode
+                                ? global.inputColorDark
+                                : global.inputColor,
+                            },
+                          ]}
+                        />
+                      </TouchableOpacity>
+                      {/* <View style={{height: 30}}></View> */}
+                    </>
+                  );
+                }
                 return (
                   <TouchableOpacity
                     style={[

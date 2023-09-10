@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import {
   View,
   FlatList,
@@ -36,6 +36,7 @@ const HomeScreen = ({navigation}) => {
   const [profile, setProfile] = useState(null);
   const [isGuest, setIsGuest] = useState(false);
   const [adMobIds, setAdMobIds] = useState();
+  const [adInterval, setAdInterval] = useState();
 
   const dispatch = useDispatch();
 
@@ -93,6 +94,7 @@ const HomeScreen = ({navigation}) => {
     fetchToken();
     setFirstTime();
     getAdMobIdsFromFireStore();
+    getBannerAdsIntervalFromFireStore();
   }, []);
 
   const getAdMobIdsFromFireStore = async () => {
@@ -100,6 +102,16 @@ const HomeScreen = ({navigation}) => {
       const ApIds = await firestore().collection('adMobIds').get();
 
       setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getBannerAdsIntervalFromFireStore = async () => {
+    try {
+      const interval = await firestore().collection('bannerAdsInterval').get();
+
+      setAdInterval(interval.docs[0]._data.Interval);
     } catch (error) {
       console.log(error);
     }
@@ -190,28 +202,73 @@ const HomeScreen = ({navigation}) => {
   };
 
   const BlogItem = React.memo(({item, index, navigation}) => {
-    if ((index + 1) % 3 === 0 && adMobIds) {
-      const adIndex = (index + 1) / 3;
-      const adItem = adMobIds[adIndex - 1];
-      return (
+    const commonContent = useMemo(
+      () => (
         <>
           <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
-          {adItem && (
-            <BannerAd
-              unitId={adItem._data.adId}
-              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-              requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-              }}
-            />
-          )}
+          <View style={{height: 16}}></View>
         </>
-      );
-    } else {
-      return (
-        <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
-      );
-    }
+      ),
+      [item, profile, isGuest],
+    );
+
+    const shouldRenderAd =
+      adInterval && (index + 1) % adInterval === 0 && adMobIds;
+    const adIndex = (index + 1) / adInterval;
+    const adItem = adMobIds[adIndex - 1];
+
+    return (
+      <>
+        {commonContent}
+        {shouldRenderAd && (
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 16,
+            }}>
+            {adItem && (
+              <BannerAd
+                unitId={adItem._data.adId}
+                size="365x45"
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            )}
+          </View>
+        )}
+      </>
+    );
+    // if (adInterval && (index + 1) % adInterval === 0 && adMobIds) {
+    //   const adIndex = (index + 1) / adInterval;
+    //   const adItem = adMobIds[adIndex - 1];
+    //   return (
+    //     <>
+    //       {commonContent}
+    //       <View
+    //         style={{
+    //           display: 'flex',
+    //           justifyContent: 'center',
+    //           alignItems: 'center',
+    //           height: 16,
+    //         }}>
+    //         {adItem && (
+    //           <BannerAd
+    //             unitId={adItem._data.adId}
+    //             size="365x45"
+    //             requestOptions={{
+    //               requestNonPersonalizedAdsOnly: true,
+    //             }}
+    //           />
+    //         )}
+    //       </View>
+    //     </>
+    //   );
+    // } else {
+    //   return commonContent;
+    // }
   });
 
   const renderItem = ({item, index}) => {
@@ -221,9 +278,9 @@ const HomeScreen = ({navigation}) => {
   const darkMode = useSelector(state => state.darkMode.value);
   const scrollRef = React.createRef();
 
-  const onFabPress = () => {
+  const onFabPress = useCallback(() => {
     scrollRef.current?.scrollToOffset({animated: true, offset: 0});
-  };
+  }, []);
 
   return (
     <>

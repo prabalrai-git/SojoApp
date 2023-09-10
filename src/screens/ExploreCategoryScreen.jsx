@@ -32,6 +32,7 @@ const Category = () => {
   const [config, setConfig] = useState();
   const [isGuest, setIsGuest] = useState(false);
   const [adMobIds, setAdMobIds] = useState();
+  const [adInterval, setAdInterval] = useState();
 
   const route = useRoute();
 
@@ -47,6 +48,7 @@ const Category = () => {
   useEffect(() => {
     getUserType();
     getAdMobIdsFromFireStore();
+    getBannerAdsIntervalFromFireStore();
   }, []);
 
   const getUserType = async () => {
@@ -55,6 +57,17 @@ const Category = () => {
       setIsGuest(Boolean(data));
     });
   };
+
+  const getBannerAdsIntervalFromFireStore = async () => {
+    try {
+      const interval = await firestore().collection('bannerAdsInterval').get();
+
+      setAdInterval(interval.docs[0]._data.Interval);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getAdMobIdsFromFireStore = async () => {
     try {
       const ApIds = await firestore().collection('adMobIds').get();
@@ -166,25 +179,38 @@ const Category = () => {
   };
 
   const BlogItem = React.memo(({item, navigation, index}) => {
-    if ((index + 1) % 3 === 0 && adMobIds) {
-      const adIndex = (index + 1) / 3;
+    if (adInterval && (index + 1) % adInterval === 0 && adMobIds) {
+      const adIndex = (index + 1) / adInterval;
       const adItem = adMobIds[adIndex - 1];
       return (
         <>
           <Card item={item} key={item.id} isGuest={isGuest} />
-          {adItem && (
-            <BannerAd
-              unitId={adItem._data.adId}
-              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-              requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-              }}
-            />
-          )}
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 16,
+            }}>
+            {adItem && (
+              <BannerAd
+                unitId={adItem._data.adId}
+                size="365x45"
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            )}
+          </View>
         </>
       );
     } else {
-      return <Card item={item} key={item.id} isGuest={isGuest} />;
+      return (
+        <>
+          <Card item={item} key={item.id} isGuest={isGuest} />
+          <View style={{height: 16}}></View>
+        </>
+      );
     }
   });
 

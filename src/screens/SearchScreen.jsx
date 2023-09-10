@@ -24,6 +24,7 @@ const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [adMobIds, setAdMobIds] = useState();
+  const [adInterval, setAdInterval] = useState();
 
   // const [page, setPage] = useState(1);
   // const [hasMore, setHasMore] = useState(false);
@@ -37,11 +38,21 @@ const SearchScreen = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const getBannerAdsIntervalFromFireStore = async () => {
+    try {
+      const interval = await firestore().collection('bannerAdsInterval').get();
+
+      setAdInterval(interval.docs[0]._data.Interval);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     getAdMobIdsFromFireStore();
+    getBannerAdsIntervalFromFireStore();
   }, []);
 
   useEffect(() => {
@@ -84,8 +95,8 @@ const SearchScreen = ({navigation, route}) => {
   };
 
   const BlogItem = React.memo(({item, index}) => {
-    if ((index + 1) % 2 === 0 && adMobIds) {
-      const adIndex = (index + 1) / 2;
+    if (adInterval && (index + 1) % adInterval === 0 && adMobIds) {
+      const adIndex = (index + 1) / adInterval;
       const adItem = adMobIds[adIndex - 1];
       return (
         <>
@@ -94,24 +105,35 @@ const SearchScreen = ({navigation, route}) => {
             key={item.id}
             isGuest={route.params.profile.isGuestUser}
           />
-          {adItem && (
-            <BannerAd
-              unitId={adItem._data.adId}
-              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-              requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-              }}
-            />
-          )}
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 16,
+            }}>
+            {adItem && (
+              <BannerAd
+                unitId={adItem._data.adId}
+                size="365x45"
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            )}
+          </View>
         </>
       );
     } else {
       return (
-        <Card
-          item={item}
-          key={item.id}
-          isGuest={route.params.profile.isGuestUser}
-        />
+        <>
+          <Card
+            item={item}
+            key={item.id}
+            isGuest={route.params.profile.isGuestUser}
+          />
+          <View style={{height: 16}}></View>
+        </>
       );
     }
   });

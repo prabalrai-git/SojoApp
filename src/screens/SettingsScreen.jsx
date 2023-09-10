@@ -21,6 +21,7 @@ import BlogCard from '../components/Card';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
+import {BannerAd, TestIds} from 'react-native-google-mobile-ads';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
@@ -330,16 +331,34 @@ const SettingsScreen = () => {
         ) : (
           <>
             {news?.length > 0 && (
-              <Text
-                style={{
-                  color: darkMode ? 'white' : 'black',
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                  marginBottom: 10,
-                  marginLeft: 15,
-                }}>
-                Saved stories
-              </Text>
+              <>
+                <View
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 10,
+                  }}>
+                  <BannerAd
+                    unitId={'ca-app-pub-7141466234997058/7599411198'}
+                    size="365x45"
+                    requestOptions={{
+                      requestNonPersonalizedAdsOnly: true,
+                    }}
+                  />
+                </View>
+
+                <Text
+                  style={{
+                    color: darkMode ? 'white' : 'black',
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                    marginBottom: 10,
+                    marginLeft: 15,
+                  }}>
+                  Saved stories
+                </Text>
+              </>
             )}
             <ScrollView>
               {news?.length > 0 ? (

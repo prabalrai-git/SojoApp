@@ -20,6 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import '../../globalThemColor';
 import {windowHeight, windowWidth} from '../helper/usefulConstants';
 import DeviceInfo from 'react-native-device-info';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const BlogCard = ({
   item,
@@ -116,99 +117,104 @@ const BlogCard = ({
 
   return (
     image && (
-      <TouchableOpacity
-        key={item?.id}
-        style={{
-          marginTop: 30,
-          height: 440,
-          width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
-        }}
-        onPress={() => {
-          navigation.navigate('Blog', {
-            fromBookmarks: fromBookmarks,
-            id: item?.id,
-            isBookmarked: item?.isBookmarkedByUser,
-            isGuest: isGuest,
-          });
-          if (scrollRef)
-            scrollRef.current?.scrollToOffset({animated: true, y: 0});
-        }}>
-        <View
-          style={[
-            styles.cardContainer,
-            {
-              backgroundColor: darkMode
-                ? global.backgroundColorDark
-                : global.backgroundColor,
-              borderBottomColor: darkMode ? '#3F424A' : '#DADADD',
-            },
-          ]}>
-          <View style={styles.wrapper}>
-            <View>
-              <FastImage
-                source={{uri: image}}
-                style={[styles.cardImage, {position: 'relative'}]}
-                resizeMode={FastImage.resizeMode.cover}
-                priority={FastImage.priority.high}>
-                {!isGuest && (
-                  <Pressable onPress={() => bookmarkPressed()}>
-                    <Image
-                      source={
-                        toggled
-                          ? require('../assets/marking.png')
-                          : require('../assets/inmarking.png')
-                      }
-                      style={{
-                        width: toggled ? 120 : 150,
-                        height: 55,
-                        resizeMode: 'contain',
-                        position: 'absolute',
-                        top: 190,
-                        left: 10,
-                      }}
-                    />
-                  </Pressable>
-                )}
-              </FastImage>
-            </View>
-            <Text
-              style={[styles.cardTitle, {color: darkMode ? 'white' : 'black'}]}
-              numberOfLines={DeviceInfo.isTablet() ? 1 : 2}
-              ellipsizeMode="tail">
-              {item?.title}
-            </Text>
-
-            <Text
-              style={[
-                styles.cardText,
-                {color: darkMode ? '#9B9EA5' : '#3F424A'},
-              ]}
-              numberOfLines={2}
-              ellipsizeMode="tail">
-              {item?.previewText}
-            </Text>
-
-            <View style={styles.footer}>
-              <Text style={styles.category}>
-                {
-                  item?.topics?.sort(
-                    (a, b) => a.news_topic.order - b.news_topic.order,
-                  )[0].name
-                }
+      <>
+        <TouchableOpacity
+          key={item?.id}
+          style={{
+            marginTop: 30,
+            height: 440,
+            width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
+          }}
+          onPress={() => {
+            navigation.navigate('Blog', {
+              fromBookmarks: fromBookmarks,
+              id: item?.id,
+              isBookmarked: item?.isBookmarkedByUser,
+              isGuest: isGuest,
+            });
+            if (scrollRef)
+              scrollRef.current?.scrollToOffset({animated: true, y: 0});
+          }}>
+          <View
+            style={[
+              styles.cardContainer,
+              {
+                backgroundColor: darkMode
+                  ? global.backgroundColorDark
+                  : global.backgroundColor,
+                borderBottomColor: darkMode ? '#3F424A' : '#DADADD',
+              },
+            ]}>
+            <View style={styles.wrapper}>
+              <View>
+                <FastImage
+                  source={{uri: image}}
+                  style={[styles.cardImage, {position: 'relative'}]}
+                  resizeMode={FastImage.resizeMode.cover}
+                  priority={FastImage.priority.high}>
+                  {!isGuest && (
+                    <Pressable onPress={() => bookmarkPressed()}>
+                      <Image
+                        source={
+                          toggled
+                            ? require('../assets/marking.png')
+                            : require('../assets/inmarking.png')
+                        }
+                        style={{
+                          width: toggled ? 120 : 150,
+                          height: 55,
+                          resizeMode: 'contain',
+                          position: 'absolute',
+                          top: 190,
+                          left: 10,
+                        }}
+                      />
+                    </Pressable>
+                  )}
+                </FastImage>
+              </View>
+              <Text
+                style={[
+                  styles.cardTitle,
+                  {color: darkMode ? 'white' : 'black'},
+                ]}
+                numberOfLines={DeviceInfo.isTablet() ? 1 : 2}
+                ellipsizeMode="tail">
+                {item?.title}
               </Text>
-              <View style={styles.link}>
-                <Text style={styles.linkText}>Continue Reading</Text>
-                <Icon
-                  name="keyboard-arrow-right"
-                  size={20}
-                  color="#5AC087"
-                  style={styles.linkIcon}
-                />
+
+              <Text
+                style={[
+                  styles.cardText,
+                  {color: darkMode ? '#9B9EA5' : '#3F424A'},
+                ]}
+                numberOfLines={2}
+                ellipsizeMode="tail">
+                {item?.previewText}
+              </Text>
+
+              <View style={styles.footer}>
+                <Text style={styles.category}>
+                  {
+                    item?.topics?.sort(
+                      (a, b) => a.news_topic.order - b.news_topic.order,
+                    )[0].name
+                  }
+                </Text>
+                <View style={styles.link}>
+                  <Text style={styles.linkText}>Continue Reading</Text>
+                  <Icon
+                    name="keyboard-arrow-right"
+                    size={20}
+                    color="#5AC087"
+                    style={styles.linkIcon}
+                  />
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </>
     )
   );
 };

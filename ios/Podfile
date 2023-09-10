@@ -9,24 +9,24 @@ $RNFirebaseAsStaticFramework = true
 prepare_react_native_project!
 
 setup_permissions([
-   'AppTrackingTransparency',
-   'BluetoothPeripheral',
-   'Calendars',
-   'Camera',
-   'Contacts',
-   'FaceID',
-   'LocationAccuracy',
-   'LocationAlways',
-   'LocationWhenInUse',
-   'MediaLibrary',
-   'Microphone',
-   'Motion',
-   'Notifications',
-   'PhotoLibrary',
-   'PhotoLibraryAddOnly',
-   'Reminders',
-   'SpeechRecognition',
-   'StoreKit'
+   'AppTrackingTransparency'
+  #  'BluetoothPeripheral',
+  #  'Calendars',
+  #  'Camera',
+  #  'Contacts',
+  #  'FaceID	',
+  #  'LocationAccuracy',
+  #  'LocationAlways',
+  #  'LocationWhenInUse',
+  #  'MediaLibrary',
+  #  'Microphone',
+  #  'Motion',
+  #  'Notifications',
+  #  'PhotoLibrary',
+  #  'PhotoLibraryAddOnly',
+  #  'Reminders',
+  #  'SpeechRecognition',
+  #  'StoreKit'
 ])
 
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.

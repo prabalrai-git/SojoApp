@@ -11,14 +11,12 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import SearchBar from '../components/SearchBar/SearchBar';
 import Axios from './../api/server';
 import CreateProfileHeader from '../components/CreateProfileHeader';
 import {windowWidth} from '../helper/usefulConstants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AddtopicsRegister from '../components/AddtopicsRegister';
 import Icon from 'react-native-vector-icons/Feather';
-import {showTabBar} from '../redux/features/HideTabBar';
 import {useDispatch, useSelector} from 'react-redux';
 
 const TopicsScreen = ({navigation, route}) => {
@@ -31,6 +29,31 @@ const TopicsScreen = ({navigation, route}) => {
   const [newTopicAdded, setNewTopicAdded] = useState(false);
 
   const config = route?.params?.config;
+
+  const getAdMobIdsFromFireStore = async () => {
+    try {
+      const ApIds = await firestore().collection('adMobIds').get();
+
+      setAdMobIds(ApIds.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getBannerAdsIntervalFromFireStore = async () => {
+    try {
+      const interval = await firestore().collection('bannerAdsInterval').get();
+
+      setAdInterval(interval.docs[0]._data.Interval);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAdMobIdsFromFireStore();
+    getBannerAdsIntervalFromFireStore();
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -165,7 +188,7 @@ const TopicsScreen = ({navigation, route}) => {
           Explore Topics
         </Text> */}
             <View style={{marginTop: 20}}>
-              {filteredTopics?.map(item => {
+              {filteredTopics?.map((item, index) => {
                 return (
                   <AddtopicsRegister
                     key={item?.id}

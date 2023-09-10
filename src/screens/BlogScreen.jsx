@@ -55,10 +55,13 @@ const BlogScreen = ({route}) => {
 
   const dispatch = useDispatch();
 
-  const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
-    requestNonPersonalizedAdsOnly: true,
-    keywords: ['fashion', 'clothing'],
-  });
+  const interstitial = InterstitialAd.createForAdRequest(
+    'ca-app-pub-7141466234997058/2285141810',
+    {
+      requestNonPersonalizedAdsOnly: true,
+      keywords: ['fashion', 'clothing'],
+    },
+  );
 
   useEffect(() => {
     if (data?.image) {
@@ -108,7 +111,7 @@ const BlogScreen = ({route}) => {
 
     // Unsubscribe from events on unmount
     return unsubscribe;
-  }, []);
+  }, [data]);
 
   // Start loading the interstitial straight away
 
@@ -518,13 +521,21 @@ const BlogScreen = ({route}) => {
                     },
                   ]}
                   showsVerticalScrollIndicator={false}>
-                  <BannerAd
-                    unitId={TestIds.BANNER}
-                    size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-                    requestOptions={{
-                      requestNonPersonalizedAdsOnly: true,
-                    }}
-                  />
+                  <View
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 10,
+                    }}>
+                    <BannerAd
+                      unitId={'ca-app-pub-7141466234997058/1521088001'}
+                      size="365x45"
+                      requestOptions={{
+                        requestNonPersonalizedAdsOnly: true,
+                      }}
+                    />
+                  </View>
 
                   <View style={styles.blog}>
                     <Text
@@ -601,10 +612,16 @@ const BlogScreen = ({route}) => {
                     {/* <View style={styles.shareWrapper}>
            <Text style={styles.shareTitle}>Share this story</Text>
          </View> */}
-                    <View style={{marginLeft: -13}}>
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: 10,
+                      }}>
                       <BannerAd
-                        unitId={TestIds.BANNER}
-                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                        unitId={'ca-app-pub-7141466234997058/4147251345'}
+                        size="365x45"
                         requestOptions={{
                           requestNonPersonalizedAdsOnly: true,
                         }}
