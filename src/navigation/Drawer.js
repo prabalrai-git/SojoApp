@@ -54,9 +54,7 @@ const CustomHeader = ({setFilteredTopics, navigation}) => {
         const res = await Axios.get('/topics');
         setTopics(res.data.data);
         setFilteredTopics(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     fetchTopics();
   }, []);
@@ -201,7 +199,6 @@ export const HomeDrawerNavigator = () => {
       setFilteredTopics(res.data.data.topics);
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);
@@ -377,9 +374,7 @@ const CustomExploreHeader = ({setFilteredTopics, navigation}) => {
         const res = await Axios.get('/topics');
         setTopics(res.data.data);
         setFilteredTopics(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     fetchTopics();
   }, []);
@@ -488,9 +483,7 @@ export const ExploreDrawerNavigator = () => {
         const res = await Axios.get('/topics');
         setTopics(res.data.data);
         setFilteredTopics(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     fetchTopics();
   }, []);

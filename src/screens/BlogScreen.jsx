@@ -127,9 +127,7 @@ const BlogScreen = ({route}) => {
     try {
       const res = await Axios.get(`/news/${id}?userId=${profile?.id}`);
       setData(res.data.data);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const scrollToTop = () => {
     if (scrollRef.current) {
@@ -161,9 +159,7 @@ const BlogScreen = ({route}) => {
         : setSimilarBlogs(res.data.data);
       setLoading(false);
       setHasMore(res.data.pagination.nextPage !== null);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {}, []);
@@ -190,9 +186,7 @@ const BlogScreen = ({route}) => {
 
       setRefetch(prev => !prev);
       dispatch(toggle());
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const url = `https://sojonews.com/news/${id}`;
@@ -272,7 +266,6 @@ const BlogScreen = ({route}) => {
       }
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);

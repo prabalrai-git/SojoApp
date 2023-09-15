@@ -36,9 +36,7 @@ const Category = () => {
       const ApIds = await firestore().collection('adMobIds').get();
 
       setAdMobIds(ApIds.docs);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getBannerAdsIntervalFromFireStore = async () => {
@@ -146,7 +144,6 @@ const Category = () => {
       }
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);

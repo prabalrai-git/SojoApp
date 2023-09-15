@@ -57,14 +57,12 @@ const VerifyScreen = ({navigation, route}) => {
       });
       if (res.status === 200) {
         setResendLoading(false);
-        console.log('done');
         Alert.alert('Token sent successfully !');
         // toast.success('Resent verification token', {
         //   theme: 'colored',
         // });
       }
     } catch (err) {
-      console.log(err);
       setResendLoading(false);
       setErrorMessage(err.response.data.err);
     }

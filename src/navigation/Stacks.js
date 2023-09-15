@@ -224,10 +224,10 @@ export const TabAndAuthStack = () => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
     messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.data.id,
-      );
+      // console.log(
+      //   'Notification caused app to open from background state:',
+      //   remoteMessage.data.id,
+      // );
 
       navigation.navigate('Blog', {id: Number(remoteMessage.data.id)});
     });
@@ -237,10 +237,10 @@ export const TabAndAuthStack = () => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.data.id,
-          );
+          // console.log(
+          //   'Notification caused app to open from quit state:',
+          //   remoteMessage.data.id,
+          // );
           navigation.navigate('Blog', {id: Number(remoteMessage.data.id)});
           // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
         }

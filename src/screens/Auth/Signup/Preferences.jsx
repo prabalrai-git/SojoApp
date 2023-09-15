@@ -58,6 +58,7 @@ const Preferences = ({navigation, route}) => {
         skipNSFW,
         state,
       };
+
       try {
         setLoading(true);
         const res = await Axios.post('/users/profile/complete', data, config);
@@ -67,10 +68,9 @@ const Preferences = ({navigation, route}) => {
         setLoading(false);
       } catch (err) {
         setLoading(false);
-        console.log(err);
         if (err && err.response && err.response.data) {
-          console.log(err.response.data);
-          console.log(err.response.data.err);
+          // console.log(err.response.data);
+          // console.log(err.response.data.err);
         }
       }
     }
@@ -90,6 +90,8 @@ const Preferences = ({navigation, route}) => {
       state: route?.params?.data?.state ? route?.params?.data?.state : null,
     };
 
+    // return console.log(data);
+
     try {
       setLoading(true);
       const res = await Axios.post(
@@ -101,10 +103,10 @@ const Preferences = ({navigation, route}) => {
       navigation.navigate('TopicsScreenLogin', {
         config: config,
       });
+
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      console.log(err);
       // if (err && err.response && err.response.data) {
       //   console.log(err.response.data);
       //   console.log(err.response.data.err);

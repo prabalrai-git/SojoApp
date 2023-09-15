@@ -67,14 +67,14 @@ const ProfileSettings = props => {
         messaging()
           .subscribeToTopic(userTopics[x])
           .then(() => {})
-          .catch(console.log('error'));
+          .catch();
       }
     } else if (userTopics && !checked) {
       for (let x in userTopics) {
         messaging()
           .unsubscribeFromTopic(userTopics[x])
           .then(() => {})
-          .catch(console.log('error'));
+          .catch();
       }
     }
   }, [checked, userTopics]);
@@ -112,7 +112,6 @@ const ProfileSettings = props => {
       }
       setUserTopics(subscribeTopics);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setUserTopics(null);
@@ -177,9 +176,7 @@ const ProfileSettings = props => {
           routes: [{name: 'MainScreen'}],
         });
       }
-    } catch (error) {
-      console.log(error, 'something went wrong');
-    }
+    } catch (error) {}
   };
 
   const removeGuestUser = async () => {

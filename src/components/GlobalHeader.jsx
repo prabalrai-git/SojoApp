@@ -16,9 +16,7 @@ const GlobalHeader = ({id, isShown = true}) => {
       try {
         const res = await Axios.get(`/topics/${id}`);
         setTopic(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     id && fetchTopic();
   }, [id]);

@@ -10,6 +10,8 @@ import {
   Platform,
   Image,
   TouchableOpacity,
+  ScrollView,
+  TextInput,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -26,6 +28,9 @@ import _ from 'lodash';
 import DeviceInfo from 'react-native-device-info';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import firestore from '@react-native-firebase/firestore';
+import SurveyModal from '../components/SurveyModal';
+
+///
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
@@ -37,6 +42,7 @@ const HomeScreen = ({navigation}) => {
   const [isGuest, setIsGuest] = useState(false);
   const [adMobIds, setAdMobIds] = useState();
   const [adInterval, setAdInterval] = useState();
+  //
 
   const dispatch = useDispatch();
 
@@ -54,9 +60,7 @@ const HomeScreen = ({navigation}) => {
   const setFirstTime = async () => {
     try {
       await AsyncStorage.setItem('notFirstTime', 'yes');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   async function requestUserPermissionNotificationIOS() {
     const authStatus = await messaging().requestPermission();
@@ -65,7 +69,7 @@ const HomeScreen = ({navigation}) => {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
     }
   }
 
@@ -102,9 +106,7 @@ const HomeScreen = ({navigation}) => {
       const ApIds = await firestore().collection('adMobIds').get();
 
       setAdMobIds(ApIds.docs);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getBannerAdsIntervalFromFireStore = async () => {
@@ -112,9 +114,7 @@ const HomeScreen = ({navigation}) => {
       const interval = await firestore().collection('bannerAdsInterval').get();
 
       setAdInterval(interval.docs[0]._data.Interval);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -124,7 +124,28 @@ const HomeScreen = ({navigation}) => {
     }
   }, [navigation]);
   // fetch profile
-  const fetchProfile = async () => {
+  // const fetchProfile = async () => {
+  //   try {
+  //     const res = await Axios.get('/users/profile', config);
+
+  //     if (!res.data.data.isComplete) {
+  //       return navigation.replace('InfoScreen');
+  //     }
+  //     setProfile(res.data.data);
+  //   } catch (err) {
+  //     if (err && err.response && err.response.status === 401) {
+  //       logout();
+  //       setProfile(null);
+  //       // return router.replace('/');
+  //     }
+  //   }
+  // };
+  useEffect(() => {
+    if (config) {
+      fetchProfile();
+    }
+  }, [config]);
+  const fetchProfile = useCallback(async () => {
     try {
       const res = await Axios.get('/users/profile', config);
 
@@ -133,44 +154,91 @@ const HomeScreen = ({navigation}) => {
       }
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);
         // return router.replace('/');
       }
     }
-  };
-  useEffect(() => {
-    if (config) {
-      fetchProfile();
-    }
-  }, [config]);
+  }, [config, navigation]);
 
   // fetch user news
-  const fetchNews = async () => {
+  // const fetchNews = async () => {
+  //   try {
+  //     const res = await Axios.get(
+  //       `/users/news?page=${page}&id=${profile?.id}&limit=27`,
+  //       config,
+  //     );
+  //     // return console.log(res.data.data);
+  //     const newData = res.data.data;
+
+  //     const uniqueItemIds = new Set(news?.map(item => item.id));
+  //     const filteredNewData = newData.filter(
+  //       newItem => !uniqueItemIds.has(newItem.id),
+  //     );
+  //     news.length > 0
+  //       ? setNews(prevData => {
+  //           // const filteredData = prevData.filter(item => {
+  //           //   return !newData.some(newItem => newItem.id === item.id);
+  //           // });
+  //           //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
+  //           return [...prevData, ...filteredNewData];
+  //         })
+  //       : setNews(res.data.data);
+  //     setLoading(false);
+  //     setHasMore(res.data.pagination.nextPage !== null);
+  //   } catch (err) {}
+  // };
+
+  const fetchNews = async pageNumber => {
     try {
       const res = await Axios.get(
-        `/users/news?page=${page}&id=${profile?.id}`,
+        `/users/news?page=${pageNumber}&id=${profile?.id}&limit=25`, // Adjust the limit as needed
         config,
       );
-      // return console.log(res.data.data);
       const newData = res.data.data;
-      news.length > 0
-        ? setNews(prevData => {
-            const filteredData = prevData.filter(item => {
-              return !newData.some(newItem => newItem.id === item.id);
-            });
-            //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
-            return [...filteredData, ...newData];
-          })
-        : setNews(res.data.data);
+
+      setNews(prevData => {
+        const uniqueItemIds = new Set(prevData.map(item => item.id));
+        const filteredNewData = newData.filter(
+          newItem => !uniqueItemIds.has(newItem.id),
+        );
+        return [...prevData, ...filteredNewData];
+      });
+
       setLoading(false);
       setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
-      console.log(err);
+      // Handle errors
     }
   };
+
+  // const fetchNews = useCallback(async () => {
+  //   try {
+  //     const res = await Axios.get(
+  //       `/users/news?page=${page}&id=${profile?.id}&limit=22`,
+  //       config,
+  //     );
+  //     // return console.log(res.data.data);
+  //     const newData = res.data.data;
+
+  //     const uniqueItemIds = new Set(news?.map(item => item.id));
+  //     const filteredNewData = newData.filter(
+  //       newItem => !uniqueItemIds.has(newItem.id),
+  //     );
+  //     news.length > 0
+  //       ? setNews(prevData => {
+  //           // const filteredData = prevData.filter(item => {
+  //           //   return !newData.some(newItem => newItem.id === item.id);
+  //           // });
+  //           //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
+  //           return [...prevData, ...filteredNewData];
+  //         })
+  //       : setNews(res.data.data);
+  //     setLoading(false);
+  //     setHasMore(res.data.pagination.nextPage !== null);
+  //   } catch (err) {}
+  // }, [config, page, profile, news]);
 
   useEffect(() => {
     getUserType();
@@ -191,6 +259,7 @@ const HomeScreen = ({navigation}) => {
     if (hasMore) {
       setPage(prevPage => prevPage + 1);
       setLoading(true);
+      fetchNews(page + 1);
     } else {
       setLoading(false);
     }
@@ -215,7 +284,7 @@ const HomeScreen = ({navigation}) => {
     const shouldRenderAd =
       adInterval && (index + 1) % adInterval === 0 && adMobIds;
     const adIndex = (index + 1) / adInterval;
-    const adItem = adMobIds[adIndex - 1];
+    const adItem = adMobIds && adMobIds[adIndex - 1];
 
     return (
       <>
@@ -231,6 +300,7 @@ const HomeScreen = ({navigation}) => {
             {adItem && (
               <BannerAd
                 unitId={adItem._data.adId}
+                // unitId={'ca-app-pub-3940256099942544/6300978111'}
                 size="365x45"
                 requestOptions={{
                   requestNonPersonalizedAdsOnly: true,
@@ -278,12 +348,13 @@ const HomeScreen = ({navigation}) => {
   const darkMode = useSelector(state => state.darkMode.value);
   const scrollRef = React.createRef();
 
-  const onFabPress = useCallback(() => {
+  const onFabPress = () => {
     scrollRef.current?.scrollToOffset({animated: true, offset: 0});
-  }, []);
+  };
 
   return (
     <>
+      {/* <SurveyModal /> */}
       <SafeAreaView
         style={{
           flex: 0,
@@ -348,7 +419,7 @@ const HomeScreen = ({navigation}) => {
           renderItem={renderItem}
           keyExtractor={item => item.id}
           ListFooterComponent={renderFooter}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.4}
           showsHorizontalScrollIndicator={false}
           onEndReached={handleLoadMore}
           refreshing={page === 1 && loading}

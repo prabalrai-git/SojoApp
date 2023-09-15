@@ -35,18 +35,14 @@ const SearchScreen = ({navigation, route}) => {
       const ApIds = await firestore().collection('adMobIds').get();
 
       setAdMobIds(ApIds.docs);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const getBannerAdsIntervalFromFireStore = async () => {
     try {
       const interval = await firestore().collection('bannerAdsInterval').get();
 
       setAdInterval(interval.docs[0]._data.Interval);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const dispatch = useDispatch();
@@ -89,7 +85,6 @@ const SearchScreen = ({navigation, route}) => {
       }
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);
@@ -119,7 +114,6 @@ const SearchScreen = ({navigation, route}) => {
       setBlogs(res.data.data);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       setLoading(false);
     }
   };

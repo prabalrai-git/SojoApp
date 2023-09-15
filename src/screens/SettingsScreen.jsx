@@ -88,7 +88,6 @@ const SettingsScreen = () => {
       }
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);
@@ -121,7 +120,6 @@ const SettingsScreen = () => {
       // ? setNews(prevData => [...prevData, ...res.data.bookmarkedNews])
       // :
     } catch (err) {
-      console.log(err);
       setNews();
     }
   };

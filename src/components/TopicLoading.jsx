@@ -26,16 +26,18 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile, index}) => {
       setToggle(false);
       messaging()
         .unsubscribeFromTopic(item?.name.toLowerCase())
-        .then(() =>
-          console.log(`Unsubscribed fom the ${item?.name.toLowerCase()}`),
+        .then(
+          () => {},
+          // console.log(`Unsubscribed fom the ${item?.name.toLowerCase()}`),
         );
     }
     if (toggle === false) {
       setToggle(true);
       messaging()
         .subscribeToTopic(item?.name.toLowerCase())
-        .then(() =>
-          console.log(`subscribeToTopic ${item?.name.toLowerCase()}`),
+        .then(
+          () => {},
+          // console.log(`subscribeToTopic ${item?.name.toLowerCase()}`),
         );
     }
   };

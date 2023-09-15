@@ -31,7 +31,6 @@ const SplashScreen = () => {
       const res = await Axios.get('/users/profile', config);
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         await AsyncStorage.removeItem('token');
         navigation.reset({index: 0, routes: [{name: 'Auth'}]});

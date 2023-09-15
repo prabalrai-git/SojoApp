@@ -206,9 +206,7 @@ const EditProfile = props => {
       await Axios.patch('users/profile/details', data, config);
       setReloadProfileOnEdit(prev => !prev);
       onBackPress();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (

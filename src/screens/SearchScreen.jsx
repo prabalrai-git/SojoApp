@@ -34,18 +34,14 @@ const SearchScreen = ({navigation, route}) => {
       const ApIds = await firestore().collection('adMobIds').get();
 
       setAdMobIds(ApIds.docs);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const getBannerAdsIntervalFromFireStore = async () => {
     try {
       const interval = await firestore().collection('bannerAdsInterval').get();
 
       setAdInterval(interval.docs[0]._data.Interval);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const dispatch = useDispatch();
@@ -79,7 +75,6 @@ const SearchScreen = ({navigation, route}) => {
       setBlogs(res.data.data);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       setLoading(false);
     }
   };
@@ -88,7 +83,6 @@ const SearchScreen = ({navigation, route}) => {
     route.params.term && fetchBlogs();
   }, [route.params.term]);
 
-  console.log(route.params.profile.isGuestUser, 'mero bata');
   const renderFooter = () => {
     if (!loading) return null;
     return <ActivityIndicator size="large" style={{marginVertical: 20}} />;

@@ -59,9 +59,7 @@ const Category = () => {
       const res = await Axios.get('/topics');
       setData(res.data.data);
       setFilteredTopics(res.data.data);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -100,7 +98,6 @@ const Category = () => {
       });
       setSelectedTopics(arr);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);

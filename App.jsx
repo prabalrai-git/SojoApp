@@ -62,7 +62,6 @@ export default function App() {
       }
       setUserTopics(subscribeTopics);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setUserTopics(null);
@@ -93,7 +92,7 @@ export default function App() {
   }, [userTopics]);
 
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
+    // console.log('Message handled in the background!', remoteMessage);
   });
 
   /// notification
@@ -124,7 +123,7 @@ export default function App() {
 
       setUpdatedVersion(version._data.version);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -160,7 +159,7 @@ export default function App() {
               onPress: () => openGoogleORAppStore(),
               style: 'cancel',
             },
-            {text: 'Later', onPress: () => console.log('OK Pressed')},
+            {text: 'Later', onPress: () => {}},
           ])
         : null}
       <Provider store={store}>

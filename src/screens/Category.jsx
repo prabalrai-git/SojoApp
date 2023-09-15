@@ -60,7 +60,7 @@ const Category = () => {
   const fetchData = async page => {
     try {
       const res = await Axios.get(
-        `/news/categories/${route.params.id}?page=${page}&userId=${profile?.id}`,
+        `/news/categories/${route.params.id}?page=${page}&userId=${profile?.id}&limit=18`,
         // config,
       );
 
@@ -69,7 +69,6 @@ const Category = () => {
       setHasMore(res.data.pagination.nextPage !== null);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       if (err.response.status === 404) {
         navigation.replace('Home');
       }
@@ -82,7 +81,6 @@ const Category = () => {
       const res = await Axios.get(`/topics/${route.params.id}`);
       setTopic(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err.response.status === 404) {
         navigation.replace('Home');
       }
@@ -93,18 +91,14 @@ const Category = () => {
       const ApIds = await firestore().collection('adMobIds').get();
 
       setAdMobIds(ApIds.docs);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const getBannerAdsIntervalFromFireStore = async () => {
     try {
       const interval = await firestore().collection('bannerAdsInterval').get();
 
       setAdInterval(interval.docs[0]._data.Interval);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -147,7 +141,6 @@ const Category = () => {
       }
       setProfile(res.data.data);
     } catch (err) {
-      console.log(err);
       if (err && err.response && err.response.status === 401) {
         logout();
         setProfile(null);

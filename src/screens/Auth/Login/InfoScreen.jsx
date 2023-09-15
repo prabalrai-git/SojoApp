@@ -171,7 +171,6 @@ const InfoScreen = ({navigation}) => {
         occupation: setOccupationId(occupation),
         state: setStateId(state),
       };
-      // return console.log(data);
       return navigation.navigate('Preferences', {data});
     }
   };

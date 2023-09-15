@@ -73,6 +73,9 @@ const MainScreen = () => {
     });
 
     try {
+      setIndicatorLoading(true);
+      setServiceIsRunning(true);
+
       const res = await appleAuthAndroid.signIn();
 
       const credentials = jwt_decode(res.id_token);
@@ -111,8 +114,13 @@ const MainScreen = () => {
         });
       } else {
         navigation.navigate('InfoScreen');
+        setIndicatorLoading(false);
+        setServiceIsRunning(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      setIndicatorLoading(false);
+      setServiceIsRunning(false);
+    }
   }
 
   async function onAppleButtonPress() {
@@ -136,6 +144,9 @@ const MainScreen = () => {
       const {email, displayName} = userCredential.user._user;
 
       try {
+        setIndicatorLoading(true);
+        setServiceIsRunning(true);
+
         const response =
           email &&
           (await Axios.post('/auth/applePhoneLogin', {
@@ -151,15 +162,24 @@ const MainScreen = () => {
             params: {screen: 'Home'},
           });
         } else {
+          setIndicatorLoading(false);
+          setServiceIsRunning(false);
+
           navigation.navigate('InfoScreen');
         }
-      } catch (error) {}
+      } catch (error) {
+        setIndicatorLoading(false);
+        setServiceIsRunning(false);
+      }
     } else {
       // handle this - retry?
     }
   }
   const signIn = async () => {
     try {
+      setIndicatorLoading(true);
+      setServiceIsRunning(true);
+
       await GoogleSignin.hasPlayServices();
       const {idToken, user} = await GoogleSignin.signIn();
 
@@ -180,6 +200,9 @@ const MainScreen = () => {
             params: {screen: 'Home'},
           });
         } else {
+          setIndicatorLoading(false);
+          setServiceIsRunning(false);
+
           navigation.navigate('InfoScreen');
         }
       } catch (error) {
@@ -197,23 +220,25 @@ const MainScreen = () => {
         }
       }
     } catch (error) {
+      setIndicatorLoading(false);
+      setServiceIsRunning(false);
+
       signOut();
-      console.log(error);
       // setErrorMessage(error.Error);
 
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-        console.log(error);
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-        console.log(error);
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-        console.log(error);
-      } else {
-        // some other error happened
-        console.log(error);
-      }
+      // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      //   // user cancelled the login flow
+      //   console.log(error);
+      // } else if (error.code === statusCodes.IN_PROGRESS) {
+      //   // operation (e.g. sign in) is in progress already
+      //   console.log(error);
+      // } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      //   // play services not available or outdated
+      //   console.log(error);
+      // } else {
+      //   // some other error happened
+      //   console.log(error);
+      // }
     }
   };
   const signOut = async () => {
@@ -254,9 +279,6 @@ const MainScreen = () => {
         params: {screen: 'Home'},
       });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
       setIndicatorLoading(false);
       setServiceIsRunning(false);
     }

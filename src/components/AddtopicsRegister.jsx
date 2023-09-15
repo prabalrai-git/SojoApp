@@ -44,7 +44,7 @@ const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
               setNewTopicAdded(prev => !prev);
               setLoading(false);
             } catch (error) {
-              console.log(error);
+              // console.log(error);
             }
           }}
         />
@@ -64,7 +64,7 @@ const AddtopicsRegister = ({item, config, setNewTopicAdded, userTopics}) => {
               setNewTopicAdded(prev => !prev);
               setLoading(false);
             } catch (error) {
-              console.log(error);
+              // console.log(error);
             }
           }}
         />

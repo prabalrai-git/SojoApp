@@ -30,30 +30,30 @@ const TopicsScreen = ({navigation, route}) => {
 
   const config = route?.params?.config;
 
-  const getAdMobIdsFromFireStore = async () => {
-    try {
-      const ApIds = await firestore().collection('adMobIds').get();
+  // const getAdMobIdsFromFireStore = async () => {
+  //   try {
+  //     const ApIds = await firestore().collection('adMobIds').get();
 
-      setAdMobIds(ApIds.docs);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setAdMobIds(ApIds.docs);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const getBannerAdsIntervalFromFireStore = async () => {
-    try {
-      const interval = await firestore().collection('bannerAdsInterval').get();
+  // const getBannerAdsIntervalFromFireStore = async () => {
+  //   try {
+  //     const interval = await firestore().collection('bannerAdsInterval').get();
 
-      setAdInterval(interval.docs[0]._data.Interval);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setAdInterval(interval.docs[0]._data.Interval);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getAdMobIdsFromFireStore();
-    getBannerAdsIntervalFromFireStore();
-  }, []);
+  // useEffect(() => {
+  //   getAdMobIdsFromFireStore();
+  //   getBannerAdsIntervalFromFireStore();
+  // }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -61,9 +61,7 @@ const TopicsScreen = ({navigation, route}) => {
         const res = await Axios.get('/users/profile', config);
         // console.log(res.data.data.topics);
         setUserTopics(res.data.data.topics);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     fetchUserData();
   }, [newTopicAdded]);
@@ -74,9 +72,7 @@ const TopicsScreen = ({navigation, route}) => {
         const res = await Axios.get('/topics');
         setData(res.data.data);
         setFilteredTopics(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     fetchData();
   }, [navigation]);
