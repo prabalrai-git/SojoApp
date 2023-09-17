@@ -19,6 +19,7 @@ export default function App() {
   const [userTopics, setUserTopics] = useState([]);
   const [config, setConfig] = useState();
   const [updatedVersion, setUpdatedVersion] = useState();
+  const [lastApiCallTimestamp, setLastApiCallTimestamp] = useState(null);
 
   const AdPermission = async () => {
     const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
@@ -41,14 +42,49 @@ export default function App() {
         setConfig(config);
       }
     };
+    AsyncStorage.getItem('lastApiCallTimestamp')
+      .then(timestamp => {
+        if (timestamp) {
+          // If a timestamp is found, check if 24 hours have passed
+          const lastCallTime = new Date(timestamp);
+          const currentTime = new Date();
+
+          if (currentTime - lastCallTime >= 24 * 60 * 60 * 1000) {
+            // If 24 hours have passed, make the API call
+            setUserActivity();
+          }
+        } else {
+          // If no timestamp is found, make the API call
+          setUserActivity();
+        }
+      })
+      .catch(error => console.error(error));
     fetchToken();
     AdPermission();
   }, []);
 
+  const setUserActivity = async () => {
+    // Make your API call here
+    try {
+      await Axios.post('/users/profile/addUserActivity', {}, config);
+
+      // Store the current timestamp in AsyncStorage
+      AsyncStorage.setItem('lastApiCallTimestamp', new Date().toISOString());
+      // Handle the API response data
+    } catch (error) {
+      console.error('API Error:', error);
+      if (error.response) {
+        console.error('Response Data:', error.response.data);
+      }
+    }
+  };
+
   // fetch profile
   const fetchProfile = async () => {
     try {
+      console.log(config);
       const res = await Axios.get('/users/profile', config);
+
       // res.data.data.topics.forEach(item => {});
       if (!res.data.data.isComplete) {
         return navigation.navigate('Auth', {screen: 'InfoScreen'});

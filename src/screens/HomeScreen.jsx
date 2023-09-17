@@ -22,6 +22,7 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
+import {FlashList} from '@shopify/flash-list';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -265,8 +266,8 @@ const HomeScreen = ({navigation}) => {
             <GlobalHeader />
           </View>
           <SearchBar />
-          <View style={{marginBottom: 288}}>
-            <FlatList
+          <View style={{marginBottom: 288, height: '100%'}}>
+            <FlashList
               ref={scrollRef}
               data={blogs}
               numColumns={DeviceInfo.isTablet() ? 2 : 1}
@@ -277,6 +278,7 @@ const HomeScreen = ({navigation}) => {
               showsVerticalScrollIndicator={false}
               onEndReached={handleLoadMore}
               refreshing={page === 1 && loading}
+              estimatedItemSize={100}
               // onScroll={event => {
               //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
               // }}

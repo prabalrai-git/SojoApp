@@ -20,6 +20,7 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
+import {FlashList} from '@shopify/flash-list';
 
 const Category = () => {
   const [data, setData] = useState([]);
@@ -85,7 +86,7 @@ const Category = () => {
   const fetchData = async page => {
     try {
       const res = await Axios.get(
-        `/news/categories/${route.params.id}?page=${page}&userId=${profile.id}&limit=18`,
+        `/news/categories/${route.params.id}?page=${page}&userId=${profile.id}&limit=22`,
         // config,
       );
       setData(prevData => [...prevData, ...res.data.data]);

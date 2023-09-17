@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState, memo} from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -222,7 +222,7 @@ const BlogCard = ({
   );
 };
 
-export default BlogCard;
+export default memo(BlogCard);
 
 const styles = StyleSheet.create({
   cardContainer: {

@@ -26,7 +26,9 @@ function SurveyModal() {
       const showSurvey = await firestore()
         .collection('showSurveyQuestion')
         .get();
-      setShowSurvey(showSurvey.docs[0]._data.show);
+      setTimeout(() => {
+        setShowSurvey(showSurvey.docs[0]._data.show);
+      }, 4000);
       if (showSurvey.docs[0]._data.show) {
         setModalVisible(true);
       }

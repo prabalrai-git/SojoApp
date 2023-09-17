@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   FlatList,
   SafeAreaView,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {logoutUser} from './../helper/auth';
@@ -22,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
 import {BannerAd, TestIds} from 'react-native-google-mobile-ads';
+import messaging from '@react-native-firebase/messaging';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
@@ -39,6 +42,17 @@ const SettingsScreen = () => {
   const reload = useSelector(state => state.reloadNews.value);
 
   const dispatch = useDispatch();
+
+  async function requestUserPermissionNotificationIOS() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      // console.log('Authorization status:', authStatus);
+    }
+  }
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(showTabBar());
@@ -48,6 +62,14 @@ const SettingsScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+    }
+    if (Platform.OS === 'ios') {
+      requestUserPermissionNotificationIOS();
+    }
     getUserType();
   }, []);
 

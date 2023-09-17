@@ -253,7 +253,7 @@ const MainScreen = () => {
     try {
       setIndicatorLoading(true);
       setServiceIsRunning(true);
-      const response = await Axios.post('auth/guestLoginSingle');
+      const response = await Axios.post('auth/guestLogin');
 
       const {token, guestUser} = response.data.data;
 
@@ -267,11 +267,11 @@ const MainScreen = () => {
           authorization: `Bearer ${token}`,
         },
       };
-      // const topics = await Axios.get('/topics');
+      const topics = await Axios.get('/topics');
 
-      // for (const item of topics.data.data) {
-      //   await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
-      // }
+      for (const item of topics.data.data) {
+        await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
+      }
       setIndicatorLoading(false);
       setServiceIsRunning(false);
       navigation.replace('AuthHome', {

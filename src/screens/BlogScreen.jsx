@@ -33,6 +33,7 @@ import {
   InterstitialAd,
   AdEventType,
 } from 'react-native-google-mobile-ads';
+import {FlashList} from '@shopify/flash-list';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
@@ -499,6 +500,7 @@ const BlogScreen = ({route}) => {
         </View>
         <FlatList
           ref={scrollRef}
+          estimatedItemSize={100}
           data={[null]}
           renderItem={() => {
             return data ? (
@@ -642,21 +644,24 @@ const BlogScreen = ({route}) => {
                  return <Card key={item.id} item={item} />;
                })} */}
                   {/* </View> */}
-                  <FlatList
-                    data={similarBlogs}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    ListFooterComponent={renderFooter}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={false}
-                    onEndReached={handleLoadMore}
-                    numColumns={DeviceInfo.isTablet() ? 2 : 1}
-                    refreshing={page === 1 && loading}
-                    onRefresh={() => {
-                      setPage(1);
-                      setSimilarBlogs([]);
-                    }}
-                  />
+                  <View style={{height: '100%'}}>
+                    <FlatList
+                      data={similarBlogs}
+                      renderItem={renderItem}
+                      keyExtractor={item => item.id}
+                      ListFooterComponent={renderFooter}
+                      onEndReachedThreshold={1.0}
+                      showsHorizontalScrollIndicator={false}
+                      onEndReached={handleLoadMore}
+                      numColumns={DeviceInfo.isTablet() ? 2 : 1}
+                      refreshing={page === 1 && loading}
+                      estimatedItemSize={100}
+                      onRefresh={() => {
+                        setPage(1);
+                        setSimilarBlogs([]);
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
             ) : (

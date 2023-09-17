@@ -19,6 +19,7 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
+import {FlashList} from '@shopify/flash-list';
 
 const SearchScreen = ({navigation, route}) => {
   const [blogs, setBlogs] = useState([]);
@@ -211,7 +212,7 @@ const SearchScreen = ({navigation, route}) => {
           <GlobalHeader isShown={false} />
         </View>
         <SearchBar />
-        <FlatList
+        <FlashList
           ListHeaderComponent={() => (
             <View>
               <Text
@@ -228,6 +229,7 @@ const SearchScreen = ({navigation, route}) => {
               </Text>
             </View>
           )}
+          estimatedItemSize={100}
           data={blogs}
           renderItem={renderItem}
           keyExtractor={item => item.id}

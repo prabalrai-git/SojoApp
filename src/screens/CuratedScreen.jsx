@@ -7,11 +7,8 @@ import {
   Text,
   StatusBar,
   SafeAreaView,
-  Platform,
   Image,
   TouchableOpacity,
-  ScrollView,
-  TextInput,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -21,14 +18,13 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import HomeHeader from './../components/HomeHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
-import messaging from '@react-native-firebase/messaging';
 import '../../globalThemColor';
-import {PermissionsAndroid} from 'react-native';
 import _ from 'lodash';
 import DeviceInfo from 'react-native-device-info';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import firestore from '@react-native-firebase/firestore';
 import SurveyModal from '../components/SurveyModal';
+import {FlashList} from '@shopify/flash-list';
 
 ///
 
@@ -62,39 +58,21 @@ const HomeScreen = ({navigation}) => {
       await AsyncStorage.setItem('notFirstTime', 'yes');
     } catch (error) {}
   };
-  async function requestUserPermissionNotificationIOS() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    if (enabled) {
-      // console.log('Authorization status:', authStatus);
+  const fetchToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+
+    if (token) {
+      const config = {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+
+      setConfig(config);
     }
-  }
-
+  };
   useEffect(() => {
-    if (Platform.OS === 'android') {
-      PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-    }
-    if (Platform.OS === 'ios') {
-      requestUserPermissionNotificationIOS();
-    }
-    const fetchToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-
-      if (token) {
-        const config = {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        };
-
-        setConfig(config);
-      }
-    };
     fetchToken();
     setFirstTime();
     getAdMobIdsFromFireStore();
@@ -123,23 +101,7 @@ const HomeScreen = ({navigation}) => {
       navigation.replace('WelcomeScreen');
     }
   }, [navigation]);
-  // fetch profile
-  // const fetchProfile = async () => {
-  //   try {
-  //     const res = await Axios.get('/users/profile', config);
 
-  //     if (!res.data.data.isComplete) {
-  //       return navigation.replace('InfoScreen');
-  //     }
-  //     setProfile(res.data.data);
-  //   } catch (err) {
-  //     if (err && err.response && err.response.status === 401) {
-  //       logout();
-  //       setProfile(null);
-  //       // return router.replace('/');
-  //     }
-  //   }
-  // };
   useEffect(() => {
     if (config) {
       fetchProfile();
@@ -162,38 +124,12 @@ const HomeScreen = ({navigation}) => {
     }
   }, [config, navigation]);
 
-  // fetch user news
-  // const fetchNews = async () => {
-  //   try {
-  //     const res = await Axios.get(
-  //       `/users/news?page=${page}&id=${profile?.id}&limit=27`,
-  //       config,
-  //     );
-  //     // return console.log(res.data.data);
-  //     const newData = res.data.data;
-
-  //     const uniqueItemIds = new Set(news?.map(item => item.id));
-  //     const filteredNewData = newData.filter(
-  //       newItem => !uniqueItemIds.has(newItem.id),
-  //     );
-  //     news.length > 0
-  //       ? setNews(prevData => {
-  //           // const filteredData = prevData.filter(item => {
-  //           //   return !newData.some(newItem => newItem.id === item.id);
-  //           // });
-  //           //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
-  //           return [...prevData, ...filteredNewData];
-  //         })
-  //       : setNews(res.data.data);
-  //     setLoading(false);
-  //     setHasMore(res.data.pagination.nextPage !== null);
-  //   } catch (err) {}
-  // };
-
   const fetchNews = async pageNumber => {
     try {
+      setLoading(true);
+
       const res = await Axios.get(
-        `/users/news?page=${pageNumber}&id=${profile?.id}&limit=25`, // Adjust the limit as needed
+        `/users/news?page=${pageNumber}&id=${profile?.id}&limit=15`, // Adjust the limit as needed
         config,
       );
       const newData = res.data.data;
@@ -209,36 +145,11 @@ const HomeScreen = ({navigation}) => {
       setLoading(false);
       setHasMore(res.data.pagination.nextPage !== null);
     } catch (err) {
+      setLoading(false);
+
       // Handle errors
     }
   };
-
-  // const fetchNews = useCallback(async () => {
-  //   try {
-  //     const res = await Axios.get(
-  //       `/users/news?page=${page}&id=${profile?.id}&limit=22`,
-  //       config,
-  //     );
-  //     // return console.log(res.data.data);
-  //     const newData = res.data.data;
-
-  //     const uniqueItemIds = new Set(news?.map(item => item.id));
-  //     const filteredNewData = newData.filter(
-  //       newItem => !uniqueItemIds.has(newItem.id),
-  //     );
-  //     news.length > 0
-  //       ? setNews(prevData => {
-  //           // const filteredData = prevData.filter(item => {
-  //           //   return !newData.some(newItem => newItem.id === item.id);
-  //           // });
-  //           //  filteredData.forEach(item=>console.log(item[0].id,'from loop'));
-  //           return [...prevData, ...filteredNewData];
-  //         })
-  //       : setNews(res.data.data);
-  //     setLoading(false);
-  //     setHasMore(res.data.pagination.nextPage !== null);
-  //   } catch (err) {}
-  // }, [config, page, profile, news]);
 
   useEffect(() => {
     getUserType();
@@ -256,9 +167,8 @@ const HomeScreen = ({navigation}) => {
   }, [config, page, profile]);
 
   const handleLoadMore = () => {
-    if (hasMore) {
+    if (hasMore && !loading) {
       setPage(prevPage => prevPage + 1);
-      setLoading(true);
       fetchNews(page + 1);
     } else {
       setLoading(false);
@@ -267,7 +177,7 @@ const HomeScreen = ({navigation}) => {
 
   const renderFooter = () => {
     if (!loading) return null;
-    return <ActivityIndicator size="large" style={{marginVertical: 20}} />;
+    return <ActivityIndicator size="large" style={{marginVertical: 10}} />;
   };
 
   const BlogItem = React.memo(({item, index, navigation}) => {
@@ -311,34 +221,6 @@ const HomeScreen = ({navigation}) => {
         )}
       </>
     );
-    // if (adInterval && (index + 1) % adInterval === 0 && adMobIds) {
-    //   const adIndex = (index + 1) / adInterval;
-    //   const adItem = adMobIds[adIndex - 1];
-    //   return (
-    //     <>
-    //       {commonContent}
-    //       <View
-    //         style={{
-    //           display: 'flex',
-    //           justifyContent: 'center',
-    //           alignItems: 'center',
-    //           height: 16,
-    //         }}>
-    //         {adItem && (
-    //           <BannerAd
-    //             unitId={adItem._data.adId}
-    //             size="365x45"
-    //             requestOptions={{
-    //               requestNonPersonalizedAdsOnly: true,
-    //             }}
-    //           />
-    //         )}
-    //       </View>
-    //     </>
-    //   );
-    // } else {
-    //   return commonContent;
-    // }
   });
 
   const renderItem = ({item, index}) => {
@@ -372,7 +254,6 @@ const HomeScreen = ({navigation}) => {
         <StatusBar
           backgroundColor={darkMode ? global.brandColorDark : global.brandColor}
         />
-
         <View
           style={[
             styles.topBar,
@@ -386,9 +267,7 @@ const HomeScreen = ({navigation}) => {
 
           <HomeHeader />
         </View>
-
         <SearchBar />
-
         <TouchableOpacity
           onPress={() => {
             onFabPress();
@@ -412,7 +291,8 @@ const HomeScreen = ({navigation}) => {
             />
           </View>
         </TouchableOpacity>
-        <FlatList
+
+        <FlashList
           ref={scrollRef}
           data={news}
           numColumns={DeviceInfo.isTablet() ? 2 : 1}
@@ -429,6 +309,7 @@ const HomeScreen = ({navigation}) => {
             setNews([]);
             navigation.replace('Curated');
           }}
+          estimatedItemSize={100}
         />
       </SafeAreaView>
     </>
