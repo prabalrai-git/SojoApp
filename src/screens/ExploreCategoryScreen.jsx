@@ -285,9 +285,11 @@ const Category = () => {
           numColumns={DeviceInfo.isTablet() ? 2 : 1}
           refreshing={page === 1 && loading}
           onRefresh={() => {
-            navigation.replace('ExploreCategory', {
-              id: route.params.id,
-            });
+            // navigation.replace('ExploreCategory', {
+            //   id: route.params.id,
+            // });
+            setData([]);
+            fetchData(page);
           }}
         />
       </SafeAreaView>

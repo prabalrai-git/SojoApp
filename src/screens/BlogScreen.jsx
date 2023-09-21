@@ -4,14 +4,12 @@ import {
   Text,
   Image,
   StyleSheet,
-  ScrollView,
   useWindowDimensions,
   ActivityIndicator,
   TouchableOpacity,
   SafeAreaView,
   Platform,
   FlatList,
-  Pressable,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -23,17 +21,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {toggle} from '../redux/features/ReloadNewsSlice';
 import Share from 'react-native-share';
 import {useDispatch, useSelector} from 'react-redux';
-import {hideTabBar, showTabBar} from '../redux/features/HideTabBar';
+import {hideTabBar} from '../redux/features/HideTabBar';
 import {useNavigation} from '@react-navigation/native';
 import DeviceInfo from 'react-native-device-info';
 import {
   BannerAd,
-  BannerAdSize,
-  TestIds,
   InterstitialAd,
   AdEventType,
 } from 'react-native-google-mobile-ads';
-import {FlashList} from '@shopify/flash-list';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
@@ -179,14 +174,17 @@ const BlogScreen = ({route}) => {
 
   const toggleBookmark = async () => {
     try {
+      setLoaded(true);
       const res = await Axios.post(
         '/users/bookmarks/toggleOrAddBookmark',
         {userId: profile?.id, newsId: id},
         config,
       );
-
       setRefetch(prev => !prev);
       dispatch(toggle());
+      setTimeout(() => {
+        setLoaded(false);
+      }, 3000);
     } catch (error) {}
   };
 
@@ -432,17 +430,24 @@ const BlogScreen = ({route}) => {
                     flexDirection: 'row',
                   }}
                   onPress={() => toggleBookmark()}>
-                  <Image
-                    source={require('../assets/saved.png')}
-                    style={{
-                      tintColor: 'white',
-                      resizeMode: 'contain',
-                      width: 18,
-                      height: 18,
-                      marginRight: 6,
-                      alignSelf: 'center',
-                    }}
-                  />
+                  {loaded ? (
+                    <ActivityIndicator
+                      color={'white'}
+                      style={{marginRight: 3}}
+                    />
+                  ) : (
+                    <Image
+                      source={require('../assets/saved.png')}
+                      style={{
+                        tintColor: 'white',
+                        resizeMode: 'contain',
+                        width: 18,
+                        height: 18,
+                        marginRight: 6,
+                        alignSelf: 'center',
+                      }}
+                    />
+                  )}
                   <Text
                     style={{
                       color: 'white',

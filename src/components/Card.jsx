@@ -20,6 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import '../../globalThemColor';
 import {windowWidth} from '../helper/usefulConstants';
 import DeviceInfo from 'react-native-device-info';
+import CaughtUp from './CaughtUp';
 
 const BlogCard = ({
   item,
@@ -27,6 +28,7 @@ const BlogCard = ({
   setRenderBookmarked,
   scrollRef,
   isGuest,
+  showCaughtForToday,
 }) => {
   const {width} = Dimensions.get('window');
   const [toggled, setToggled] = useState(
@@ -34,7 +36,6 @@ const BlogCard = ({
   );
   const [config, setConfig] = useState();
   const [profile, setProfile] = useState();
-  // console.log(item.id, 'item from explore');
 
   const dispatch = useDispatch();
 
@@ -129,7 +130,7 @@ const BlogCard = ({
         key={item?.id}
         style={{
           marginTop: 30,
-          height: 440,
+          // height: 440,
           width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
         }}
         onPress={() => {
@@ -218,6 +219,7 @@ const BlogCard = ({
           </View>
         </View>
       </TouchableOpacity>
+      {showCaughtForToday && <CaughtUp />}
     </>
   );
 };

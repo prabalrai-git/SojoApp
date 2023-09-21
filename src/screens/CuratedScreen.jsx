@@ -38,11 +38,66 @@ const HomeScreen = ({navigation}) => {
   const [isGuest, setIsGuest] = useState(false);
   const [adMobIds, setAdMobIds] = useState();
   const [adInterval, setAdInterval] = useState();
+  const [todaysNewsLength, setTodaysNewsLength] = useState(null);
   //
 
   const dispatch = useDispatch();
 
   // after deploying new updates in stores please update firestore in firebase for triggering user prompts to update the app
+
+  let today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  const yyyy = today.getFullYear();
+
+  today = yyyy + '-' + mm + '-' + dd;
+
+  useEffect(() => {
+    if (news) {
+      const todaysNews = news.filter(
+        item => item.createdAt.split('T')[0] === today,
+      );
+      setTodaysNewsLength(todaysNews.length);
+    }
+  }, [news]);
+
+  useEffect(() => {
+    AsyncStorage.getItem('lastApiCallTimestamp')
+      .then(timestamp => {
+        if (timestamp) {
+          // If a timestamp is found, check if 24 hours have passed
+          const lastCallTime = new Date(timestamp);
+          const currentTime = new Date();
+
+          if (currentTime - lastCallTime >= 24 * 60 * 60 * 1000) {
+            // If 24 hours have passed, make the API call
+            setUserActivity();
+          }
+        } else {
+          // If no timestamp is found, make the API call
+          setUserActivity();
+        }
+      })
+      .catch(error => console.error(error));
+  }, [config]);
+
+  const setUserActivity = async () => {
+    // Make your API call here
+    if (config) {
+      try {
+        await Axios.post('/users/profile/addUserActivity', {}, config);
+
+        // Store the current timestamp in AsyncStorage
+        AsyncStorage.setItem('lastApiCallTimestamp', new Date().toISOString());
+        // Handle the API response data
+      } catch (error) {
+        console.error('API Error:', error);
+        if (error.response) {
+          console.error('Response Data:', error.response.data);
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -129,7 +184,7 @@ const HomeScreen = ({navigation}) => {
       setLoading(true);
 
       const res = await Axios.get(
-        `/users/news?page=${pageNumber}&id=${profile?.id}&limit=15`, // Adjust the limit as needed
+        `/users/news?page=${pageNumber}&id=${profile?.id}&limit=35`, // Adjust the limit as needed
         config,
       );
       const newData = res.data.data;
@@ -164,6 +219,8 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     config && fetchNews(page);
+
+    // Iterate through the fetched news to set 'showCaughtup'
   }, [config, page, profile]);
 
   const handleLoadMore = () => {
@@ -181,10 +238,21 @@ const HomeScreen = ({navigation}) => {
   };
 
   const BlogItem = React.memo(({item, index, navigation}) => {
+    let showCaughtForToday = false;
+    if (todaysNewsLength && index === todaysNewsLength - 1) {
+      showCaughtForToday = true;
+    }
     const commonContent = useMemo(
       () => (
         <>
-          <Card item={item} key={item.id} profile={profile} isGuest={isGuest} />
+          <Card
+            item={item}
+            key={item.id}
+            profile={profile}
+            isGuest={isGuest}
+            showCaughtForToday={showCaughtForToday}
+          />
+
           <View style={{height: 16}}></View>
         </>
       ),
@@ -198,7 +266,6 @@ const HomeScreen = ({navigation}) => {
 
     return (
       <>
-        {commonContent}
         {shouldRenderAd && (
           <View
             style={{
@@ -209,8 +276,8 @@ const HomeScreen = ({navigation}) => {
             }}>
             {adItem && (
               <BannerAd
-                unitId={adItem._data.adId}
-                // unitId={'ca-app-pub-3940256099942544/6300978111'}
+                // unitId={adItem._data.adId}
+                unitId={'ca-app-pub-3940256099942544/6300978111'}
                 size="365x45"
                 requestOptions={{
                   requestNonPersonalizedAdsOnly: true,
@@ -219,6 +286,7 @@ const HomeScreen = ({navigation}) => {
             )}
           </View>
         )}
+        {commonContent}
       </>
     );
   });
@@ -236,7 +304,7 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <>
-      {/* <SurveyModal /> */}
+      <SurveyModal />
       <SafeAreaView
         style={{
           flex: 0,
@@ -298,16 +366,17 @@ const HomeScreen = ({navigation}) => {
           numColumns={DeviceInfo.isTablet() ? 2 : 1}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={news.length > 0 ? renderFooter : null}
           onEndReachedThreshold={0.4}
           showsHorizontalScrollIndicator={false}
           onEndReached={handleLoadMore}
           refreshing={page === 1 && loading}
           // onScroll={e => onScrollEvent(e)}
           onRefresh={() => {
-            setPage(1);
             setNews([]);
-            navigation.replace('Curated');
+            setPage(1);
+            fetchNews(page);
+            // navigation.replace('Curated');
           }}
           estimatedItemSize={100}
         />

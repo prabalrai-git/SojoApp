@@ -14,26 +14,31 @@ function SurveyModal() {
   const [review, setReview] = useState();
   const [error, setError] = useState(false);
   const [surveCompleted, setSurveyCompleted] = useState(null);
+  const [lastSkipTime, setLastSkipTime] = useState(null);
 
   useEffect(() => {
-    getShowSurveyQuestion();
     getSurveyDataFromAsyncStorage();
+    getShowSurveyQuestion();
+
     // funfun();
   }, []);
 
   const getShowSurveyQuestion = async () => {
-    try {
-      const showSurvey = await firestore()
-        .collection('showSurveyQuestion')
-        .get();
-      setTimeout(() => {
-        setShowSurvey(showSurvey.docs[0]._data.show);
-      }, 4000);
-      if (showSurvey.docs[0]._data.show) {
-        setModalVisible(true);
-      }
-      // console.log(showSurvey.docs[0]._data.show, 'hee haaaw');
-    } catch (error) {}
+    const skipTimestamp = await AsyncStorage.getItem('surveySkipTimestamp');
+    if (!skipTimestamp) {
+      try {
+        const showSurvey = await firestore()
+          .collection('showSurveyQuestion')
+          .get();
+        setTimeout(() => {
+          setShowSurvey(showSurvey.docs[0]._data.show);
+        }, 4000);
+        if (showSurvey.docs[0]._data.show) {
+          setModalVisible(true);
+        }
+        // console.log(showSurvey.docs[0]._data.show, 'hee haaaw');
+      } catch (error) {}
+    }
   };
 
   useEffect(() => {
@@ -67,10 +72,13 @@ function SurveyModal() {
       firestore()
         .collection('surveyQuestions')
         .add({
-          answer1: answerOne,
-          answer2: answerTwo,
-          answer3: answerThree,
-          review: review,
+          'On a scale of 1 to 10, how satisfied are you with the news content provided by our app?':
+            answerOne,
+          'Do you find our negativity filters effective in rducing unwanted content? (Yes/No)':
+            answerTwo,
+          'Would you recommend our app to a friend or family member? (Yes/No)':
+            answerThree,
+          'Please write us short note': review,
         })
         .then(() => {
           console.log('Survey data added!');
@@ -78,6 +86,37 @@ function SurveyModal() {
         });
       await AsyncStorage.setItem('surveyCompleted', 'true');
     } catch (error) {}
+  };
+
+  useEffect(() => {
+    // Check if the user has previously skipped the survey
+    const checkSurveySkipTimestamp = async () => {
+      const skipTimestamp = await AsyncStorage.getItem('surveySkipTimestamp');
+      if (skipTimestamp) {
+        const currentTime = new Date().getTime();
+        const skipTime = parseInt(skipTimestamp, 10);
+        const minutesElapsed = (currentTime - skipTime) / (1000 * 60 * 60);
+
+        // Set the last skip time
+        setLastSkipTime(skipTime);
+
+        // Show the survey modal again after 1 minute
+        if (minutesElapsed >= 48) {
+          // Change this to 1 minute
+          setShowSurvey(true);
+          setModalVisible(true);
+        }
+      }
+    };
+
+    checkSurveySkipTimestamp();
+  }, []);
+
+  const onSkip = async () => {
+    setModalVisible(false);
+    const now = new Date().getTime();
+    await AsyncStorage.setItem('surveySkipTimestamp', now.toString());
+    setLastSkipTime(now);
   };
 
   return (
@@ -97,7 +136,7 @@ function SurveyModal() {
           }}>
           <ScrollView
             style={{
-              height: 600,
+              height: 640,
               width: '90%',
               backgroundColor: 'white',
               borderRadius: 5,
@@ -108,12 +147,14 @@ function SurveyModal() {
                 textAlign: 'center',
                 margin: 20,
                 fontWeight: 'bold',
+                fontSize: 18,
               }}>
-              These are the questions
+              Please Answer all the questions:
             </Text>
             <View style={{margin: 12}}>
               <Text style={{color: 'black', marginBottom: 10}}>
-                Question One?
+                On a scale of 1 to 10, how satisfied are you with the news
+                content provided by our app?
               </Text>
               <TextInput
                 style={{
@@ -129,7 +170,8 @@ function SurveyModal() {
             </View>
             <View style={{margin: 12}}>
               <Text style={{color: 'black', marginBottom: 10}}>
-                Question One?
+                Do you find our negativity filters effective in rducing unwanted
+                content?(Yes/No)
               </Text>
               <TextInput
                 style={{
@@ -145,7 +187,8 @@ function SurveyModal() {
             </View>
             <View style={{margin: 12}}>
               <Text style={{color: 'black', marginBottom: 10}}>
-                Question One?
+                Would you recommend our app to a friend or family
+                member?(Yes/No)
               </Text>
               <TextInput
                 style={{
@@ -160,7 +203,9 @@ function SurveyModal() {
               />
             </View>
             <View style={{margin: 12}}>
-              <Text style={{color: 'black', marginBottom: 10}}>Remarks</Text>
+              <Text style={{color: 'black', marginBottom: 10}}>
+                Please write us short note
+              </Text>
               <TextInput
                 multiline={true}
                 numberOfLines={4}
@@ -206,7 +251,9 @@ function SurveyModal() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  onSkip();
+                }}
                 style={{
                   backgroundColor: '#EA4335',
                   padding: 12,

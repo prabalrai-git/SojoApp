@@ -273,7 +273,7 @@ const HomeScreen = ({navigation}) => {
               numColumns={DeviceInfo.isTablet() ? 2 : 1}
               renderItem={renderItem}
               keyExtractor={item => item.id}
-              ListFooterComponent={renderFooter}
+              ListFooterComponent={blogs.length > 0 ? renderFooter : null}
               onEndReachedThreshold={0.5}
               showsVerticalScrollIndicator={false}
               onEndReached={handleLoadMore}
@@ -283,9 +283,7 @@ const HomeScreen = ({navigation}) => {
               //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
               // }}
               onRefresh={() => {
-                setPage(1);
                 setBlogs([]);
-                navigation.replace('Explore');
               }}
             />
           </View>

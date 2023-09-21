@@ -4,7 +4,6 @@ import {
   View,
   ActivityIndicator,
   FlatList,
-  StatusBar,
   SafeAreaView,
   TouchableOpacity,
   Image,
@@ -20,7 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {showTabBar} from '../redux/features/HideTabBar';
 import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
-import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
+import {BannerAd} from 'react-native-google-mobile-ads';
 import {FlashList} from '@shopify/flash-list';
 
 const Category = () => {
@@ -29,7 +28,7 @@ const Category = () => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState();
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
   const [adMobIds, setAdMobIds] = useState();
@@ -66,9 +65,17 @@ const Category = () => {
       );
 
       // console.log(res.data.data, 'yo res');
+      const newData = res.data.data;
 
       // return console.log(res.data.data);
-      setData(prevData => [...prevData, ...res.data.data]);
+      // setData(prevData => [...prevData, ...res.data.data]);
+      setData(prevData => {
+        const uniqueItemIds = new Set(prevData.map(item => item.id));
+        const filteredNewData = newData.filter(
+          newItem => !uniqueItemIds.has(newItem.id),
+        );
+        return [...prevData, ...filteredNewData];
+      });
       setHasMore(res.data.pagination.nextPage !== null);
       setLoading(false);
     } catch (err) {
@@ -292,9 +299,11 @@ const Category = () => {
           refreshing={page === 1 && loading}
           estimatedItemSize={50}
           onRefresh={() => {
-            navigation.replace('CategoryScreen', {
-              id: route.params.id,
-            });
+            // navigation.replace('CategoryScreen', {
+            //   id: route.params.id,
+            // });
+            setData([]);
+            fetchData(page);
           }}
         />
       </SafeAreaView>
