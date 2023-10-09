@@ -99,8 +99,8 @@ android {
         applicationId "com.sojonewsapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "1.2.6"
+        versionCode 16
+        versionName "1.2.9"
     }
 
     splits {
@@ -166,6 +166,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-config')
     implementation project(':react-native-vector-icons')
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
      implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0' 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")

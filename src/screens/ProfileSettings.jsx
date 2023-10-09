@@ -25,6 +25,7 @@ import {toggleDarkMode} from '../redux/features/DarkMode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../api/server';
 import messaging from '@react-native-firebase/messaging';
+import {Appearance} from 'react-native';
 
 const ProfileSettings = props => {
   const [checked, setChecked] = useState(null);
@@ -151,6 +152,11 @@ const ProfileSettings = props => {
         setDarkModeChecked(true);
         dispatch(toggleDarkMode(true));
       } else {
+        if (Appearance.getColorScheme() === 'dark') {
+          dispatch(toggleDarkMode(true));
+        } else {
+          dispatch(toggleDarkMode(false));
+        }
         setDarkModeChecked(false);
         dispatch(toggleDarkMode(false));
       }

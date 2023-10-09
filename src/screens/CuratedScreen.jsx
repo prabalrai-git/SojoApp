@@ -276,8 +276,8 @@ const HomeScreen = ({navigation}) => {
             }}>
             {adItem && (
               <BannerAd
-                // unitId={adItem._data.adId}
-                unitId={'ca-app-pub-3940256099942544/6300978111'}
+                unitId={adItem._data.adId}
+                // unitId={'ca-app-pub-3940256099942544/6300978111'}
                 size="365x45"
                 requestOptions={{
                   requestNonPersonalizedAdsOnly: true,

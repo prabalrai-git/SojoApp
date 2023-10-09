@@ -19,7 +19,7 @@ export default function App() {
   const [userTopics, setUserTopics] = useState([]);
   const [config, setConfig] = useState();
   const [updatedVersion, setUpdatedVersion] = useState();
-  const [lastApiCallTimestamp, setLastApiCallTimestamp] = useState(null);
+  // const [lastApiCallTimestamp, setLastApiCallTimestamp] = useState(null);
 
   const AdPermission = async () => {
     const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
@@ -50,7 +50,6 @@ export default function App() {
   // fetch profile
   const fetchProfile = async () => {
     try {
-      console.log(config);
       const res = await Axios.get('/users/profile', config);
 
       // res.data.data.topics.forEach(item => {});

@@ -2,6 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+  
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>977324196650839</string>
+    </array>
+    </dict>
+  </array>
+  <key>FacebookAppID</key>
+  <string>977324196650839</string>
+  <key>FacebookClientToken</key>
+  <string>41f153d1ffbb439e517b41cd1331eff6</string>
+  <key>FacebookDisplayName</key>
+  <string>Sojo News</string>
 	<key>NSUserTrackingUsageDescription</key>
     <string>This app uses device identifiers to track marketing attribution and app usage.  Your data is kept confidential and is not shared with any 3rd parties or advertising partners.</string>
 	<key>CFBundleDevelopmentRegion</key>

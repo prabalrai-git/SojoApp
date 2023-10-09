@@ -8,6 +8,7 @@ import '../../../globalThemColor';
 import {toggleDarkMode} from '../../redux/features/DarkMode';
 import NetInfo from '@react-native-community/netinfo';
 import MobileAds from 'react-native-google-mobile-ads';
+import {Appearance} from 'react-native';
 
 const SplashScreen = () => {
   const [config, setConfig] = useState(null);
@@ -65,9 +66,17 @@ const SplashScreen = () => {
       const darkMode = await AsyncStorage.getItem('darkmode');
 
       if (darkMode === 'true' || darkMode === true) {
-        dispatch(toggleDarkMode(true));
+        return dispatch(toggleDarkMode(true));
+      } else if (darkMode === 'false' || darkMode === false) {
+        return dispatch(toggleDarkMode(false));
       } else {
-        dispatch(toggleDarkMode(false));
+        if (Appearance.getColorScheme() === 'dark') {
+          dispatch(toggleDarkMode(true));
+          await AsyncStorage.setItem('darkmode', 'true');
+        } else {
+          await AsyncStorage.setItem('darkmode', 'false');
+          dispatch(toggleDarkMode(false));
+        }
       }
     }
     getDarkModeValue();
