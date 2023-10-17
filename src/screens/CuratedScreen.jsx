@@ -207,8 +207,13 @@ const HomeScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    getUserType();
-  }, []);
+    const getUser = navigation.addListener('focus', () => {
+      getUserType();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return getUser;
+  }, [navigation]);
 
   const getUserType = async () => {
     await AsyncStorage.getItem('guestUser').then(value => {

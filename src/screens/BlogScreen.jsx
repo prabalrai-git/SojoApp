@@ -94,20 +94,20 @@ const BlogScreen = ({route}) => {
     fetchToken();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = interstitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        interstitial.show();
-      },
-    );
+  // useEffect(() => {
+  //   const unsubscribe = interstitial.addAdEventListener(
+  //     AdEventType.LOADED,
+  //     () => {
+  //       interstitial.show();
+  //     },
+  //   );
 
-    // Start loading the interstitial straight away
-    interstitial.load();
+  //   // Start loading the interstitial straight away
+  //   interstitial.load();
 
-    // Unsubscribe from events on unmount
-    return unsubscribe;
-  }, [data]);
+  //   // Unsubscribe from events on unmount
+  //   return unsubscribe;
+  // }, [data]);
 
   // Start loading the interstitial straight away
 
@@ -521,7 +521,7 @@ const BlogScreen = ({route}) => {
                     },
                   ]}
                   showsVerticalScrollIndicator={false}>
-                  <View
+                  {/* <View
                     style={{
                       display: 'flex',
                       justifyContent: 'center',
@@ -535,7 +535,7 @@ const BlogScreen = ({route}) => {
                         requestNonPersonalizedAdsOnly: true,
                       }}
                     />
-                  </View>
+                  </View> */}
 
                   <View style={styles.blog}>
                     <Text
@@ -612,7 +612,7 @@ const BlogScreen = ({route}) => {
                     {/* <View style={styles.shareWrapper}>
            <Text style={styles.shareTitle}>Share this story</Text>
          </View> */}
-                    <View
+                    {/* <View
                       style={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -626,7 +626,7 @@ const BlogScreen = ({route}) => {
                           requestNonPersonalizedAdsOnly: true,
                         }}
                       />
-                    </View>
+                    </View> */}
                     <Text
                       style={{
                         fontSize: 25,

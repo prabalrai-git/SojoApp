@@ -249,6 +249,34 @@ const MainScreen = () => {
     }
   };
 
+  /*code to check all the key-values of async AsyncStorage*/
+
+  // const importData = async () => {
+  //   try {
+  //     const keys = await AsyncStorage.getAllKeys();
+  //     const result = await AsyncStorage.multiGet(keys);
+  //     const parsedData = [];
+
+  //     result.forEach(req => {
+  //       try {
+  //         const parsedItem = JSON.parse(req);
+  //         parsedData.push(parsedItem);
+  //         console.log(parsedItem);
+  //       } catch (error) {
+  //         console.error('Error parsing JSON:', error);
+  //         console.log('Problematic item:', req);
+  //       }
+  //     });
+
+  //     return parsedData;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   importData();
+  // }, []);
+
   const signInWithoutCredentials = async () => {
     try {
       setIndicatorLoading(true);

@@ -352,7 +352,7 @@ const SettingsScreen = () => {
           <>
             {news?.length > 0 && (
               <>
-                <View
+                {/* <View
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -366,7 +366,7 @@ const SettingsScreen = () => {
                       requestNonPersonalizedAdsOnly: true,
                     }}
                   />
-                </View>
+                </View> */}
 
                 <Text
                   style={{

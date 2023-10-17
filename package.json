@@ -47,6 +47,7 @@
     "react-native-gesture-handler": "^2.9.0",
     "react-native-get-random-values": "^1.9.0",
     "react-native-google-mobile-ads": "^12.1.1",
+    "react-native-kochava-tracker": "^2.5.0",
     "react-native-modal": "^13.0.1",
     "react-native-pager-view": "^6.1.4",
     "react-native-permissions": "^3.9.0",

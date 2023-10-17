@@ -12,6 +12,7 @@ import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import {Alert, Linking, Platform} from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {KochavaTracker} from 'react-native-kochava-tracker';
 
 export default function App() {
   // to subscribe the users to topics based on their selection of news topic using FCM notification service
@@ -21,6 +22,9 @@ export default function App() {
   const [updatedVersion, setUpdatedVersion] = useState();
   // const [lastApiCallTimestamp, setLastApiCallTimestamp] = useState(null);
 
+  KochavaTracker.instance.registerAndroidAppGuid('kosojo-news-android-i2l4mqs');
+  KochavaTracker.instance.registerIosAppGuid('kosojo-news-ios-niwqhe');
+  KochavaTracker.instance.start();
   const AdPermission = async () => {
     const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
     if (result === RESULTS.DENIED) {
