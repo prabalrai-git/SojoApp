@@ -61,43 +61,49 @@ const HomeScreen = ({navigation}) => {
     }
   }, [news]);
 
+  function isNextDay(timestamp1, timestamp2) {
+    const date1 = new Date(timestamp1);
+    const date2 = new Date(timestamp2);
+    return date1.getDate() !== date2.getDate();
+  }
+
   useEffect(() => {
-    AsyncStorage.getItem('lastApiCallTimestamp')
-      .then(timestamp => {
-        if (timestamp) {
-          // If a timestamp is found, check if 24 hours have passed
-          const lastCallTime = new Date(timestamp);
-          const currentTime = new Date();
+    async function setUserActivity() {
+      // Make your API call here
+      if (config) {
+        try {
+          await Axios.post('/users/profile/addUserActivity', {}, config);
 
-          if (currentTime - lastCallTime >= 24 * 60 * 60 * 1000) {
-            // If 24 hours have passed, make the API call
-            setUserActivity();
+          // Store the current timestamp in AsyncStorage
+          AsyncStorage.setItem(
+            'lastApiCallTimestamp',
+            new Date().toISOString(),
+          );
+          // Handle the API response data
+        } catch (error) {
+          console.error('API Error:', error);
+          if (error.response) {
+            console.error('Response Data:', error.response.data);
           }
-        } else {
-          // If no timestamp is found, make the API call
-          setUserActivity();
-        }
-      })
-      .catch(error => console.error(error));
-  }, [config]);
-
-  const setUserActivity = async () => {
-    // Make your API call here
-    if (config) {
-      try {
-        await Axios.post('/users/profile/addUserActivity', {}, config);
-
-        // Store the current timestamp in AsyncStorage
-        AsyncStorage.setItem('lastApiCallTimestamp', new Date().toISOString());
-        // Handle the API response data
-      } catch (error) {
-        console.error('API Error:', error);
-        if (error.response) {
-          console.error('Response Data:', error.response.data);
         }
       }
     }
-  };
+
+    AsyncStorage.getItem('lastApiCallTimestamp')
+      .then(lastApiCallTimestamp => {
+        const currentTimestamp = new Date().toISOString();
+
+        if (
+          isNextDay(lastApiCallTimestamp, currentTimestamp) ||
+          !lastApiCallTimestamp
+        ) {
+          setUserActivity();
+        }
+      })
+      .catch(error => {
+        console.error('AsyncStorage Error:', error);
+      });
+  }, [config]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
