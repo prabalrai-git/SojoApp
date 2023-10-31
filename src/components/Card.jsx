@@ -169,7 +169,7 @@ const BlogCard = ({
                           : require('../assets/inmarking.png')
                       }
                       style={{
-                        width: toggled ? 120 : 150,
+                        width: toggled ? 140 : 165,
                         height: 55,
                         resizeMode: 'contain',
                         position: 'absolute',

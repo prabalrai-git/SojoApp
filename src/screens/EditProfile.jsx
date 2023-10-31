@@ -201,7 +201,6 @@ const EditProfile = props => {
       skipNSFW,
       skipPolitical,
     };
-
     try {
       await Axios.patch('users/profile/details', data, config);
       setReloadProfileOnEdit(prev => !prev);

@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: PRIMARY_COLOR,
     padding: 20,
-    paddingVertical: 13.3,
+    paddingVertical: 13.0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth,

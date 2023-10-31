@@ -535,14 +535,14 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: '#27B161',
     padding: 20,
-    paddingVertical: 17,
+    paddingVertical: 16.9,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   title: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     flex: 2,
   },

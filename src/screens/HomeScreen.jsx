@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
-  FlatList,
   ActivityIndicator,
   StatusBar,
   StyleSheet,
@@ -301,7 +300,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   topBar: {
-    backgroundColor: '#27B161',
+    backgroundColor: '#18AD56',
     padding: 20,
     paddingVertical: 15,
     flexDirection: 'row',

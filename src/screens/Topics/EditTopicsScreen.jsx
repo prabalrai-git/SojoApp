@@ -219,6 +219,7 @@ const Category = () => {
                 selectedTopics={selectedTopics}
                 config={config}
                 fetchProfile={fetchProfile}
+                profile={profile}
               />
             );
           }}
@@ -254,9 +255,9 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   topBar: {
-    backgroundColor: '#27B060',
+    backgroundColor: '#18AD56',
     padding: 20,
-    paddingVertical: 17,
+    paddingVertical: 17.9,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

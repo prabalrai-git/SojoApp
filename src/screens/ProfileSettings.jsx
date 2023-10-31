@@ -4,9 +4,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  Button,
-  TextInput,
-  StatusBar,
   SafeAreaView,
   ScrollView,
   Alert,
@@ -15,7 +12,6 @@ import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
 import {logoutUser} from '../helper/auth';
 import {Switch} from 'react-native-switch';
-import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
@@ -563,7 +559,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   topBar: {
-    backgroundColor: PRIMARY_COLOR,
+    backgroundColor: '#18AD56',
     padding: 15,
     paddingVertical: 15.7,
     flexDirection: 'row',

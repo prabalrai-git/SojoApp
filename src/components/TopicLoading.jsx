@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
@@ -14,7 +15,14 @@ import Axios from './../api/server';
 import messaging from '@react-native-firebase/messaging';
 import {useSelector} from 'react-redux';
 
-const TopicLoading = ({item, selectedTopics, config, fetchProfile, index}) => {
+const TopicLoading = ({
+  item,
+  selectedTopics,
+  config,
+  fetchProfile,
+  index,
+  profile,
+}) => {
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
@@ -44,6 +52,23 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile, index}) => {
   const darkMode = useSelector(state => state.darkMode.value);
 
   const [loading, setLoading] = useState('');
+
+  const updateProfile = async () => {
+    const data = {
+      ageGroup: profile?.ageGroup,
+      gender: profile?.gender,
+      occupation: profile?.occupation?.id,
+      state: profile?.stateId,
+      skipNSFW: profile?.skipNSFW,
+      skipPolitical: false,
+    };
+
+    try {
+      await Axios.patch('users/profile/details', data, config);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <TouchableOpacity
       style={[
@@ -90,11 +115,45 @@ const TopicLoading = ({item, selectedTopics, config, fetchProfile, index}) => {
             {borderLeftColor: darkMode ? global.inputColorDark : '#DEE1E5'},
           ]}
           onPress={async () => {
-            setLoading(true);
-            await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
-            toogleSubscriptionForFCM();
-            fetchProfile();
-            setLoading(false);
+            if (item.name.toLowerCase() === 'politics') {
+              setLoading(true);
+              Alert.alert(
+                'Disable Politics Filter',
+                'Robust filter for politics will be disabled.',
+                [
+                  {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'OK',
+                    onPress: async () => {
+                      try {
+                        updateProfile();
+                        await Axios.patch(
+                          `/users/profile/topic/${item.id}`,
+                          {},
+                          config,
+                        );
+                        toogleSubscriptionForFCM();
+                        fetchProfile();
+                      } catch (error) {
+                        console.log(error);
+                      }
+                    },
+                  },
+                ],
+              );
+
+              setLoading(false);
+            } else {
+              setLoading(true);
+              await Axios.patch(`/users/profile/topic/${item.id}`, {}, config);
+              toogleSubscriptionForFCM();
+              fetchProfile();
+              setLoading(false);
+            }
           }}
         />
       )}
