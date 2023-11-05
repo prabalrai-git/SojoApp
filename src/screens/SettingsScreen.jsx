@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   Platform,
   PermissionsAndroid,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {logoutUser} from './../helper/auth';
@@ -213,7 +214,7 @@ const SettingsScreen = () => {
                 : global.brandColor,
             },
           ]}>
-          <Text style={styles.topBarText}>My Profile</Text>
+          <Text style={styles.topBarText}></Text>
 
           <TouchableOpacity
             style={[
@@ -462,7 +463,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: PRIMARY_COLOR,
     padding: 20,
-    paddingVertical: 13.0,
+    paddingVertical: 13.2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: windowWidth,

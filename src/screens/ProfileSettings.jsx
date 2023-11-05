@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
@@ -480,6 +481,83 @@ const ProfileSettings = props => {
               })}
             </View>
           </Modal> */}
+          <View style={{marginTop: 30, paddingHorizontal: 15}}>
+            <Text
+              style={{
+                color: darkMode ? 'white' : 'black',
+                textAlign: 'left',
+                fontWeight: '500',
+                fontSize: 18,
+                marginBottom: 10,
+              }}>
+              Connect with us:
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 25,
+                marginBottom: 10,
+                justifyContent: 'flex-start',
+                marginTop: 8,
+              }}>
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.openURL(
+                    'https://www.facebook.com/profile.php?id=61550332155442',
+                  )
+                }>
+                <Image
+                  source={require('../assets/facebook.png')}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    resizeMode: 'contain',
+                    alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => Linking.openURL('mailto:newssojo@gmail.com')}>
+                <Image
+                  source={require('../assets/gmail.png')}
+                  style={{
+                    width: 27,
+                    height: 27,
+                    resizeMode: 'contain',
+                    alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.openURL('https://twitter.com/Sojo_News')
+                }>
+                <Image
+                  source={require('../assets/twitter.png')}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    resizeMode: 'contain',
+                    alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.openURL('https://www.instagram.com/sojojob_offical/')
+                }>
+                <Image
+                  source={require('../assets/instagram.png')}
+                  style={{
+                    width: 23,
+                    height: 23,
+                    resizeMode: 'contain',
+                    alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </>

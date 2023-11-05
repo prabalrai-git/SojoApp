@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: '#27B161',
     padding: 20,
-    paddingVertical: 16.9,
+    paddingVertical: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -25,11 +26,13 @@ import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import firestore from '@react-native-firebase/firestore';
 import SurveyModal from '../components/SurveyModal';
 import {FlashList} from '@shopify/flash-list';
+import NetInfo from '@react-native-community/netinfo';
 
 ///
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
+  const [offlineNews, setOfflineNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
@@ -39,6 +42,8 @@ const HomeScreen = ({navigation}) => {
   const [adMobIds, setAdMobIds] = useState();
   const [adInterval, setAdInterval] = useState();
   const [todaysNewsLength, setTodaysNewsLength] = useState(null);
+  const [isconnectedToInternet, setIsConnectedToInternet] = useState();
+
   //
 
   const dispatch = useDispatch();
@@ -51,21 +56,62 @@ const HomeScreen = ({navigation}) => {
   const yyyy = today.getFullYear();
 
   today = yyyy + '-' + mm + '-' + dd;
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() - 1); // Subtract one day
+  const yesterday = currentDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
 
   useEffect(() => {
     if (news) {
-      const todaysNews = news.filter(
-        item => item.createdAt.split('T')[0] === today,
-      );
-      setTodaysNewsLength(todaysNews.length);
+      // const todaysNews = news.filter(
+      //   item => item.createdAt.split('T')[0] === today,
+      // );
+
+      // setTodaysNewsLength(todaysNews.length);
+      getTodaysNewsCount();
     }
   }, [news]);
+
+  const getTodaysNewsCount = async (req, res) => {
+    try {
+      const res = await Axios.get('/news/count/numberOfNewsForToday', config);
+      setTodaysNewsLength(res.data.countOfNewsToday);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   function isNextDay(timestamp1, timestamp2) {
     const date1 = new Date(timestamp1);
     const date2 = new Date(timestamp2);
     return date1.getDate() !== date2.getDate();
   }
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (news.length > 15) {
+  //       const latestFifteenNews = news?.slice(0, 15);
+  //       try {
+  //         await AsyncStorage.removeItem('latestFifteenNews');
+  //         await AsyncStorage.setItem(
+  //           'latestFifteenNews',
+  //           JSON.stringify(latestFifteenNews),
+  //         );
+  //         const storedDataString = await AsyncStorage.getItem(
+  //           'latestFifteenNews',
+  //         );
+  //         if (storedDataString) {
+  //           const storedData = JSON.parse(storedDataString);
+  //           // Use the stored data in your app
+  //           setOfflineNews(storedData);
+  //         }
+  //       } catch (error) {
+  //         console.error('AsyncStorage error:', error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchData(); // Call the async function
+  // }, [news, isconnectedToInternet]);
 
   useEffect(() => {
     async function setUserActivity() {
@@ -184,6 +230,8 @@ const HomeScreen = ({navigation}) => {
       }
     }
   }, [config, navigation]);
+
+  console.log(config);
 
   const fetchNews = async pageNumber => {
     try {
@@ -312,7 +360,15 @@ const HomeScreen = ({navigation}) => {
   const onFabPress = () => {
     scrollRef.current?.scrollToOffset({animated: true, offset: 0});
   };
+  // console.log(offlineNews, 'off');
 
+  // useEffect(() => {
+  //   NetInfo.fetch().then(state => {
+  //     if (state.isConnected) {
+  //       setIsConnectedToInternet(state.isConnected);
+  //     }
+  //   });
+  // }, [offlineNews, news, isconnectedToInternet]);
   return (
     <>
       <SurveyModal />

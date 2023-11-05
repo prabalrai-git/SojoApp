@@ -23,11 +23,19 @@ function CaughtUp() {
       <Text
         style={{
           color: darkMode ? 'white' : 'black',
-          textTransform: 'capitalize',
           fontWeight: 'bold',
           fontSize: 15,
         }}>
         Congratulations !! you are done for the day.
+      </Text>
+      <Text
+        style={{
+          color: darkMode ? 'white' : 'black',
+          fontWeight: 'bold',
+          marginTop: 5,
+          fontSize: 15,
+        }}>
+        Try explore feed for more new news.
       </Text>
     </View>
   );

@@ -14,7 +14,7 @@ const SplashScreen = () => {
   const [config, setConfig] = useState(null);
   const [profile, setProfile] = useState(null);
   const [notFirstTime, setNotFirstTime] = useState(null);
-  const [isconnectedToInternet, setIsConnectedToInternet] = useState();
+  const [isconnectedToInternet, setIsConnectedToInternet] = useState(true);
   const navigation = useNavigation();
 
   const darkMode = useSelector(state => state.darkMode.value);
@@ -34,7 +34,7 @@ const SplashScreen = () => {
     } catch (err) {
       if (err && err.response && err.response.status === 401) {
         await AsyncStorage.removeItem('token');
-        navigation.reset({index: 0, routes: [{name: 'Auth'}]});
+        // navigation.reset({index: 0, routes: [{name: 'Auth'}]});
       }
     }
   };
@@ -81,19 +81,17 @@ const SplashScreen = () => {
     }
     getDarkModeValue();
 
-    NetInfo.fetch().then(state => {
-      if (state.isConnected) {
-        setIsConnectedToInternet(state.isConnected);
-      } else {
-        Alert.alert(
-          'No internet connection',
-          'Please check your network settings and try again.',
-        );
-      }
-    });
+    // NetInfo.fetch().then(state => {
+    //   if (state.isConnected) {
+    //     setIsConnectedToInternet(state.isConnected);
+    //   } else {
+    //     Alert.alert(
+    //       'No internet connection',
+    //       'Please check your network settings and try again.',
+    //     );
+    //   }
+    // });
   }, []);
-
-  useEffect(() => {});
 
   useEffect(() => {
     const notFirstTimeFn = async () => {
