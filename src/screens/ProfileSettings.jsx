@@ -444,9 +444,10 @@ const ProfileSettings = props => {
                   marginBottom: 10,
                   marginTop: 0,
                 }}>
-                Your Feedback is valuable to us!
+                Your voice matters, and we're here to listen
               </Text>
               <TextInput
+                multiline={true}
                 placeholderTextColor={'grey'}
                 style={[
                   styles.input,
@@ -455,6 +456,7 @@ const ProfileSettings = props => {
                       ? global.inputColorDark
                       : global.inputColor,
                     color: darkMode ? 'white' : 'black',
+                    paddingTop: 10,
                   },
                 ]}
                 onChangeText={onChangeText}
@@ -479,7 +481,7 @@ const ProfileSettings = props => {
                     textAlign: 'center',
                     fontWeight: 'bold',
                   }}>
-                  Send Feedback
+                  Send Us Feedback
                 </Text>
               </TouchableOpacity>
             </View>
@@ -697,7 +699,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: 'black',
     height: 110,
-    verticalAlign: 'top',
+    // verticalAlign: 'top',
+    textAlignVertical: 'top',
+    alignItems: 'flex-start',
     padding: 12,
   },
   btnTxt: {

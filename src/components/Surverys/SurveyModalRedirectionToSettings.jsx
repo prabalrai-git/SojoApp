@@ -33,7 +33,7 @@ function SurveyModalRedirectionToSettings({profile}) {
       checkSurveyCompletedTimestamp();
     }
     getShowSurveyQuestion();
-  }, []);
+  }, [skipTimeStamp]);
 
   const checkSurveyCompletedTimestamp = async () => {
     const completedTimestamp = await AsyncStorage.getItem(
@@ -268,7 +268,7 @@ function SurveyModalRedirectionToSettings({profile}) {
               <TouchableOpacity
                 onPress={() => onOkay()}
                 style={{
-                  backgroundColor: '#26b160',
+                  backgroundColor: '#3da066',
                   padding: 10,
                   flex: 0.5,
                   borderRadius: 6,
@@ -287,7 +287,7 @@ function SurveyModalRedirectionToSettings({profile}) {
                   onSkip();
                 }}
                 style={{
-                  backgroundColor: '#EA4335',
+                  backgroundColor: '#b53327',
                   padding: 12,
                   flex: 0.4,
                   borderRadius: 6,
