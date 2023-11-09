@@ -24,9 +24,10 @@ import _ from 'lodash';
 import DeviceInfo from 'react-native-device-info';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import firestore from '@react-native-firebase/firestore';
-import SurveyModal from '../components/SurveyModal';
+import SurveyModal from '../components/Surverys/SurveyModal';
 import {FlashList} from '@shopify/flash-list';
 import NetInfo from '@react-native-community/netinfo';
+import SurveyModalRedirectionToSettings from '../components/Surverys/SurveyModalRedirectionToSettings';
 
 ///
 
@@ -231,8 +232,6 @@ const HomeScreen = ({navigation}) => {
     }
   }, [config, navigation]);
 
-  console.log(config);
-
   const fetchNews = async pageNumber => {
     try {
       setLoading(true);
@@ -371,7 +370,7 @@ const HomeScreen = ({navigation}) => {
   // }, [offlineNews, news, isconnectedToInternet]);
   return (
     <>
-      <SurveyModal />
+      <SurveyModalRedirectionToSettings profile={profile} />
       <SafeAreaView
         style={{
           flex: 0,

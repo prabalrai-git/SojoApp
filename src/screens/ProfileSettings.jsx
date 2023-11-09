@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   Linking,
+  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR, windowWidth} from '../helper/usefulConstants';
@@ -23,12 +24,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../api/server';
 import messaging from '@react-native-firebase/messaging';
 import {Appearance} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 const ProfileSettings = props => {
   const [checked, setChecked] = useState(null);
   const [darkModeChecked, setDarkModeChecked] = useState(null);
   const [config, setConfig] = useState();
   const [userTopics, setUserTopics] = useState([]);
+  const [text, onChangeText] = useState('');
+  const [disableSend, setDisableSend] = useState(true);
 
   const navigation = useNavigation();
 
@@ -210,6 +214,43 @@ const ProfileSettings = props => {
   // useEffect(() => {
   //   importData();
   // }, []);
+
+  useEffect(() => {
+    if (text.length > 0) {
+      setDisableSend(false);
+    } else {
+      setDisableSend(true);
+    }
+  }, [text]);
+  const sendFeedBack = async () => {
+    try {
+      firestore()
+        .collection('surveyQuestions')
+        .add({
+          FeedBack: text,
+          // 'Would you recommend our app to a friend or family member? (Yes/No)':
+          //   answerThree,
+          // 'Please write us short note': review,
+        })
+        .then(() => {
+          onChangeText('');
+        });
+      const now = new Date().getTime();
+
+      await AsyncStorage.setItem('surveyCompleted', 'true');
+      await AsyncStorage.setItem('surveryCompletedTime', now.toString());
+      await AsyncStorage.removeItem('surveySkipTimestamp');
+      Alert.alert('Thank You!', 'We appreciate your feedback!', [
+        // {
+        //   text: 'Cancel',
+        //   onPress: () => console.log('Cancel Pressed'),
+        //   style: 'cancel',
+        // },
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]);
+    } catch (error) {}
+  };
+
   return (
     <>
       <SafeAreaView
@@ -257,6 +298,7 @@ const ProfileSettings = props => {
         </View>
         <ScrollView>
           {/* Start of body/ content */}
+
           <View style={{paddingHorizontal: 15}}>
             <View
               style={{
@@ -393,14 +435,142 @@ const ProfileSettings = props => {
                 height: 1,
                 marginVertical: 20,
               }}></View>
+            <View>
+              <Text
+                style={{
+                  color: darkMode ? 'white' : 'black',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  marginBottom: 10,
+                  marginTop: 0,
+                }}>
+                Your Feedback is valuable to us!
+              </Text>
+              <TextInput
+                placeholderTextColor={'grey'}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: darkMode
+                      ? global.inputColorDark
+                      : global.inputColor,
+                    color: darkMode ? 'white' : 'black',
+                  },
+                ]}
+                onChangeText={onChangeText}
+                value={text}
+                placeholder="Your feedback..."
+              />
+              <TouchableOpacity
+                disabled={disableSend}
+                onPress={() => sendFeedBack()}
+                style={{
+                  backgroundColor: disableSend ? 'grey' : global.brandColor,
+                  paddingVertical: 12,
+                  marginTop: 8,
+                  width: '40%',
+                  elevation: 2,
+                  borderRadius: 8,
+                  alignSelf: 'flex-start',
+                }}>
+                <Text
+                  style={{
+                    color: disableSend ? 'lightgrey' : 'white',
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                  }}>
+                  Send Feedback
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{marginTop: 20}}>
+              <Text
+                style={{
+                  color: darkMode ? 'white' : 'black',
+                  textAlign: 'left',
+                  fontWeight: '500',
+                  fontSize: 18,
+                  marginBottom: 10,
+                }}>
+                Connect with us:
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 25,
+                  marginBottom: 10,
+                  justifyContent: 'flex-start',
+                  marginTop: 8,
+                }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://www.facebook.com/profile.php?id=61550332155442',
+                    )
+                  }>
+                  <Image
+                    source={require('../assets/facebook.png')}
+                    style={{
+                      width: 25,
+                      height: 25,
+                      resizeMode: 'contain',
+                      alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL('mailto:newssojo@gmail.com')}>
+                  <Image
+                    source={require('../assets/gmail.png')}
+                    style={{
+                      width: 27,
+                      height: 27,
+                      resizeMode: 'contain',
+                      alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL('https://twitter.com/Sojo_News')
+                  }>
+                  <Image
+                    source={require('../assets/twitter.png')}
+                    style={{
+                      width: 25,
+                      height: 25,
+                      resizeMode: 'contain',
+                      alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://www.instagram.com/sojojob_offical/',
+                    )
+                  }>
+                  <Image
+                    source={require('../assets/instagram.png')}
+                    style={{
+                      width: 23,
+                      height: 23,
+                      resizeMode: 'contain',
+                      alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
             {!isGuestUser && (
               <>
                 <Text
                   style={{
                     color: darkMode ? 'white' : 'black',
                     fontWeight: 'bold',
-                    fontSize: 18,
+                    fontSize: 16,
                     marginBottom: 20,
+                    marginTop: 10,
                   }}>
                   Account Settings
                 </Text>
@@ -421,9 +591,9 @@ const ProfileSettings = props => {
                   }
                   style={{
                     backgroundColor: darkMode ? '#7B3445' : '#fecdd3',
-                    padding: 8,
+                    padding: 12,
                     borderRadius: 8,
-                    width: '60%',
+                    width: '40%',
                   }}>
                   <Text
                     style={{
@@ -481,83 +651,6 @@ const ProfileSettings = props => {
               })}
             </View>
           </Modal> */}
-          <View style={{marginTop: 30, paddingHorizontal: 15}}>
-            <Text
-              style={{
-                color: darkMode ? 'white' : 'black',
-                textAlign: 'left',
-                fontWeight: '500',
-                fontSize: 18,
-                marginBottom: 10,
-              }}>
-              Connect with us:
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 25,
-                marginBottom: 10,
-                justifyContent: 'flex-start',
-                marginTop: 8,
-              }}>
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL(
-                    'https://www.facebook.com/profile.php?id=61550332155442',
-                  )
-                }>
-                <Image
-                  source={require('../assets/facebook.png')}
-                  style={{
-                    width: 25,
-                    height: 25,
-                    resizeMode: 'contain',
-                    alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => Linking.openURL('mailto:newssojo@gmail.com')}>
-                <Image
-                  source={require('../assets/gmail.png')}
-                  style={{
-                    width: 27,
-                    height: 27,
-                    resizeMode: 'contain',
-                    alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL('https://twitter.com/Sojo_News')
-                }>
-                <Image
-                  source={require('../assets/twitter.png')}
-                  style={{
-                    width: 25,
-                    height: 25,
-                    resizeMode: 'contain',
-                    alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL('https://www.instagram.com/sojojob_offical/')
-                }>
-                <Image
-                  source={require('../assets/instagram.png')}
-                  style={{
-                    width: 23,
-                    height: 23,
-                    resizeMode: 'contain',
-                    alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
         </ScrollView>
       </SafeAreaView>
     </>
@@ -603,7 +696,9 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 5,
     color: 'black',
-    height: 40,
+    height: 110,
+    verticalAlign: 'top',
+    padding: 12,
   },
   btnTxt: {
     textAlign: 'center',

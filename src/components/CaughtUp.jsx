@@ -26,7 +26,7 @@ function CaughtUp() {
           fontWeight: 'bold',
           fontSize: 15,
         }}>
-        Congratulations !! you are done for the day.
+        Congratulations on finishing your daily news feed!
       </Text>
       <Text
         style={{
@@ -35,7 +35,7 @@ function CaughtUp() {
           marginTop: 5,
           fontSize: 15,
         }}>
-        Try explore feed for more new news.
+        Discover more in our Explore Feed.
       </Text>
     </View>
   );

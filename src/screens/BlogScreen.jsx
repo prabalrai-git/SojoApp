@@ -404,7 +404,7 @@ const BlogScreen = ({route}) => {
               }}
             />
           </TouchableOpacity>
-          {!isGuest && (
+          {!isGuest ? (
             <View style={{flexDirection: 'row', alignSelf: 'center'}}>
               {data?.isBookmarkedByUser ? (
                 <TouchableOpacity onPress={() => toggleBookmark()}>
@@ -482,6 +482,29 @@ const BlogScreen = ({route}) => {
                 />
               </TouchableOpacity>
             </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => onClickShare()}
+              style={{
+                marginLeft: 10,
+                backgroundColor: darkMode
+                  ? global.brandColorLightDark
+                  : global.brandColorLight,
+                padding: 6,
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                flexDirection: 'row',
+              }}>
+              <Image
+                source={require('../assets/share.png')}
+                style={{
+                  tintColor: 'white',
+                  resizeMode: 'contain',
+                  width: 23,
+                  height: 23,
+                }}
+              />
+            </TouchableOpacity>
           )}
 
           {/* 
