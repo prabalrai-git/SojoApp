@@ -336,6 +336,7 @@ export const HomeDrawerNavigator = () => {
         swipeEnabled: false,
         swipeEdgeWidth: 0,
       }}
+      useLegacyImplementation={true}
       drawerContent={props => {
         return (
           <>
