@@ -294,7 +294,8 @@ const BlogScreen = ({route}) => {
       fontStyle: 'italic',
     },
     a: {
-      textDecorationLine: 'underline',
+      textDecorationLine: 'none',
+      color: darkMode ? '#9B9EA5' : '#3F424A',
     },
     heading1: {
       fontSize: 28,
