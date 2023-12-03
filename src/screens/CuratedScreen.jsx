@@ -368,6 +368,7 @@ const HomeScreen = ({navigation}) => {
   //     }
   //   });
   // }, [offlineNews, news, isconnectedToInternet]);
+
   return (
     <>
       <SurveyModalRedirectionToSettings profile={profile} />

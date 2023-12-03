@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Platform,
   FlatList,
+  StatusBar,
 } from 'react-native';
 import Axios from './../api/server';
 import HTML from 'react-native-render-html';
@@ -29,6 +30,7 @@ import {
   InterstitialAd,
   AdEventType,
 } from 'react-native-google-mobile-ads';
+import {ImagePreview} from 'react-native-images-preview';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
@@ -610,15 +612,39 @@ const BlogScreen = ({route}) => {
                       </Text>
                     </View>
                     {/* <Image source={{uri: data.image}} style={styles.image} /> */}
-                    <FastImage
-                      source={{uri: image ? image : null}}
-                      style={[
-                        styles.image,
-                        {height: DeviceInfo.isTablet() ? 450 : 260},
-                      ]}
-                      resizeMode={FastImage.resizeMode.cover}
-                      priority={FastImage.priority.high}
-                    />
+                    {image && (
+                      <ImagePreview
+                        renderHeader={close => (
+                          <>
+                            <StatusBar backgroundColor={'black'} />
+                            <TouchableOpacity onPress={() => close()}>
+                              <Image
+                                source={require('../assets/cancel.png')}
+                                style={{
+                                  tintColor: 'white',
+                                  resizeMode: 'contain',
+                                  position: 'absolute',
+                                  padding: 20,
+                                  right: 15,
+                                  top: 20,
+                                  width: 38,
+                                  height: 38,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          </>
+                        )}
+                        imageSource={{
+                          uri: image,
+                        }}
+                        imageStyle={[
+                          styles.image,
+                          {height: DeviceInfo.isTablet() ? 450 : 260},
+                        ]}
+                        resizeMode={FastImage.resizeMode.contain}
+                        priority={FastImage.priority.high}
+                      />
+                    )}
                     <Text
                       style={[
                         styles.previewText,
@@ -751,7 +777,9 @@ const styles = StyleSheet.create({
   image: {
     height: 260,
     marginBottom: 10,
+    width: '100%',
     borderRadius: 10,
+    resizeMode: 'stretch',
   },
   title: {
     fontSize: 22,
