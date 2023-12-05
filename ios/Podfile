@@ -78,6 +78,7 @@ target 'app' do
   target 'appTests' do
     inherit! :complete
     # Pods for testing
+    pod 'RNInAppBrowser', :path => '../node_modules/react-native-inappbrowser-reborn'
   end
 
   post_install do |installer|
@@ -89,4 +90,5 @@ target 'app' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
+
 end

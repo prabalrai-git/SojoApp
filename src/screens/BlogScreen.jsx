@@ -31,6 +31,7 @@ import {
   AdEventType,
 } from 'react-native-google-mobile-ads';
 import {ImagePreview} from 'react-native-images-preview';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const BlogScreen = ({route}) => {
   const scrollRef = useRef(null);
@@ -364,6 +365,91 @@ const BlogScreen = ({route}) => {
   //     scrollRef.current.scrollToOffset({offset: 0, animated: true});
   //   }
   // };
+  const onPress = (e, href) => {
+    console.log(href);
+    // try {
+    //   // return console.log(Boolean(InAppBrowser.isAvailable()), 'hi');
+    //   const isAvailable = await InAppBrowser.isAvailable();
+
+    //   if (Boolean(isAvailable)) {
+    //     await InAppBrowser.open(href, {
+    //       // iOS Properties
+    //       dismissButtonStyle: 'cancel',
+    //       preferredBarTintColor: '#18AD56',
+    //       preferredControlTintColor: 'white',
+    //       readerMode: false,
+    //       animated: true,
+    //       modalPresentationStyle: 'fullScreen',
+    //       modalTransitionStyle: 'coverVertical',
+    //       modalEnabled: false,
+    //       enableBarCollapsing: true,
+    //       // Android Properties
+    //       showTitle: true,
+    //       toolbarColor: '#18AD56',
+    //       secondaryToolbarColor: 'white',
+    //       navigationBarColor: 'white',
+    //       navigationBarDividerColor: 'white',
+    //       enableUrlBarHiding: true,
+    //       enableDefaultShare: false,
+    //       forceCloseOnRedirection: false,
+    //       // Specify full animation resource identifier(package:anim/name)
+    //       // or only resource name(in case of animation bundled with app).
+    //       animations: {
+    //         startEnter: 'slide_in_right',
+    //         startExit: 'slide_out_left',
+    //         endEnter: 'slide_in_left',
+    //         endExit: 'slide_out_right',
+    //       },
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
+  const renderersProps = {
+    a: {
+      onPress: async (e, href) => {
+        try {
+          // return console.log(Boolean(InAppBrowser.isAvailable()), 'hi');
+          const isAvailable = await InAppBrowser.isAvailable();
+
+          if (Boolean(isAvailable)) {
+            await InAppBrowser.open(href, {
+              // iOS Properties
+              dismissButtonStyle: 'cancel',
+              preferredBarTintColor: '#18AD56',
+              preferredControlTintColor: 'white',
+              readerMode: false,
+              animated: true,
+              modalPresentationStyle: 'fullScreen',
+              modalTransitionStyle: 'coverVertical',
+              modalEnabled: false,
+              enableBarCollapsing: true,
+              // Android Properties
+              showTitle: true,
+              toolbarColor: '#18AD56',
+              secondaryToolbarColor: 'white',
+              navigationBarColor: 'white',
+              navigationBarDividerColor: 'white',
+              enableUrlBarHiding: true,
+              enableDefaultShare: false,
+              forceCloseOnRedirection: false,
+              // Specify full animation resource identifier(package:anim/name)
+              // or only resource name(in case of animation bundled with app).
+              animations: {
+                startEnter: 'slide_in_right',
+                startExit: 'slide_out_left',
+                endEnter: 'slide_in_left',
+                endExit: 'slide_out_right',
+              },
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    },
+  };
 
   return (
     <>
@@ -624,11 +710,11 @@ const BlogScreen = ({route}) => {
                                   tintColor: 'white',
                                   resizeMode: 'contain',
                                   position: 'absolute',
-                                  padding: 20,
+                                  padding: 15,
                                   right: 15,
                                   top: 20,
-                                  width: 38,
-                                  height: 38,
+                                  width: 34,
+                                  height: 34,
                                 }}
                               />
                             </TouchableOpacity>
@@ -657,6 +743,7 @@ const BlogScreen = ({route}) => {
                       source={{html: data.news}}
                       contentWidth={width}
                       tagsStyles={markdownStyles}
+                      renderersProps={renderersProps}
                     />
 
                     {/* <View style={styles.shareWrapper}>

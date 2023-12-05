@@ -25,6 +25,12 @@ import Axios from '../api/server';
 import messaging from '@react-native-firebase/messaging';
 import {Appearance} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from 'react-native-alert-notification';
 
 const ProfileSettings = props => {
   const [checked, setChecked] = useState(null);
@@ -240,19 +246,25 @@ const ProfileSettings = props => {
       await AsyncStorage.setItem('surveyCompleted', 'true');
       await AsyncStorage.setItem('surveryCompletedTime', now.toString());
       await AsyncStorage.removeItem('surveySkipTimestamp');
-      Alert.alert('Thank You!', 'We appreciate your feedback!', [
-        // {
-        //   text: 'Cancel',
-        //   onPress: () => console.log('Cancel Pressed'),
-        //   style: 'cancel',
-        // },
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ]);
+      Toast.show({
+        autoClose: 2000,
+        onPress: () => Toast.hide(),
+        type: ALERT_TYPE.SUCCESS,
+        textBody: 'Thank you! We appreciate your feedback!',
+      });
+      // Alert.alert('Thank You!', 'We appreciate your feedback!', [
+      //   // {
+      //   //   text: 'Cancel',
+      //   //   onPress: () => console.log('Cancel Pressed'),
+      //   //   style: 'cancel',
+      //   // },
+      //   {text: 'OK', onPress: () => console.log('OK Pressed')},
+      // ]);
     } catch (error) {}
   };
 
   return (
-    <>
+    <AlertNotificationRoot theme="white">
       <SafeAreaView
         style={{
           flex: 0,
@@ -655,7 +667,7 @@ const ProfileSettings = props => {
           </Modal> */}
         </ScrollView>
       </SafeAreaView>
-    </>
+    </AlertNotificationRoot>
   );
 };
 

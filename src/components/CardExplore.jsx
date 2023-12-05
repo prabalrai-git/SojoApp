@@ -20,6 +20,7 @@ import {toggle} from '../redux/features/ReloadNewsSlice';
 import DeviceInfo from 'react-native-device-info';
 import {windowWidth} from '../helper/usefulConstants';
 import {ImagePreview} from 'react-native-images-preview';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const ExploreCard = ({item, navigation, profile, isGuest}) => {
   const {width} = Dimensions.get('window');
@@ -86,7 +87,46 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
   if (!resizedImageUrl) {
     return null;
   }
+  const openBrowser = async url => {
+    try {
+      // return console.log(Boolean(InAppBrowser.isAvailable()), 'hi');
+      const isAvailable = await InAppBrowser.isAvailable();
 
+      if (Boolean(isAvailable)) {
+        await InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#18AD56',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: false,
+          enableBarCollapsing: true,
+          // Android Properties
+          showTitle: true,
+          toolbarColor: '#18AD56',
+          secondaryToolbarColor: 'white',
+          navigationBarColor: 'white',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: false,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       {item?.isPaid ? (
@@ -98,13 +138,7 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
             // height: 440,
             width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
           }}
-          onPress={() =>
-            Linking.openURL(
-              item?.sponsorURL.includes('http')
-                ? item?.sponsorURL
-                : 'https://' + item?.sponsorURL,
-            )
-          }>
+          onPress={() => openBrowser(item?.sponsorURL)}>
           <View
             style={[
               styles.cardContainer,
@@ -132,29 +166,9 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
             </View>
             <View style={styles.wrapper}>
               <View>
-                <ImagePreview
-                  renderHeader={close => (
-                    <>
-                      <StatusBar backgroundColor={'black'} />
-                      <TouchableOpacity onPress={() => close()}>
-                        <Image
-                          source={require('../assets/cancel.png')}
-                          style={{
-                            tintColor: 'white',
-                            resizeMode: 'contain',
-                            position: 'absolute',
-                            padding: 20,
-                            right: 15,
-                            top: 20,
-                            width: 38,
-                            height: 38,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                  imageSource={{uri: resizedImageUrl}}
-                  imageStyle={[
+                <Image
+                  source={{uri: resizedImageUrl}}
+                  style={[
                     styles.cardImage,
                     {
                       position: 'relative',
@@ -162,7 +176,7 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
                       borderWidth: 2,
                     },
                   ]}
-                  resizeMode={FastImage.resizeMode.contain}
+                  resizeMode={FastImage.resizeMode.cover}
                   priority={FastImage.priority.high}
                 />
                 {!isGuest && (
@@ -237,13 +251,12 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
           }}
           onPress={() => {
             navigation.navigate('Blog', {
-              fromBookmarks: fromBookmarks,
               id: item?.id,
               isBookmarked: item?.isBookmarkedByUser,
               isGuest: isGuest,
             });
-            if (scrollRef)
-              scrollRef.current?.scrollToOffset({animated: true, y: 0});
+            // if (scrollRef)
+            //   scrollRef.current?.scrollToOffset({animated: true, y: 0});
           }}>
           <View
             style={[
@@ -257,51 +270,31 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
             ]}>
             <View style={styles.wrapper}>
               <View>
-                <ImagePreview
-                  renderHeader={close => (
-                    <>
-                      <StatusBar backgroundColor={'black'} />
-                      <TouchableOpacity onPress={() => close()}>
-                        <Image
-                          source={require('../assets/cancel.png')}
-                          style={{
-                            tintColor: 'white',
-                            resizeMode: 'contain',
-                            position: 'absolute',
-                            padding: 20,
-                            right: 15,
-                            top: 20,
-                            width: 38,
-                            height: 38,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                  imageSource={{uri: resizedImageUrl}}
-                  imageStyle={[styles.cardImage, {position: 'relative'}]}
+                <Image
+                  source={{uri: resizedImageUrl}}
+                  style={[styles.cardImage, {position: 'relative'}]}
                   resizeMode={FastImage.resizeMode.contain}
-                  priority={FastImage.priority.high}>
-                  {!isGuest && (
-                    <Pressable onPress={() => bookmarkPressed()}>
-                      <Image
-                        source={
-                          toggled
-                            ? require('../assets/marking.png')
-                            : require('../assets/inmarking.png')
-                        }
-                        style={{
-                          width: toggled ? 140 : 165,
-                          height: 55,
-                          resizeMode: 'contain',
-                          position: 'absolute',
-                          top: 190,
-                          left: 10,
-                        }}
-                      />
-                    </Pressable>
-                  )}
-                </ImagePreview>
+                  priority={FastImage.priority.high}></Image>
+
+                {!isGuest && (
+                  <Pressable onPress={() => bookmarkPressed()}>
+                    <Image
+                      source={
+                        toggled
+                          ? require('../assets/marking.png')
+                          : require('../assets/inmarking.png')
+                      }
+                      style={{
+                        width: toggled ? 140 : 165,
+                        height: 55,
+                        resizeMode: 'contain',
+                        position: 'absolute',
+                        top: 190,
+                        left: 10,
+                      }}
+                    />
+                  </Pressable>
+                )}
               </View>
               <Text
                 style={[

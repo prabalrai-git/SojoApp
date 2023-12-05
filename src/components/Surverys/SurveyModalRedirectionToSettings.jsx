@@ -1,20 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {TextInput} from 'react-native';
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {windowHeight} from '../../helper/usefulConstants';
-import {Platform} from 'react-native';
-import {Keyboard} from 'react-native';
-import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 function SurveyModalRedirectionToSettings({profile}) {
@@ -64,8 +53,12 @@ function SurveyModalRedirectionToSettings({profile}) {
       const skipTime = parseInt(skipTimestamp, 10);
       const hoursElapsed = (currentTime - skipTime) / (1000 * 60 * 60 * 24);
 
-      // Show the survey modal again after 2 days
-      if (hoursElapsed >= 4) {
+      const askAgainDays = await firestore()
+        .collection('askFeedbackAgainIfSkipped')
+        .get();
+
+      // Show the survey modal again after certain days
+      if (daysElasped >= Number(askAgainDays.docs[0]._data.days)) {
         // Change this to 1 minute
         setSkipTimeFound(true);
       }
@@ -83,7 +76,9 @@ function SurveyModalRedirectionToSettings({profile}) {
         setShowSurvey(showSurvey.docs[0]._data.show);
       }, 4000);
       if (showSurvey.docs[0]._data.show) {
-        setModalVisible(true);
+        setTimeout(() => {
+          setModalVisible(true);
+        }, 120000);
       }
       // console.log(showSurvey.docs[0]._data.show, 'hee haaaw');
     } catch (error) {}

@@ -22,6 +22,7 @@ import DeviceInfo from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
 import {FlashList} from '@shopify/flash-list';
+import Snackbar from 'react-native-snackbar';
 
 const HomeScreen = ({navigation}) => {
   const [blogs, setBlogs] = useState([]);
@@ -273,7 +274,7 @@ const HomeScreen = ({navigation}) => {
               renderItem={renderItem}
               keyExtractor={item => item.id}
               ListFooterComponent={blogs.length > 0 ? renderFooter : null}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0.4}
               showsVerticalScrollIndicator={false}
               onEndReached={handleLoadMore}
               refreshing={page === 1 && loading}
@@ -283,6 +284,15 @@ const HomeScreen = ({navigation}) => {
               // }}
               onRefresh={() => {
                 setBlogs([]);
+                setPage(1);
+                Snackbar.show({
+                  text: 'Your feed has been updated.',
+                  duration: Snackbar.LENGTH_SHORT,
+                  backgroundColor: darkMode ? '#3F424A' : 'white',
+                  marginBottom: 97,
+                  textColor: darkMode ? 'white' : 'black',
+                  numberOfLines: 1,
+                });
               }}
             />
           </View>

@@ -1,4 +1,4 @@
-import {Linking, StyleSheet} from 'react-native';
+import {Alert, Linking, StyleSheet} from 'react-native';
 import React, {useEffect, useMemo, useState, memo} from 'react';
 import {
   TouchableOpacity,
@@ -21,8 +21,7 @@ import '../../globalThemColor';
 import {windowWidth} from '../helper/usefulConstants';
 import DeviceInfo from 'react-native-device-info';
 import CaughtUp from './CaughtUp';
-import {ImagePreview} from 'react-native-images-preview';
-import {StatusBar} from 'react-native';
+import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 
 const BlogCard = ({
   item,
@@ -125,6 +124,47 @@ const BlogCard = ({
     return null;
   }
 
+  const openBrowser = async url => {
+    try {
+      // return console.log(Boolean(InAppBrowser.isAvailable()), 'hi');
+      const isAvailable = await InAppBrowser.isAvailable();
+
+      if (Boolean(isAvailable)) {
+        await InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#18AD56',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: false,
+          enableBarCollapsing: true,
+          // Android Properties
+          showTitle: true,
+          toolbarColor: '#18AD56',
+          secondaryToolbarColor: 'white',
+          navigationBarColor: 'white',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: false,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {item?.isPaid ? (
@@ -136,13 +176,7 @@ const BlogCard = ({
             // height: 440,
             width: DeviceInfo.isTablet() ? windowWidth * 0.5 : windowWidth,
           }}
-          onPress={() =>
-            Linking.openURL(
-              item?.sponsorURL.includes('http://')
-                ? item?.sponsorURL
-                : 'https://' + item?.sponsorURL,
-            )
-          }>
+          onPress={() => openBrowser(item?.sponsorURL)}>
           <View
             style={[
               styles.cardContainer,
@@ -170,29 +204,9 @@ const BlogCard = ({
             </View>
             <View style={styles.wrapper}>
               <View>
-                <ImagePreview
-                  renderHeader={close => (
-                    <>
-                      <StatusBar backgroundColor={'black'} />
-                      <TouchableOpacity onPress={() => close()}>
-                        <Image
-                          source={require('../assets/cancel.png')}
-                          style={{
-                            tintColor: 'white',
-                            resizeMode: 'contain',
-                            position: 'absolute',
-                            padding: 20,
-                            right: 15,
-                            top: 20,
-                            width: 38,
-                            height: 38,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                  imageSource={{uri: resizedImageUrl}}
-                  imageStyle={[
+                <Image
+                  source={{uri: resizedImageUrl}}
+                  style={[
                     styles.cardImage,
                     {
                       position: 'relative',
@@ -201,7 +215,7 @@ const BlogCard = ({
                     },
                   ]}
                   resizeMode={FastImage.resizeMode.contain}
-                  priority={FastImage.priority.high}></ImagePreview>
+                  priority={FastImage.priority.high}></Image>
                 {!isGuest && (
                   <Pressable onPress={() => bookmarkPressed()}>
                     <Image
@@ -294,30 +308,10 @@ const BlogCard = ({
             ]}>
             <View style={styles.wrapper}>
               <View>
-                <ImagePreview
-                  renderHeader={close => (
-                    <>
-                      <StatusBar backgroundColor={'black'} />
-                      <TouchableOpacity onPress={() => close()}>
-                        <Image
-                          source={require('../assets/cancel.png')}
-                          style={{
-                            tintColor: 'white',
-                            resizeMode: 'contain',
-                            position: 'absolute',
-                            padding: 20,
-                            right: 15,
-                            top: 20,
-                            width: 38,
-                            height: 38,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                  imageSource={{uri: resizedImageUrl}}
-                  imageStyle={[styles.cardImage, {position: 'relative'}]}
-                  resizeMode={FastImage.resizeMode.contain}
+                <Image
+                  source={{uri: resizedImageUrl}}
+                  style={[styles.cardImage, {position: 'relative'}]}
+                  resizeMode={FastImage.resizeMode.cover}
                   priority={FastImage.priority.high}
                 />
                 {!isGuest && (

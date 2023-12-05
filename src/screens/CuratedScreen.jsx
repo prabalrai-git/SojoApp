@@ -1,7 +1,6 @@
-import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {
   View,
-  FlatList,
   ActivityIndicator,
   StyleSheet,
   Text,
@@ -9,7 +8,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  Alert,
+  Linking,
 } from 'react-native';
 
 import Card from './../components/Card';
@@ -22,18 +21,17 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import '../../globalThemColor';
 import _ from 'lodash';
 import DeviceInfo from 'react-native-device-info';
-import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {BannerAd} from 'react-native-google-mobile-ads';
 import firestore from '@react-native-firebase/firestore';
-import SurveyModal from '../components/Surverys/SurveyModal';
 import {FlashList} from '@shopify/flash-list';
-import NetInfo from '@react-native-community/netinfo';
 import SurveyModalRedirectionToSettings from '../components/Surverys/SurveyModalRedirectionToSettings';
+import Snackbar from 'react-native-snackbar';
+import ShareOurAppModal from '../components/Surverys/ShareOurAppModal';
 
 ///
 
 const HomeScreen = ({navigation}) => {
   const [news, setNews] = useState([]);
-  const [offlineNews, setOfflineNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
@@ -43,7 +41,6 @@ const HomeScreen = ({navigation}) => {
   const [adMobIds, setAdMobIds] = useState();
   const [adInterval, setAdInterval] = useState();
   const [todaysNewsLength, setTodaysNewsLength] = useState(null);
-  const [isconnectedToInternet, setIsConnectedToInternet] = useState();
 
   //
 
@@ -86,33 +83,6 @@ const HomeScreen = ({navigation}) => {
     const date2 = new Date(timestamp2);
     return date1.getDate() !== date2.getDate();
   }
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (news.length > 15) {
-  //       const latestFifteenNews = news?.slice(0, 15);
-  //       try {
-  //         await AsyncStorage.removeItem('latestFifteenNews');
-  //         await AsyncStorage.setItem(
-  //           'latestFifteenNews',
-  //           JSON.stringify(latestFifteenNews),
-  //         );
-  //         const storedDataString = await AsyncStorage.getItem(
-  //           'latestFifteenNews',
-  //         );
-  //         if (storedDataString) {
-  //           const storedData = JSON.parse(storedDataString);
-  //           // Use the stored data in your app
-  //           setOfflineNews(storedData);
-  //         }
-  //       } catch (error) {
-  //         console.error('AsyncStorage error:', error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchData(); // Call the async function
-  // }, [news, isconnectedToInternet]);
 
   useEffect(() => {
     async function setUserActivity() {
@@ -371,6 +341,8 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <>
+      {/* <CustomAlert /> */}
+      <ShareOurAppModal />
       <SurveyModalRedirectionToSettings profile={profile} />
       <SafeAreaView
         style={{
@@ -389,6 +361,7 @@ const HomeScreen = ({navigation}) => {
         <StatusBar
           backgroundColor={darkMode ? global.brandColorDark : global.brandColor}
         />
+
         <View
           style={[
             styles.topBar,
@@ -444,6 +417,14 @@ const HomeScreen = ({navigation}) => {
             setPage(1);
             fetchNews(page);
             // navigation.replace('Curated');
+            Snackbar.show({
+              text: 'Your feed has been updated.',
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: darkMode ? '#3F424A' : 'white',
+              marginBottom: 97,
+              textColor: darkMode ? 'white' : 'black',
+              numberOfLines: 1,
+            });
           }}
           estimatedItemSize={100}
         />
