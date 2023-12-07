@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Pressable, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -109,8 +109,8 @@ function ShareOurAppModal() {
     await AsyncStorage.removeItem('completedTimestamp1');
   };
 
-  const url = `https://sojonews.com`;
-  const title = ``;
+  const url = 'https://sojonews.com';
+  const title = '';
   const message =
     'Check out Sojonews app. I found it best for reading short summarized news.';
   const icon = 'data:<data_type>/<file_extension>;base64,<base64_data>';
@@ -171,7 +171,9 @@ function ShareOurAppModal() {
     setModalVisible(false);
     const now = new Date().getTime();
 
-    await AsyncStorage.setItem('surveySkipTimestamp1', now.toString());
+    await AsyncStorage.setItem('surveryCompletedTime1', now.toString());
+    await AsyncStorage.removeItem('surveySkipTimestamp1');
+    // await AsyncStorage.setItem('surveySkipTimestamp1', now.toString());
   };
   return (
     showSurvey &&
@@ -181,6 +183,7 @@ function ShareOurAppModal() {
         // style={{flex: Platform.OS === 'ios' ? 0.6 : 0.6}}
         animationOut={'fadeOut'}
         animationOutTiming={300}
+        backdropOpacity={0.2}
         backdropTransitionOutTiming={300}>
         {/* <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -197,7 +200,7 @@ function ShareOurAppModal() {
           <View
             style={{
               backgroundColor: 'white',
-              width: '80%',
+              width: '100%',
               justifyContent: 'center',
               alignItems: 'center',
               paddingVertical: 20,
@@ -205,6 +208,31 @@ function ShareOurAppModal() {
               borderRadius: 8,
               position: 'relative',
             }}>
+            <View
+              style={{
+                position: 'absolute',
+                zIndex: 10,
+                top: -25,
+                marginHorizontal: 'auto',
+                paddingHorizontal: 10,
+                // left: '40%',
+                backgroundColor: 'white',
+                width: 60,
+                height: 60,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 50,
+              }}>
+              <Image
+                source={require('../../assets/feedback.png')}
+                style={{
+                  width: 35,
+                  height: 35,
+                  resizeMode: 'contain',
+                }}
+              />
+            </View>
             <TouchableOpacity
               onPress={() => onSkip()}
               style={{position: 'absolute', right: 10, top: 10}}>
@@ -216,14 +244,15 @@ function ShareOurAppModal() {
             <Text
               style={{
                 color: 'black',
-                marginTop: 0,
-                marginRight: 50,
-                marginLeft: 20,
+                marginTop: 25,
+                marginRight: 0,
+                marginLeft: 0,
                 textAlign: 'center',
+                lineHeight: 20,
               }}>
               {shareOurModalData?.text}
             </Text>
-            <TouchableOpacity
+            <Pressable
               onPress={() => {
                 onOkay();
               }}
@@ -238,7 +267,7 @@ function ShareOurAppModal() {
               <Text style={{color: 'white', textAlign: 'center'}}>
                 {shareOurModalData?.buttonText}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </Modal>

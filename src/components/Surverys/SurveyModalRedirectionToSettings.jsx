@@ -109,6 +109,7 @@ function SurveyModalRedirectionToSettings({profile}) {
         // style={{flex: Platform.OS === 'ios' ? 0.6 : 0.6}}
         animationOut={'fadeOut'}
         animationOutTiming={300}
+        backdropOpacity={0.2}
         backdropTransitionOutTiming={300}>
         {/* <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -121,7 +122,7 @@ function SurveyModalRedirectionToSettings({profile}) {
             display: 'flex',
             // flex: 1,
             // height: isKeyboardVisible ? '81%' : '51%',
-            height: 150,
+            height: 175,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'relative',
@@ -132,6 +133,7 @@ function SurveyModalRedirectionToSettings({profile}) {
               zIndex: 10,
               top: -25,
               marginHorizontal: 'auto',
+              paddingHorizontal: 10,
               // left: '40%',
               backgroundColor: 'white',
               width: 60,
@@ -168,11 +170,14 @@ function SurveyModalRedirectionToSettings({profile}) {
                 textAlign: 'center',
                 margin: 20,
                 marginHorizontal: 0,
-                fontWeight: '600',
-                fontSize: 16,
+                paddingHorizontal: 8,
+                // fontWeight: '600',
+                fontSize: 14,
                 marginTop: 35,
+                lineHeight: 20,
               }}>
-              Please, Help us improve with your feedback.
+              Help us get better with your valuable feedback. We appreciate your
+              input in making our service even more awesome!
             </Text>
             {/*
             <View style={{margin: 12}}>
@@ -254,7 +259,7 @@ function SurveyModalRedirectionToSettings({profile}) {
             )} */}
             <View
               style={{
-                marginTop: 20,
+                marginTop: 5,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 marginHorizontal: 13,
@@ -263,7 +268,7 @@ function SurveyModalRedirectionToSettings({profile}) {
               <TouchableOpacity
                 onPress={() => onOkay()}
                 style={{
-                  backgroundColor: '#3da066',
+                  backgroundColor: global.brandColor,
                   padding: 10,
                   flex: 0.5,
                   borderRadius: 6,
@@ -272,7 +277,6 @@ function SurveyModalRedirectionToSettings({profile}) {
                   style={{
                     color: 'white',
                     textAlign: 'center',
-                    textTransform: 'uppercase',
                   }}>
                   Sure
                 </Text>
@@ -282,7 +286,7 @@ function SurveyModalRedirectionToSettings({profile}) {
                   onSkip();
                 }}
                 style={{
-                  backgroundColor: '#b53327',
+                  backgroundColor: '#218da8',
                   padding: 12,
                   flex: 0.4,
                   borderRadius: 6,
@@ -291,7 +295,6 @@ function SurveyModalRedirectionToSettings({profile}) {
                   style={{
                     color: 'white',
                     textAlign: 'center',
-                    textTransform: 'uppercase',
                   }}>
                   Later
                 </Text>

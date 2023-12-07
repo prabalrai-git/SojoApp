@@ -21,7 +21,7 @@ import {showTabBar} from '../redux/features/HideTabBar';
 import '../../globalThemColor';
 import _ from 'lodash';
 import DeviceInfo from 'react-native-device-info';
-import {BannerAd} from 'react-native-google-mobile-ads';
+import {BannerAd, TestIds} from 'react-native-google-mobile-ads';
 import firestore from '@react-native-firebase/firestore';
 import {FlashList} from '@shopify/flash-list';
 import SurveyModalRedirectionToSettings from '../components/Surverys/SurveyModalRedirectionToSettings';
@@ -305,6 +305,7 @@ const HomeScreen = ({navigation}) => {
             {adItem && (
               <BannerAd
                 unitId={adItem._data.adId}
+                // unitId="ca-app-pub-7141466234997058/2292173803"
                 // unitId={'ca-app-pub-3940256099942544/6300978111'}
                 size="365x45"
                 requestOptions={{
