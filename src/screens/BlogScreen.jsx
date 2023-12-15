@@ -289,6 +289,7 @@ const BlogScreen = ({route}) => {
       lineHeight: 24,
       color: darkMode ? '#9B9EA5' : '#3F424A',
       textAlign: 'left',
+      backgroundColor: 'transparent',
     },
     strong: {
       fontWeight: 'bold',

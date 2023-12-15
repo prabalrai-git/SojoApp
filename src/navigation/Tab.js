@@ -11,6 +11,7 @@ import {windowWidth} from '../helper/usefulConstants';
 import {useDispatch, useSelector} from 'react-redux';
 
 import '../../globalThemColor';
+import SojoReels from '../screens/SojoReels';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -80,6 +81,23 @@ const TabNavigator = () => {
                         ? require('../assets/darknews.png')
                         : require('../assets/feed_fill.png')
                       : require('../assets/feed.png')
+                  }
+                  style={{
+                    width: 26,
+                    height: 26,
+                    resizeMode: 'contain',
+                  }}
+                />
+              );
+            } else if (route.name === 'Reels') {
+              return (
+                <Image
+                  source={
+                    focused
+                      ? darkMode
+                        ? require('../assets/movie.png')
+                        : require('../assets/movie.png')
+                      : require('../assets/movie.png')
                   }
                   style={{
                     width: 26,
@@ -159,6 +177,30 @@ const TabNavigator = () => {
                 fontWeight: '500',
               }}>
               Feed
+            </Text>
+          ),
+          tabBarInactiveTintColor: 'grey',
+        }}
+        // listeners={{
+        //   tabPress: () => {
+        //     navigation.replace('Curated');
+        //   },
+        // }}
+      />
+      <Tab.Screen
+        name="Reels"
+        children={() => <SojoReels />}
+        options={{
+          headerShown: false,
+
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                color: focused ? (darkMode ? 'white' : '#171717') : 'grey',
+                fontSize: 12,
+                fontWeight: '500',
+              }}>
+              Reels
             </Text>
           ),
           tabBarInactiveTintColor: 'grey',
