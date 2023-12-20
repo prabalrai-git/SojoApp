@@ -26,7 +26,7 @@ function SojoReels() {
 
   return (
     <>
-      <StatusBar translucent backgroundColor="transparent" />
+      {/* <StatusBar translucent backgroundColor="transparent" /> */}
       <View style={styles.topContainer}>
         <FlatList
           pagingEnabled

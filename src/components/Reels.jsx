@@ -3,7 +3,6 @@ import React, {useRef, useState} from 'react';
 import Video from 'react-native-video';
 import LinearGradient from 'react-native-linear-gradient';
 import {windowHeight, windowWidth} from '../helper/usefulConstants';
-import {StatusBar} from 'react-native';
 const Reels = ({item, index, selectedIndex, setSelectedIndex}) => {
   const [liked, setLiked] = useState(false);
   const videoRef = useRef(null);
@@ -15,209 +14,200 @@ const Reels = ({item, index, selectedIndex, setSelectedIndex}) => {
     }
   };
   return (
-    <>
-      <StatusBar translucent backgroundColor="transparent" />
+    <View style={styles.topContainer}>
+      <Video
+        ref={videoRef}
+        controls={false}
+        reapeat={true}
+        paused={selectedIndex == index ? false : true}
+        onEnd={onEnd}
+        style={styles.videoContainer}
+        source={item.uri}
+        resizeMode={'cover'}
+      />
+      <LinearGradient
+        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,.2)', 'rgba(0,0,0,.9)']}
+        style={styles.linearGradient}>
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={() => {
+            if (selectedIndex == -1) {
+              setSelectedIndex(index);
+            } else {
+              setSelectedIndex(-1);
+            }
+          }}>
+          {selectedIndex == -1 ? (
+            <Image
+              source={require('../assets/pause1.png')}
+              tintColor={'rgba(255,255,255,1)'}
+              style={styles.pauseBtn}
+            />
+          ) : null}
+          <View style={styles.soundInfo}>
+            <View style={{flexDirection: 'row'}}>
+              <Image
+                source={require('../assets/music.png')}
+                style={{
+                  width: 15,
+                  height: 15,
+                  objectFit: 'contain',
+                  alignSelf: 'flex-end',
+                  marginRight: 8,
+                }}
+              />
+              <Text style={{color: 'white', alignSelf: 'flex-end'}}>
+                Original sound
+              </Text>
+            </View>
+            <Image
+              source={require('../assets/app.png')}
+              style={{
+                width: 35,
+                height: 35,
+                alignSelf: 'center',
+                objectFit: 'contain',
+                borderRadius: 10,
+              }}
+            />
+          </View>
+          <View
+            style={{
+              width: '80%',
 
-      <View style={styles.topContainer}>
-        <Video
-          ref={videoRef}
-          controls={false}
-          reapeat={true}
-          paused={selectedIndex == index ? false : true}
-          // onEnd={onEnd}
-          style={styles.videoContainer}
-          source={item.uri}
-          resizeMode={'cover'}
-        />
-        <LinearGradient
-          colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,.2)', 'rgba(0,0,0,.9)']}
-          style={styles.linearGradient}>
-          <TouchableOpacity
-            style={styles.overlay}
-            onPress={() => {
-              if (selectedIndex == -1) {
-                setSelectedIndex(index);
-              } else {
-                setSelectedIndex(-1);
-              }
+              position: 'absolute',
+              bottom: 36,
+              right: '3%',
+              left: '3%',
+              display: 'flex',
+              flexDirection: 'row',
             }}>
-            {selectedIndex == -1 ? (
-              <Image
-                source={require('../assets/pause1.png')}
-                tintColor={'rgba(255,255,255,1)'}
-                style={styles.pauseBtn}
-              />
-            ) : null}
-            <View style={styles.soundInfo}>
-              <View style={{flexDirection: 'row'}}>
-                <Image
-                  source={require('../assets/music.png')}
-                  style={{
-                    width: 15,
-                    height: 15,
-                    objectFit: 'contain',
-                    alignSelf: 'flex-end',
-                    marginRight: 8,
-                  }}
-                />
-                <Text style={{color: 'white', alignSelf: 'flex-end'}}>
-                  Original sound
-                </Text>
-              </View>
-              <Image
-                source={require('../assets/app.png')}
-                style={{
-                  width: 35,
-                  height: 35,
-                  alignSelf: 'center',
-                  objectFit: 'contain',
-                  borderRadius: 10,
-                }}
-              />
-            </View>
-            <View
-              style={{
-                width: '80%',
+            <Text style={{color: 'white', fontWeight: '500'}}>
+              {item.description}
+            </Text>
+          </View>
+          <View
+            style={{
+              width: '80%',
 
-                position: 'absolute',
-                bottom: 90,
-                right: '3%',
-                left: '3%',
-                display: 'flex',
-                flexDirection: 'row',
+              position: 'absolute',
+              bottom: 65,
+              right: '3%',
+              left: '3%',
+              display: 'flex',
+              flexDirection: 'row',
+            }}>
+            <Image
+              source={require('../assets/app.png')}
+              style={{
+                width: 35,
+                height: 35,
+                alignSelf: 'center',
+                objectFit: 'contain',
+                borderRadius: 25,
+              }}
+            />
+            <Text
+              style={{
+                color: 'white',
+                marginLeft: 4,
+                alignSelf: 'center',
+                fontWeight: 'bold',
               }}>
-              <Text style={{color: 'white', fontWeight: '500'}}>
-                {item.description}
+              @{item.creator}
+            </Text>
+          </View>
+          <View
+            style={{position: 'absolute', right: 15, bottom: 130, zIndex: 999}}>
+            <TouchableOpacity
+              style={{
+                paddingLeft: 30,
+                paddingTop: 20,
+              }}
+              onPress={() => setLiked(!liked)}>
+              <Image
+                source={
+                  liked
+                    ? require('../assets/liked.png')
+                    : require('../assets/heart.png')
+                }
+                style={{width: 31, height: 31, objectFit: 'contain'}}
+              />
+              <Text
+                style={{
+                  color: 'white',
+                  marginTop: 4,
+                  fontSize: 12,
+                  textAlign: 'center',
+                }}>
+                3.4K
               </Text>
-            </View>
-            <View
-              style={{
-                width: '80%',
+            </TouchableOpacity>
 
-                position: 'absolute',
-                bottom: 115,
-                right: '3%',
-                left: '3%',
-                display: 'flex',
-                flexDirection: 'row',
+            <TouchableOpacity
+              style={{
+                paddingLeft: 30,
+                paddingTop: 20,
               }}>
               <Image
-                source={require('../assets/app.png')}
+                source={require('../assets/comment.png')}
                 style={{
                   width: 35,
                   height: 35,
-                  alignSelf: 'center',
                   objectFit: 'contain',
-                  borderRadius: 25,
+                  marginTop: 20,
                 }}
               />
               <Text
                 style={{
                   color: 'white',
-                  marginLeft: 4,
-                  alignSelf: 'center',
-                  fontWeight: 'bold',
+                  marginTop: 4,
+                  fontSize: 12,
+                  textAlign: 'center',
                 }}>
-                @{item.creator}
+                4.4K
               </Text>
-            </View>
-            <View
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
-                position: 'absolute',
-                right: 15,
-                bottom: 160,
-                zIndex: 999,
+                paddingLeft: 30,
+                paddingTop: 20,
               }}>
-              <TouchableOpacity
+              <Image
+                source={require('../assets/send.png')}
                 style={{
-                  paddingLeft: 30,
-                  paddingTop: 20,
+                  width: 30,
+                  height: 30,
+                  objectFit: 'contain',
+                  marginTop: 20,
                 }}
-                onPress={() => setLiked(!liked)}>
-                <Image
-                  source={
-                    liked
-                      ? require('../assets/liked.png')
-                      : require('../assets/heart.png')
-                  }
-                  style={{width: 31, height: 31, objectFit: 'contain'}}
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    marginTop: 4,
-                    fontSize: 12,
-                    textAlign: 'center',
-                  }}>
-                  3.4K
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  paddingLeft: 30,
-                  paddingTop: 20,
-                }}>
-                <Image
-                  source={require('../assets/comment.png')}
-                  style={{
-                    width: 35,
-                    height: 35,
-                    objectFit: 'contain',
-                    marginTop: 20,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    marginTop: 4,
-                    fontSize: 12,
-                    textAlign: 'center',
-                  }}>
-                  4.4K
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  paddingLeft: 30,
-                  paddingTop: 20,
-                }}>
-                <Image
-                  source={require('../assets/send.png')}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    objectFit: 'contain',
-                    marginTop: 20,
-                  }}
-                />
-                <Text style={{color: 'white', marginTop: 4, fontSize: 12}}>
-                  Share
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                position: 'absolute',
-                top: 40,
-                left: 20,
-                display: 'flex',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  color: 'white',
-
-                  fontSize: 27,
-                  fontWeight: '800',
-                }}>
-                SoJo Reels
+              />
+              <Text style={{color: 'white', marginTop: 4, fontSize: 12}}>
+                Share
               </Text>
-            </View>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
-    </>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              top: 40,
+              left: 20,
+              display: 'flex',
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                color: 'white',
+
+                fontSize: 27,
+                fontWeight: '800',
+              }}>
+              SoJo Reels
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
+    </View>
   );
 };
 
@@ -241,7 +231,7 @@ const styles = StyleSheet.create({
   soundInfo: {
     width: '92%',
     position: 'absolute',
-    bottom: 60,
+    bottom: 10,
     right: '5%',
     left: '3%',
     display: 'flex',
@@ -257,7 +247,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     width: windowWidth,
-    height: windowHeight,
+    height: windowHeight * 0.94,
     position: 'absolute',
     top: 0,
     justifyContent: 'center',
