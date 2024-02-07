@@ -187,7 +187,7 @@ const TabNavigator = () => {
         //   },
         // }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Reels"
         children={() => <SojoReels />}
         options={{
@@ -205,12 +205,7 @@ const TabNavigator = () => {
           ),
           tabBarInactiveTintColor: 'grey',
         }}
-        // listeners={{
-        //   tabPress: () => {
-        //     navigation.replace('Curated');
-        //   },
-        // }}
-      />
+      /> */}
       <Tab.Screen
         name="Explore"
         children={() => <ExploreDrawerNavigator />}

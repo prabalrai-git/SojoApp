@@ -732,13 +732,13 @@ const BlogScreen = ({route}) => {
                         priority={FastImage.priority.high}
                       />
                     )}
-                    <Text
+                    {/* <Text
                       style={[
                         styles.previewText,
                         {color: darkMode ? '#9B9EA5' : '#3F424A'},
                       ]}>
                       {data.previewText}
-                    </Text>
+                    </Text> */}
 
                     <MemoizedRenderHtml
                       source={{html: data.news}}

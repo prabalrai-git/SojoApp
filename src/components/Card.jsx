@@ -252,7 +252,7 @@ const BlogCard = ({
                   styles.cardText,
                   {color: darkMode ? '#9B9EA5' : '#3F424A'},
                 ]}
-                numberOfLines={2}
+                // numberOfLines={2}
                 ellipsizeMode="tail">
                 {item?.previewText}
               </Text>
@@ -266,7 +266,7 @@ const BlogCard = ({
                   }
                 </Text>
                 <View style={styles.link}>
-                  <Text style={styles.linkText}>Continue Reading</Text>
+                  <Text style={styles.linkText}>Read Full Story</Text>
                   <Icon
                     name="keyboard-arrow-right"
                     size={20}
@@ -350,7 +350,7 @@ const BlogCard = ({
                   styles.cardText,
                   {color: darkMode ? '#9B9EA5' : '#3F424A'},
                 ]}
-                numberOfLines={2}
+                // numberOfLines={2}
                 ellipsizeMode="tail">
                 {item?.previewText}
               </Text>
@@ -364,7 +364,7 @@ const BlogCard = ({
                   }
                 </Text>
                 <View style={styles.link}>
-                  <Text style={styles.linkText}>Continue Reading</Text>
+                  <Text style={styles.linkText}>Read Full Story</Text>
                   <Icon
                     name="keyboard-arrow-right"
                     size={20}
@@ -417,6 +417,8 @@ const styles = StyleSheet.create({
     color: '#3F424A',
     fontSize: 15,
     lineHeight: 20,
+    // height: 180,
+
     // fontWeight: 'bold',
   },
   footer: {

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://backendv1.sojonews.com/api/v1';
+// const API_BASE_URL = 'https://backendv1.sojonews.com/api/v1';
+const API_BASE_URL = 'https://sojonewsbackendv1.bestaffix.com/api/v1';
 
 // const API_BASE_URL = 'http://192.168.0.105:3030/api/v1';
 

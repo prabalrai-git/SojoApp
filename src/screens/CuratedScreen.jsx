@@ -27,6 +27,7 @@ import {FlashList} from '@shopify/flash-list';
 import SurveyModalRedirectionToSettings from '../components/Surverys/SurveyModalRedirectionToSettings';
 import Snackbar from 'react-native-snackbar';
 import ShareOurAppModal from '../components/Surverys/ShareOurAppModal';
+import DualSurveys from '../components/Surverys/DualSurveys';
 
 ///
 
@@ -343,8 +344,9 @@ const HomeScreen = ({navigation}) => {
   return (
     <>
       {/* <CustomAlert /> */}
-      <ShareOurAppModal />
-      <SurveyModalRedirectionToSettings profile={profile} />
+      {/* <ShareOurAppModal />
+      <SurveyModalRedirectionToSettings profile={profile} /> */}
+      <DualSurveys />
       <SafeAreaView
         style={{
           flex: 0,

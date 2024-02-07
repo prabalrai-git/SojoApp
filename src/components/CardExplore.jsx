@@ -215,7 +215,7 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
                   styles.cardText,
                   {color: darkMode ? '#9B9EA5' : '#3F424A'},
                 ]}
-                numberOfLines={2}
+                // numberOfLines={2}
                 ellipsizeMode="tail">
                 {item?.previewText}
               </Text>
@@ -229,7 +229,7 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
                   }
                 </Text>
                 <View style={styles.link}>
-                  <Text style={styles.linkText}>Continue Reading</Text>
+                  <Text style={styles.linkText}>Read Full Story</Text>
                   <Icon
                     name="keyboard-arrow-right"
                     size={20}
@@ -311,7 +311,7 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
                   styles.cardText,
                   {color: darkMode ? '#9B9EA5' : '#3F424A'},
                 ]}
-                numberOfLines={2}
+                // numberOfLines={2}
                 ellipsizeMode="tail">
                 {item?.previewText}
               </Text>
@@ -325,7 +325,7 @@ const ExploreCard = ({item, navigation, profile, isGuest}) => {
                   }
                 </Text>
                 <View style={styles.link}>
-                  <Text style={styles.linkText}>Continue Reading</Text>
+                  <Text style={styles.linkText}>Read Full Story</Text>
                   <Icon
                     name="keyboard-arrow-right"
                     size={20}
